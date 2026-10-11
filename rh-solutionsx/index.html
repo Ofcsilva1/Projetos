@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Portfólio de People & Diversity Analytics. Dashboard interativo da RH SolutionsX com dados fictícios."><title>RH SolutionsX — People Analytics</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="refinement.css"><link rel="stylesheet" href="finishing.css"><script src="theme.js"></script><script src="data.js" defer></script><script src="visuals.js" defer></script><script src="app.js" defer></script></head>
+<body>
+<a class="skip" href="#main">Ir para o conteúdo</a>
+<header><div class="brand"><img src="assets/logo.png" alt="RH SolutionsX — Pessoas que impulsionam resultados"></div><div class="header-title">PEOPLE & DIVERSITY ANALYTICS<span>Inteligência para cuidar de pessoas</span></div><span class="demo">Portfólio · dados fictícios</span><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Ativar modo escuro" aria-pressed="false">Modo escuro</button></header>
+<nav aria-label="Seções do dashboard"><button data-tab="overview" aria-current="page">Visão geral</button><button data-tab="people">Pessoas & diversidade</button><button data-tab="performance">Desempenho & custos</button><button data-tab="safety">Saúde & segurança</button><button data-tab="departures">Desligamentos</button><button data-tab="method">Metodologia</button></nav>
+<main id="main">
+<div class="intro"><div><p class="eyebrow">RH SOLUTIONSX / OBSERVATÓRIO DE PESSOAS</p><h1 id="page-title">Pessoas em perspectiva.</h1><p id="page-subtitle">Uma visão integrada de equipe, resultados e bem-estar.</p></div><button id="export" class="secondary">Exportar resumo CSV ↓</button></div>
+<section class="filters" aria-label="Filtros globais"><label>Departamento<select id="department"></select></label><label>UF de alocação<select id="uf"></select></label><label>Modelo de trabalho<select id="model"></select></label><label>Status<select id="status"></select></label><button id="reset" class="text-button">Limpar filtros</button><span id="scope" role="status" aria-live="polite"></span></section>
+<aside id="persistent-summary" class="persistent-summary" aria-label="Resumo dos filtros atuais"></aside>
+<div id="content"></div>
+<section class="reading"><div><p class="eyebrow">LEITURA DO RECORTE</p><h2>O que os dados apresentam</h2></div><div id="insights" aria-live="polite"></div></section>
+<footer><span>RH SolutionsX · People & Diversity Analytics</span><span>Base demonstrativa de 100 registros · competência mensal não informada</span></footer>
+</main>
+<div id="chart-tooltip" role="tooltip" hidden></div>
+</body></html>
