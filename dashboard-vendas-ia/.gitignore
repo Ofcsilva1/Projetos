@@ -1,0 +1,33 @@
+# Estado local e caches do Power BI
+**/.pbi/
+**/localSettings.json
+**/cache.abf
+**/unappliedChanges.json
+**/*.abf
+**/*.tmp
+**/*.log
+~$*
+
+# Credenciais e configurações locais
+.env
+.env.*
+!.env.example
+**/credentials*.json
+**/secrets*.json
+**/*.pem
+**/*.key
+**/*.pfx
+**/data-private/
+**/data-local/
+
+# Dados e pacotes binários exigem revisão explícita antes de inclusão
+*.pbix
+*.pbit
+*.xlsx
+*.xls
+*.csv
+*.tsv
+*.parquet
+*.zip
+
+# Não exclui definições .Report/.SemanticModel: devem ser revisadas antes de inclusão.
