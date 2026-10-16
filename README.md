@@ -32,3 +32,9 @@ Abra o repositório desejado, leia o README e, quando disponível, use os links 
 Confirmar a publicação da vitrine no Pages e adicionar o link do Power BI Service quando houver um endereço público autorizado. Os arquivos e aplicações mantêm seus caminhos atuais.
 
 **Nota:** nenhum arquivo funcional dos demais repositórios é alterado por esta vitrine.
+
+## Dashboard de Vendas com IA
+
+[Documentação e arquivos disponíveis](dashboard-vendas-ia/README.md) · [Dashboard público no Power BI](https://app.powerbi.com/view?r=eyJrIjoiMmVjZDcwNTQtNGVmMS00M2M5LTgwM2MtNzdlMDJiYTQ2NDY0IiwidCI6ImQyMWQ1Y2VkLTZjN2EtNGE0OC1hMzU5LTNlNDFkMDI3NjgxMyJ9&pageName=4d5352ba00b2140c2054)
+
+Publicação parcial: o PBIP recebido é referencial; faltam as definições do relatório, o modelo correspondente e fontes demonstrativas revisadas para reproduzir o projeto.
