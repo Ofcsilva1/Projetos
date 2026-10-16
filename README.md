@@ -2,6 +2,8 @@
 
 Repositório central de navegação pelos projetos de **Análise de Dados**, **Business Intelligence**, **sistemas web** e **automação com IA**.
 
+A vitrine visual está em [`index.html`](index.html), com tema escuro e cartões para Sistema Proteja, Dashboard Vendas, Dashboard HTML e Análises e PDFs. Consulte o [guia de publicação e compatibilidade](docs/VITRINE-PORTFOLIO.md). O endereço esperado do Pages é `https://ofcsilva1.github.io/Projetos/`, mas retornou 404 na inspeção de 16/10/2026; a configuração e a publicação precisam ser confirmadas após a revisão.
+
 ## Projetos
 
 | Projeto | Foco | Repositório |
@@ -27,6 +29,6 @@ Abra o repositório desejado, leia o README e, quando disponível, use os links 
 
 ### Próximos passos
 
-Documentar individualmente cada repositório, validar demonstrações e capturas de tela, e depois criar um site de portfólio com navegação por categorias.
+Confirmar a publicação da vitrine no Pages e adicionar o link do Power BI Service quando houver um endereço público autorizado. Os arquivos e aplicações mantêm seus caminhos atuais.
 
 **Nota:** nenhum arquivo funcional dos demais repositórios é alterado por esta vitrine.

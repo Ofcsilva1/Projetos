@@ -8,7 +8,7 @@ Abra `index.html` em um navegador moderno. Mantenha todos os arquivos `.js`, `.c
 
 ## Publicar no GitHub Pages
 
-1. Extraia o ZIP e envie **o conteúdo da pasta `rh-solutionsx`** para a raiz de seu repositório. O `index.html` deve ficar diretamente na raiz.
+1. Neste repositório, mantenha **a pasta `rh-solutionsx` e todos os seus arquivos no local atual**. A raiz contém a vitrine do portfólio; o dashboard será acessível pelo caminho `rh-solutionsx/`. Para publicar em um repositório independente, o conteúdo da pasta pode ocupar a raiz desse outro repositório.
 2. No repositório, acesse **Settings → Pages**.
 3. Em **Build and deployment**, escolha **Deploy from a branch**.
 4. Selecione a branch que contém os arquivos (por exemplo, `main`) e a pasta **/(root)**. Salve.
