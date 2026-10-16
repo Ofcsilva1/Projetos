@@ -224,4 +224,3 @@ export function setupExports({ getData, notify }) {
     });
   });
 }
-

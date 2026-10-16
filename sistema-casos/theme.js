@@ -33,4 +33,3 @@
     if (event.key === storageKey) applyTheme(event.newValue === "dark" ? "dark" : "light");
   });
 })();
-
