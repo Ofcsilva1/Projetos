@@ -10,9 +10,13 @@ Acompanhar indicadores financeiros e analisar vendas por produto, região e cana
 
 ## Estado da publicação
 
-**Entrega parcial: documentação e arquivo referencial. O projeto ainda não pode ser reproduzido a partir deste diretório.**
+**Relatório publicado e arquivo PBIX disponíveis.**
 
-O anexo recebido, `Dashboard_Vendas_IA(1).pbip`, é um JSON de 298 bytes, versão 1.0. Contém apenas uma referência relativa a `Dashboard_Vendas_IA.Report` e a opção de recuperação automática. Foi mantido com seu nome original em [Dashboard_Vendas_IA(1).pbip](Dashboard_Vendas_IA%281%29.pbip).
+[Baixar Dashboard_Vendas_IA.pbix](Dashboard_Vendas_IA.pbix) para abrir no Power BI Desktop. O arquivo recebido contém duas páginas de relatório e um modelo de dados. A abertura e a atualização no Power BI Desktop não foram testadas nesta publicação.
+
+O pacote de fontes PBIP/PBIR continua incompleto; as observações abaixo se referem ao PBIP recebido anteriormente.
+
+O anexo PBIP recebido anteriormente, `Dashboard_Vendas_IA(1).pbip`, é um JSON de 298 bytes, versão 1.0. Contém apenas uma referência relativa a `Dashboard_Vendas_IA.Report` e a opção de recuperação automática. Foi mantido com seu nome original em [Dashboard_Vendas_IA(1).pbip](Dashboard_Vendas_IA%281%29.pbip).
 
 Ele não contém visuais, medidas DAX, consultas, dados nem definições do modelo. A pasta referenciada não veio no anexo. Nenhuma pasta `.Report` ou `.SemanticModel` desse projeto foi encontrada na árvore do repositório inspecionada em 16/10/2026. O arquivo `Dashboard de Vendas.pbix` existente na raiz não foi considerado equivalente: não foi possível confirmar sua relação com este PBIP.
 
@@ -33,7 +37,7 @@ Preservar o caminho relativo entre o PBIP e a pasta do relatório. Abrir o PBIP 
 
 ## Privacidade e revisão
 
-Esta entrega adiciona somente documentação, o link público autorizado, um arquivo de projeto sem dados e regras de exclusão. Não inclui currículo, contatos pessoais, bases, credenciais, caches ou caminhos locais. As regras de exclusão reduzem inclusões acidentais, mas todo arquivo futuro ainda precisa de inspeção de conteúdo, inclusive consultas M, TMDL, conexões e recursos.
+A publicação inclui documentação, o link público autorizado, o arquivo PBIX fornecido pelo autor, o arquivo referencial PBIP e regras de exclusão. Não inclui currículo, contatos pessoais, bases, credenciais, caches ou caminhos locais. As regras de exclusão reduzem inclusões acidentais, mas todo arquivo futuro ainda precisa de inspeção de conteúdo, inclusive consultas M, TMDL, conexões e recursos.
 
 ## Referência técnica
 
