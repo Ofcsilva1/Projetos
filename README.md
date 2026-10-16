@@ -2,7 +2,7 @@
 
 Repositório central de navegação pelos projetos de **Análise de Dados**, **Business Intelligence**, **sistemas web** e **automação com IA**.
 
-A vitrine visual está em [`index.html`](index.html), com tema escuro e cartões para Nexo — Gestão de Casos, Dashboard Vendas, Dashboard HTML e Análises e PDFs. Consulte o [guia de publicação e compatibilidade](docs/VITRINE-PORTFOLIO.md). O endereço esperado do Pages é `https://ofcsilva1.github.io/Projetos/`, mas retornou 404 na inspeção de 16/10/2026; a configuração e a publicação precisam ser confirmadas após a revisão.
+A [vitrine visual](https://ofcsilva1.github.io/Projetos/) está em [`index.html`](index.html), com tema escuro e cartões para Nexo — Gestão de Casos, Nexora — Landing Page, dashboards e análises. Consulte o [guia de publicação e compatibilidade](docs/VITRINE-PORTFOLIO.md).
 
 ## Projetos
 
@@ -10,7 +10,7 @@ A vitrine visual está em [`index.html`](index.html), com tema escuro e cartões
 |---|---|---|
 | **Nexo — Gestão de Casos** | Demonstração com login preenchido e dados locais fictícios | [Acessar](sistema-casos/) |
 | **Databricks** | Estudos e exercícios de dados | [Acessar](https://github.com/Ofcsilva1/Databricks) |
-| **Ladingpage** | Desenvolvimento web; documentação pendente | [Acessar](https://github.com/Ofcsilva1/Ladingpage) |
+| **Nexora — Landing Page** | Site demonstrativo de marca fictícia, responsivo e interativo | [Ver página](https://ofcsilva1.github.io/Ladingpage/) · [Código](https://github.com/Ofcsilva1/Ladingpage) |
 | **Other** | Conteúdo ainda não classificado | [Acessar](https://github.com/Ofcsilva1/Other) |
 
 **Outros:** [desktop-tutorial](https://github.com/Ofcsilva1/desktop-tutorial) (tutorial de GitHub Desktop).
@@ -29,7 +29,7 @@ Abra o repositório desejado, leia o README e, quando disponível, use os links 
 
 ### Próximos passos
 
-Confirmar a publicação da vitrine no Pages e adicionar o link do Power BI Service quando houver um endereço público autorizado. Os arquivos e aplicações mantêm seus caminhos atuais.
+A vitrine e a landing page possuem publicações bem-sucedidas no GitHub Pages. Mantenha os links dos projetos atualizados conforme novas versões forem publicadas. Os arquivos e aplicações mantêm seus caminhos atuais.
 
 **Nota:** nenhum arquivo funcional dos demais repositórios é alterado por esta vitrine.
 
