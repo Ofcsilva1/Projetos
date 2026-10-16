@@ -8,7 +8,7 @@ A vitrine visual está em [`index.html`](index.html), com tema escuro e cartões
 
 | Projeto | Foco | Repositório |
 |---|---|---|
-| **Nexo — Gestão de Casos** | Demonstração pública sem login, com dados locais fictícios | [Acessar](sistema-casos/) |
+| **Nexo — Gestão de Casos** | Demonstração com login preenchido e dados locais fictícios | [Acessar](sistema-casos/) |
 | **Databricks** | Estudos e exercícios de dados | [Acessar](https://github.com/Ofcsilva1/Databricks) |
 | **Ladingpage** | Desenvolvimento web; documentação pendente | [Acessar](https://github.com/Ofcsilva1/Ladingpage) |
 | **Other** | Conteúdo ainda não classificado | [Acessar](https://github.com/Ofcsilva1/Other) |
