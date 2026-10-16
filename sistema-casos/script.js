@@ -353,7 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const epoch = ++authEpoch;
     permissions = permissionsForAccess({active:true,role:'administrador'});
     workflows.setCanWrite(true);
-    appWrapper.hidden = false;
+    // The demonstration entry screen controls visibility.
     $("demo-storage-status").textContent = storageNotice;
     unsubscribeCases = onValue(ref(database, "casos"), (snapshot) => {
       if (auth.currentUser?.uid !== user.uid || authEpoch !== epoch) return;
@@ -375,5 +375,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  document.addEventListener("demo:logout-request", event => {
+    if (savingCase || !canLeaveCase()) event.preventDefault();
+  });
   initializeDemo();
+  document.documentElement.dataset.demoReady = "true";
+  document.dispatchEvent(new Event("demo:ready"));
 });

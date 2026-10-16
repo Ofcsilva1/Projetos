@@ -1,6 +1,6 @@
 # Vitrine do portfólio
 
-Atualização: o cartão de sistema passa a abrir [Nexo — Gestão de Casos](../sistema-casos/), demonstração pública sem login e sem banco remoto. As notas abaixo registram a inspeção anterior à primeira publicação. O Pages foi posteriormente publicado com sucesso em `main` + `/(root)`.
+Atualização: o cartão de sistema passa a abrir [Nexo — Gestão de Casos](../sistema-casos/), demonstração com login preenchido e sem banco remoto. As notas abaixo registram a inspeção anterior à primeira publicação. O Pages foi posteriormente publicado com sucesso em `main` + `/(root)`.
 
 A página `index.html` na raiz apresenta quatro cartões em tema escuro, seguindo a referência visual aprovada. Em telas até 640 px a grade passa de duas para uma coluna. O CSS e os ícones são locais; a vitrine funciona sem JavaScript, instalação ou compilação.
 

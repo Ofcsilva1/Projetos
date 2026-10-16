@@ -1,6 +1,6 @@
 # Nexo — Gestão de Casos
 
-Demonstração pública do sistema de gestão de casos, com marca genérica própria, acesso direto sem login, tema claro e escuro e armazenamento local por aba. Esta versão mantém os campos, filtros, cadastro/edição, agenda, pendências, importação de planilhas e exportações do sistema de origem.
+Demonstração pública do sistema de gestão de casos, com marca genérica própria, entrada demonstrativa com usuário e senha preenchidos, tema claro e escuro e armazenamento local por aba. Esta versão mantém os campos, filtros, cadastro/edição, agenda, pendências, importação de planilhas e exportações do sistema de origem.
 
 Não carrega Firebase, não acessa o banco original e não altera o sistema anteriormente publicado. Os nomes de campos e formatos de planilha continuam compatíveis. O identificador `visitante-local` é apenas o autor local dos registros, não uma conta autenticada.
 
@@ -14,7 +14,7 @@ As alterações ficam no `sessionStorage` desta aba e sobrevivem ao recarregamen
 
 `marca.svg` contém uma marca vetorial Nexo sobre uma superfície escura com borda, legível em ambos os temas. As referências à marca anterior foram retiradas da interface, nomes de exportação e preferência de tema desta demonstração.
 
-O cartão da vitrine aponta para `sistema-casos/`. Incorpore este PR manualmente após revisão. O GitHub Pages configurado em `main` + `/(root)` deve publicar o novo caminho sem alterar os demais endereços. O repositório e o sistema originais são preservados.
+O cartão da vitrine aponta para `sistema-casos/`. A tela de entrada traz `visitante@exemplo.com` e `NexoDemo2026` já preenchidos. São valores públicos de demonstração, sem conta Firebase e sem função de controle de segurança. O botão Entrar abre a interface local; Sair retorna à entrada sem excluir os dados da aba. Recarregar volta à tela de entrada. Incorpore este PR manualmente após revisão. O GitHub Pages configurado em `main` + `/(root)` deve publicar o novo caminho sem alterar os demais endereços. O repositório e o sistema originais são preservados.
 
 ## Executar
 
