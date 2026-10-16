@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="80" viewBox="0 0 240 80" role="img" aria-labelledby="title">
+  <title id="title">Nexo — Gestão de Casos</title>
+  <rect x="1" y="1" width="238" height="78" rx="18" fill="#152438" stroke="#58728e" stroke-width="2"/>
+  <path d="M26 53V27l26 26V27" fill="none" stroke="#67e8c0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="26" cy="27" r="5" fill="#e5fff6"/><circle cx="52" cy="53" r="5" fill="#e5fff6"/>
+  <text x="73" y="39" fill="#fff" font-family="Arial,sans-serif" font-size="27" font-weight="700" letter-spacing="2">NEXO</text>
+  <text x="75" y="59" fill="#c9d8e7" font-family="Arial,sans-serif" font-size="11" letter-spacing="1">GESTÃO DE CASOS</text>
+</svg>

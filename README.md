@@ -2,13 +2,13 @@
 
 Repositório central de navegação pelos projetos de **Análise de Dados**, **Business Intelligence**, **sistemas web** e **automação com IA**.
 
-A vitrine visual está em [`index.html`](index.html), com tema escuro e cartões para Sistema Proteja, Dashboard Vendas, Dashboard HTML e Análises e PDFs. Consulte o [guia de publicação e compatibilidade](docs/VITRINE-PORTFOLIO.md). O endereço esperado do Pages é `https://ofcsilva1.github.io/Projetos/`, mas retornou 404 na inspeção de 16/10/2026; a configuração e a publicação precisam ser confirmadas após a revisão.
+A vitrine visual está em [`index.html`](index.html), com tema escuro e cartões para Nexo — Gestão de Casos, Dashboard Vendas, Dashboard HTML e Análises e PDFs. Consulte o [guia de publicação e compatibilidade](docs/VITRINE-PORTFOLIO.md). O endereço esperado do Pages é `https://ofcsilva1.github.io/Projetos/`, mas retornou 404 na inspeção de 16/10/2026; a configuração e a publicação precisam ser confirmadas após a revisão.
 
 ## Projetos
 
 | Projeto | Foco | Repositório |
 |---|---|---|
-| **Proteja — Gestão de Casos** | Aplicação web, cadastros e gestão de atendimentos | [Acessar](https://github.com/Ofcsilva1/Proteja) |
+| **Nexo — Gestão de Casos** | Demonstração pública sem login, com dados locais fictícios | [Acessar](sistema-casos/) |
 | **Databricks** | Estudos e exercícios de dados | [Acessar](https://github.com/Ofcsilva1/Databricks) |
 | **Ladingpage** | Desenvolvimento web; documentação pendente | [Acessar](https://github.com/Ofcsilva1/Ladingpage) |
 | **Other** | Conteúdo ainda não classificado | [Acessar](https://github.com/Ofcsilva1/Other) |
