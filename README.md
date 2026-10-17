@@ -9,6 +9,7 @@ A [vitrine visual](https://ofcsilva1.github.io/Projetos/) está em [`index.html`
 | Projeto | Foco | Repositório |
 |---|---|---|
 | **Nexo — Gestão de Casos** | Demonstração com login preenchido e dados locais fictícios | [Acessar](sistema-casos/) |
+| **Paradise Island — Resort & Retreat** | Landing page cinematográfica em React/TypeScript, com galeria e consulta demonstrativa | [Visitar ilha](paradise-island/) · [Código](paradise-island/source/) |
 | **Databricks** | Estudos e exercícios de dados | [Acessar](https://github.com/Ofcsilva1/Databricks) |
 | **Nexora — Landing Page** | Site demonstrativo de marca fictícia, responsivo e interativo | [Ver página](https://ofcsilva1.github.io/Ladingpage/) · [Código](https://github.com/Ofcsilva1/Ladingpage) |
 | **Other** | Conteúdo ainda não classificado | [Acessar](https://github.com/Ofcsilva1/Other) |

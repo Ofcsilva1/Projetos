@@ -1,0 +1,10 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { validateConsultation, localDateString, nightCount, nextCalendarDay } from '../src/data/booking.mjs';
+const valid = { arrival: '2026-10-17', departure: '2026-10-20', adults: '2', interest: 'hospedagem' };
+test('aceita chegada hoje e saída futura sem consultar serviços externos', () => { assert.deepEqual(validateConsultation(valid, '2026-10-17'), {}); });
+test('rejeita chegada passada, saída igual e número fracionário de adultos', () => { const errors = validateConsultation({ ...valid, arrival: '2026-10-16', departure: '2026-10-16', adults: '1.5' }, '2026-10-17'); assert.deepEqual(Object.keys(errors).sort(), ['adults', 'arrival', 'departure']); });
+test('rejeita datas inexistentes e interesse desconhecido', () => { const errors = validateConsultation({ ...valid, arrival: '2026-02-30', departure: '', interest: '<script>' }, '2026-01-01'); assert.ok(errors.arrival); assert.ok(errors.departure); assert.ok(errors.interest); });
+test('formata a data no calendário local', () => { assert.equal(localDateString(new Date(2026, 9, 17, 23, 59)), '2026-10-17'); });
+test('conta noites atravessando ano e ano bissexto sem depender de duração do dia local', () => { assert.equal(nightCount('2026-12-30', '2027-01-02'), 3); assert.equal(nightCount('2028-02-28', '2028-03-01'), 2); assert.equal(nightCount('2026-12-10', '2026-12-10'), null); assert.equal(nightCount('', '2026-12-14'), null); });
+test('sugere saída após a chegada também na virada do mês e ano', () => { assert.equal(nextCalendarDay('2026-12-31'), '2027-01-01'); assert.equal(nextCalendarDay('2028-02-28'), '2028-02-29'); assert.equal(nextCalendarDay('2026-02-30'), ''); });

@@ -1,0 +1,14 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { HashRouter, Route, Routes } from 'react-router-dom';
+import { Layout } from './components/Layout';
+import { RouteEffects } from './components/RouteEffects';
+import { Home } from './pages/Home';
+import { Island, Accommodations, AccommodationDetail, Experiences, Gastronomy, NotFound } from './pages/Discover';
+import { Gallery } from './pages/Gallery';
+import { Reservations } from './pages/Reservations';
+import './styles/global.css';
+import './styles/animations.css';
+import './styles/refinement.css';
+import { MotionProvider } from './components/MotionSettings';
+ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><MotionProvider><HashRouter><RouteEffects /><Routes><Route element={<Layout />}><Route index element={<Home />} /><Route path="ilha" element={<Island />} /><Route path="acomodacoes" element={<Accommodations />} /><Route path="acomodacoes/:slug" element={<AccommodationDetail />} /><Route path="experiencias" element={<Experiences />} /><Route path="gastronomia" element={<Gastronomy />} /><Route path="galeria" element={<Gallery />} /><Route path="reservas" element={<Reservations />} /><Route path="*" element={<NotFound />} /></Route></Routes></HashRouter></MotionProvider></React.StrictMode>);
