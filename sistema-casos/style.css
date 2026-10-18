@@ -506,3 +506,9 @@ textarea.form-control { min-height: 94px; resize: vertical; line-height: 1.65; }
 .auth-brand .demo-logo { width: 240px; max-width: 100%; margin-bottom: 24px; }
 .auth-brand .demo-login-title { font-size: 1.45rem; letter-spacing: -.03em; margin-bottom: 10px; }
 .auth-brand p { line-height: 1.6; }
+
+/* Phase 1: contextual errors, preserving the institutional palette. */
+.field-error { display: block; margin-top: 7px; color: #b42318; font-size: .85rem; line-height: 1.5; overflow-wrap: anywhere; }
+[aria-invalid="true"] { border-color: #b42318 !important; }
+[data-theme="dark"] .field-error { color: #ffb4ab; }
+[data-theme="dark"] [aria-invalid="true"] { border-color: #ffb4ab !important; }
