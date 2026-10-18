@@ -5,12 +5,18 @@ const S=globalThis.RHFilterState;
 const filterCatalog=S.catalog(DATA);
 const initialState=S.parse(location.search,filterCatalog);
 let state=initialState.state;
-const fmt=(n,d=0)=>M.valid(n)?n.toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:d}):'—';
-const money=(n,d=0)=>M.valid(n)?n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:d,minimumFractionDigits:d}):'—';
+// Reuse locale formatters without changing calculations or rounding rules.
+const numberFormats=new Map(),currencyFormats=new Map();
+function formatter(cache,d,currency=false){
+ if(!cache.has(d))cache.set(d,new Intl.NumberFormat('pt-BR',{...(currency?{style:'currency',currency:'BRL'}:{}),maximumFractionDigits:d,minimumFractionDigits:d}));
+ return cache.get(d);
+}
+const fmt=(n,d=0)=>M.valid(n)?formatter(numberFormats,d).format(n):'—';
+const money=(n,d=0)=>M.valid(n)?formatter(currencyFormats,d,true).format(n):'—';
 const esc=s=>String(s??'Não informado').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sum=M.sum;
 const mean=M.mean;
-const colors=['#3b7d9c','#183e55','#bd965b','#8fa8ac','#bdcac6','#8d897c'];
+const colors=['var(--chart-1)','var(--chart-2)','var(--chart-3)','var(--chart-4)','var(--chart-5)','var(--chart-6)'];
 const chartState={timeline:state.trend,safety:state.safety};
 let tab=state.view, tableKey=state.tableGroup, tableSort=state.sort, tableDirection=state.direction==='asc'?1:-1, tableSearch=state.search;
 const filters={department:'Departamento',job:'Cargo',uf:'UF_Alocacao',model:'Modelo_Trabalho',status:'Status',level:'Nivel_Cargo'};
@@ -85,7 +91,7 @@ function bubbles(rows){
  return `<div class="chart-scroll"><svg class="chart" viewBox="0 0 960 320" role="group" aria-label="Horas extras médias por pessoa e atingimento médio de metas por departamento"><text x="65" y="18">Atingimento médio das metas (%)</text>${Array.from({length:5},(_,i)=>`<line x1="65" x2="855" y1="${y(ymax*i/4)}" y2="${y(ymax*i/4)}" stroke="#e7edf2"/><text x="52" y="${y(ymax*i/4)+4}" text-anchor="end">${fmt(ymax*i/4)}</text><text x="${x(xmax*i/4)}" y="282" text-anchor="middle">${fmt(xmax*i/4,1)}</text>`).join('')}<line x1="65" x2="855" y1="${y(100)}" y2="${y(100)}" stroke="#d99a35" stroke-dasharray="5 5"/><text x="864" y="${y(100)+4}">100%</text>${gs.map((g,i)=>`<circle class="bubble" ${selectionAttrs('Departamento',g.name)} aria-label="Filtrar departamento ${esc(g.name)}: ${g.n} pessoas, ${fmt(mean(g.items,'Horas_Extra_Mes'),1)} horas extras médias e ${fmt(mean(g.items,'Meta_Atingida_Pct'),1)}% de meta" cx="${x(mean(g.items,'Horas_Extra_Mes'))}" cy="${y(mean(g.items,'Meta_Atingida_Pct'))}" r="${Math.sqrt(g.n)*6}" fill="${colors[i%colors.length]}" opacity=".75"><title>${esc(g.name)} · n=${g.n} · ${fmt(mean(g.items,'Horas_Extra_Mes'),1)} h/pessoa · meta média ${fmt(mean(g.items,'Meta_Atingida_Pct'),1)}%</title></circle>`).join('')}<text x="855" y="310" text-anchor="end">Horas extras médias por pessoa (h/mês)</text></svg></div><p class="caption">Área da bolha proporcional às pessoas com pares válidos de horas extras e meta. Passe o cursor ou foque uma bolha para identificá-la. Relação descritiva, sem inferência de causa.</p><div class="legend">${gs.map((g,i)=>`<span><i style="background:${colors[i%colors.length]}"></i>${esc(g.name)}</span>`).join('')}</div>`;
 }
 function table(rows){
- return panel('Detalhamento por grupo','Totais, médias e medianas do recorte. As colunas n informam os denominadores válidos. Clique no cabeçalho para ordenar.',`<div class="table-tools"><label class="sr-only" for="table-group">Agrupamento da tabela</label>${choice('table-group',dimensions,tableKey)}<label class="sr-only" for="table-search">Buscar grupo</label><input id="table-search" name="search" autocomplete="off" maxlength="120" placeholder="Buscar grupo…" value="${esc(tableSearch)}"><span class="table-search-note">A busca afeta apenas a tabela e o CSV.</span></div><div class="table-wrap" id="table-body"></div>`);
+ return panel('Detalhamento por grupo','Totais, médias e medianas do recorte. As colunas n informam os denominadores válidos. Clique no cabeçalho para ordenar.',`<div class="table-tools"><label class="sr-only" for="table-group">Agrupamento da tabela</label>${choice('table-group',dimensions,tableKey)}<label class="sr-only" for="table-search">Buscar grupo</label><input id="table-search" name="search" autocomplete="off" maxlength="120" placeholder="Buscar grupo…" value="${esc(tableSearch)}"><span class="table-search-note">A busca afeta apenas a tabela e o CSV.</span></div><div class="table-wrap" id="table-body" tabindex="0" role="region" aria-label="Detalhamento por grupo, com rolagem"></div>`);
 }
 function tableData(rows){
  return groups(rows,tableKey).map(g=>{
@@ -152,6 +158,7 @@ function render(){
  if($('group'))$('group').onchange=()=>applyState({safety:$('group').value},{focusId:'group'});
  if($('table-group')){$('table-group').onchange=()=>applyState({tableGroup:$('table-group').value},{tableOnly:true});$('table-search').oninput=()=>applyState({search:$('table-search').value},{tableOnly:true,replace:true});updateTable()}
  compactPanels();updateInsights(rows,tab);activateVisuals();
+ updatePrintContext(rows);
 }
 
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>applyState({view:b.dataset.tab}));
@@ -184,6 +191,10 @@ function writeURL(replace=false){
   $('interaction-status').textContent='O endereço não pôde ser atualizado. Os filtros continuam funcionando nesta página.';
  }
 }
+function updatePrintContext(rows){
+ const labels=S.describe(state).map(chip=>chip.label);
+ $('print-context').textContent=`Recorte: ${labels.length?labels.join(' · '):'todos os registros'}. ${rows.length} de ${DATA.length} registros. Tabela por ${dimensions.find(([key])=>key===tableKey)[1]}${tableSearch?' · busca de grupos: '+tableSearch:''}. Ordenação: ${columns.find(([key])=>key===tableSort)[1]}, ${tableDirection===1?'crescente':'decrescente'}.`;
+}
 function renderFilterState(){
  const chips=S.describe(state);
  $('active-filters').innerHTML=chips.length?chips.map(c=>`<button type="button" class="filter-chip" data-remove-filter="${c.key}" aria-label="${esc('Remover filtro '+c.label)}">${esc(c.label)}<span aria-hidden="true">×</span></button>`).join(''):'<span class="no-filters">Nenhum filtro global ativo</span>';
@@ -200,7 +211,7 @@ function applyState(patch,options={}){
  if(options.closePeriod)$('period-details').open=false;
  $('interaction-status').textContent=options.message??'';
  writeURL(options.replace);
- if(options.tableOnly)updateTable();else render();
+ if(options.tableOnly){updateTable();updatePrintContext(selected())}else render();
  if(!$('share-link-box').hidden)$('share-link').value=shareURL();
  if(options.focusId)$(options.focusId)?.focus({preventScroll:true});
  if(options.focusSort)document.querySelector(`[data-sort="${options.focusSort}"]`)?.focus({preventScroll:true});
@@ -218,7 +229,8 @@ $('active-filters').addEventListener('click',event=>{
 function selectChart(element){
  if(element.dataset.periodYear){
   const year=element.dataset.periodYear,basis=element.dataset.periodBasis;
-  applyState({dateBasis:basis,from:year+'-01-01',to:year+'-12-31'},{syncPeriod:true,focusChip:'period',message:'Período aplicado a partir do gráfico de movimentações.'});
+  const same=state.dateBasis===basis&&state.from===year+'-01-01'&&state.to===year+'-12-31';
+  applyState(same?{dateBasis:'none',from:'',to:''}:{dateBasis:basis,from:year+'-01-01',to:year+'-12-31'},{syncPeriod:true,focusChip:'period',message:same?'Período do gráfico removido.':'Período aplicado a partir do gráfico de movimentações.'});
   return;
  }
  const key=element.dataset.selectKey;if(!key)return;
@@ -258,4 +270,5 @@ addEventListener('popstate',()=>{
  $('interaction-status').textContent='Recorte restaurado pelo histórico do navegador.';
 });
 synchronizeState();synchronizePeriod();writeURL(true);render();
+dispatchEvent(new Event('rh-dashboard-ready'));
 if(initialState.warnings.length)$('interaction-status').textContent='Alguns parâmetros do link eram inválidos e foram ignorados. Confira os filtros ativos.';

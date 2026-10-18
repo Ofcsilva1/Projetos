@@ -22,18 +22,20 @@
 }
 html[data-theme=dark] {
  color-scheme: dark;
- --navy: #e2edf4;
- --blue: #83c7df;
- --gold: #d6b070;
- --ink: #dce7ef;
- --muted: #afc1ce;
- --line: #344d5e;
- --bg: #13212c;
- --white: #1c2e3b;
- --surface-subtle: #233946;
- --accent-soft: #254353;
- --focus: #95d9f3;
- --shadow: none;
+ --navy: #f2f3f5;
+ --blue: #77d5b0;
+ --gold: #b69be9;
+ --ink: #e1e3e7;
+ --muted: #a3a7af;
+ --line: #34363c;
+ --bg: #101113;
+ --white: #1a1b1f;
+ --surface-subtle: #202227;
+ --accent-soft: #232a29;
+ --focus: #9de7c8;
+ --shadow: 0 4px 18px rgb(0 0 0 / 16%);
+ --sidebar-bg: #151618;
+ --sidebar-text: #d0d2d8;
  --danger: #ffb0a8;
 }
 * { box-sizing: border-box; }
@@ -225,12 +227,7 @@ footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12
 html[data-theme=dark] .chart text { fill: var(--muted); }
 html[data-theme=dark] .chart .timeline-value, html[data-theme=dark] .chart .value-label { fill: var(--ink); }
 html[data-theme=dark] .chart line[stroke="#e7edf2"], html[data-theme=dark] .chart line[stroke="#e6e8e4"] { stroke: var(--line); }
-html[data-theme=dark] .timeline-curve, html[data-theme=dark] .chart polyline:first-of-type { stroke: #83c7df; }
-html[data-theme=dark] .timeline-gradient-stop { stop-color: #83c7df; }
-html[data-theme=dark] .fill { background: #83c7df !important; }
-html[data-theme=dark] .heat-cell { background: rgba(105,177,204,calc(.10 + var(--intensity)*.4)) !important; color: #edf6f9 !important; }
 .heat-cell { color: #0b1c26 !important; }
-html[data-theme=dark] .donut-segment, html[data-theme=dark] .column-bar { filter: brightness(1.25); }
 @media (min-width: 1700px) { main { padding-top: 36px; } .panel { padding: 28px; } }
 /* Fase 4 — filtros compartilhados e controles de exploração. */
 .intro-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
@@ -288,7 +285,7 @@ button.bar-row:hover { background: var(--surface-subtle); }
  .period-details summary { font-size: 11px; }
  .filter-chip, .legend-filter, .salary-series[role=button] { min-height: 44px; }
 }
-@media print { .filter-state, .share-link-box, #period-context { display: none !important; } }
+@media print { .filter-state, .share-link-box { display: none !important; } }
 @media (min-width: 901px) and (max-height: 640px) { .sidebar-note { padding-top: 18px; } .brand { margin-bottom: 16px; } nav { gap: 3px; } nav button { min-height: 42px; } }
 @media (max-width: 1250px) {
  :root { --sidebar-width: 212px; --space: 20px; }
@@ -362,4 +359,61 @@ button.bar-row:hover { background: var(--surface-subtle); }
  .chart-scroll { overflow: visible; } .chart-scroll .chart { min-width: 0; width: 100%; } .chart-scroll::after { display: none; }
  .table-wrap { max-height: none; overflow: visible; } table { white-space: normal; font-size: 8px; } th, td { padding: 7px 4px; } th { position: static; }
  html[data-theme=dark] .chart text { fill: var(--muted); } html[data-theme=dark] .fill { background: #227d9b !important; } html[data-theme=dark] .column-bar, html[data-theme=dark] .donut-segment { filter: none; }
+}
+
+/* Fase 5 — modo escuro inspirado na referência, com superfícies neutras. */
+@media screen {
+ html[data-theme=dark] .sidebar { border-right: 1px solid #2a2c30; }
+ html[data-theme=dark] .brand { background: #f5f5f6; }
+ html[data-theme=dark] .sidebar-label, html[data-theme=dark] .sidebar-note p { color: #a3a7af; }
+ html[data-theme=dark] nav button { color: #c4c7ce; }
+ html[data-theme=dark] nav button:hover { background: #222429; color: #fff; }
+ html[data-theme=dark] nav button[aria-current] { background: #282b30; border-color: #3b3f46; box-shadow: inset 3px 0 #77d5b0; color: #fff; }
+ html[data-theme=dark] .panel, html[data-theme=dark] .kpi { background: linear-gradient(145deg,#202227,#191a1e 70%); border-color: #35373d; }
+ html[data-theme=dark] .kpi-heading .icon { color: #b6bbc5; background: #292c32; border-color: #3a3d43; }
+ html[data-theme=dark] .feature-summary, html[data-theme=dark] .reading { background: #1b1e21; }
+ html[data-theme=dark] .feature-tags span { background: #242a28; border-color: #3b4841; color: #b5e5cd; }
+ html[data-theme=dark] .timeline-curve, html[data-theme=dark] .chart polyline:first-of-type { stroke: #77d5b0; }
+ html[data-theme=dark] .timeline-gradient-stop { stop-color: #77d5b0; }
+ html[data-theme=dark] .chart polyline:nth-of-type(2) { stroke: #b69be9; }
+ html[data-theme=dark] .fill { background: #77d5b0 !important; }
+ html[data-theme=dark] .salary-series .fill.median { background: #b69be9 !important; }
+ html[data-theme=dark] .heat-cell { background: rgba(96,172,139,calc(.08 + var(--intensity)*.35)) !important; color: #edf7f0 !important; }
+ html[data-theme=dark] #chart-tooltip { background: #25282d; border-color: #545a64; }
+}
+.print-context { display: none; }
+@media print {
+ @page { size: A4 landscape; margin: 12mm; }
+ :root, html[data-theme=dark] { --blue: #227d9b; --gold: #af8541; --focus: #176e92; --danger: #9f302b; }
+ .intro-actions, .skip { display: none !important; }
+ .print-context { display: block; font-size: 10px; border-block: 1px solid var(--line); padding: 10px 0; overflow-wrap: anywhere; }
+ #period-context:not([hidden]) { display: block; font-size: 10px; }
+ .reveal { opacity: 1 !important; transform: none !important; }
+ .masonry-panels, .grid, .grid.thirds, .grid.equal, .overview-layout { display: block; }
+ .panel { margin-block: 12px; break-inside: auto; }
+ .panel-head, tr { break-inside: avoid; }
+ .table-wrap { overflow: visible; }
+ table { width: 100%; table-layout: fixed; font-size: 8px; }
+ th, td { overflow-wrap: anywhere; padding: 5px 3px; }
+ th:first-child { width: 11%; }
+ thead { display: table-header-group; }
+ .heatmap-scroll { overflow: visible; }
+ .heatmap-scroll table { min-width: 0; }
+ html[data-theme=dark] .timeline-curve { stroke: var(--blue); }
+ html[data-theme=dark] .timeline-gradient-stop { stop-color: var(--blue); }
+}
+
+:root {
+ --chart-1: #3b7d9c; --chart-2: #183e55; --chart-3: #bd965b;
+ --chart-4: #8fa8ac; --chart-5: #bdcac6; --chart-6: #8d897c;
+}
+@media screen {
+ html[data-theme=dark] {
+  --chart-1: #77d5b0; --chart-2: #b69be9; --chart-3: #d8b775;
+  --chart-4: #7faad6; --chart-5: #98b8a6; --chart-6: #a4a0b0;
+ }
+ html[data-theme=dark] .donut-segment, html[data-theme=dark] .column-bar { filter: none; }
+ html[data-theme=dark] .stack-segment { color: #111315; }
+ html[data-theme=dark] .timeline-point.series-0 .timeline-dot { fill: #77d5b0; }
+ html[data-theme=dark] .timeline-point.series-1 .timeline-dot { fill: #b69be9; }
 }

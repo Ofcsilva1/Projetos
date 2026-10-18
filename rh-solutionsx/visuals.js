@@ -1,5 +1,5 @@
 // Visualizações complementares. Todos os cálculos respeitam os filtros globais.
-function categoryChart(items,unit='pessoas',tone='#3b7d9c'){
+function categoryChart(items,unit='pessoas',tone='var(--chart-1)'){
  if(!items.length||!items.some(i=>i.value>0))return '<p class="empty">Não há valores para exibir neste recorte.</p>';
  const max=Math.max(...items.map(i=>i.value),1),top=Math.ceil(max/4)*4;
  const w=680,h=270,left=52,plot=600,step=plot/items.length;
@@ -12,7 +12,7 @@ function ageDistribution(rows){
 }
 function targetDistribution(rows){
  const total=rows.length;rows=rows.filter(r=>M.valid(r.Meta_Atingida_Pct));
- const data=[{name:'Abaixo de 80%',value:rows.filter(r=>r.Meta_Atingida_Pct<80).length,color:'#b28a55'},{name:'80 a <100%',value:rows.filter(r=>r.Meta_Atingida_Pct>=80&&r.Meta_Atingida_Pct<100).length,color:'#91a4aa'},{name:'100 a <110%',value:rows.filter(r=>r.Meta_Atingida_Pct>=100&&r.Meta_Atingida_Pct<110).length,color:'#3b7d9c'},{name:'110% ou mais',value:rows.filter(r=>r.Meta_Atingida_Pct>=110).length,color:'#183e55'}];data.forEach((item,index)=>Object.assign(item,{selectKey:'targetBand',selectValue:Object.keys(S.bands.targetBand)[index]}));data.axis='Atingimento da meta';return categoryChart(data)+coverageNote(total,rows.length,'meta');
+ const data=[{name:'Abaixo de 80%',value:rows.filter(r=>r.Meta_Atingida_Pct<80).length,color:'var(--chart-3)'},{name:'80 a <100%',value:rows.filter(r=>r.Meta_Atingida_Pct>=80&&r.Meta_Atingida_Pct<100).length,color:'var(--chart-4)'},{name:'100 a <110%',value:rows.filter(r=>r.Meta_Atingida_Pct>=100&&r.Meta_Atingida_Pct<110).length,color:'var(--chart-1)'},{name:'110% ou mais',value:rows.filter(r=>r.Meta_Atingida_Pct>=110).length,color:'var(--chart-2)'}];data.forEach((item,index)=>Object.assign(item,{selectKey:'targetBand',selectValue:Object.keys(S.bands.targetBand)[index]}));data.axis='Atingimento da meta';return categoryChart(data)+coverageNote(total,rows.length,'meta');
 }
 function salaryDistribution(rows){
  const active=rows.filter(r=>r.Status==='Ativo'),valid=active.filter(r=>M.valid(r.Salario_Base));
@@ -34,7 +34,7 @@ function targetHeatmap(rows){
 function monthDepartures(rows){
  const exits=rows.filter(r=>r.Status==='Desligado'&&M.validDate(r.Data_Desligamento)&&M.validDate(r.Data_Admissao)&&r.Data_Desligamento>=r.Data_Admissao);
  const periods=[...new Set(DATA.filter(r=>M.validDate(r.Data_Desligamento)).map(r=>r.Data_Desligamento.slice(0,7)))].sort();
- const data=periods.map(p=>({selectKey:'exitMonth',selectValue:p,name:p.slice(5)+'/'+p.slice(2,4),value:exits.filter(r=>r.Data_Desligamento.startsWith(p)).length}));data.axis='Mês/ano do desligamento';return categoryChart(data,'desligamentos','#b28a55');
+ const data=periods.map(p=>({selectKey:'exitMonth',selectValue:p,name:p.slice(5)+'/'+p.slice(2,4),value:exits.filter(r=>r.Data_Desligamento.startsWith(p)).length}));data.axis='Mês/ano do desligamento';return categoryChart(data,'desligamentos','var(--chart-3)');
 }
 function featuredSummary(rows){
  if(!rows.length)return '';
@@ -99,6 +99,7 @@ function activateVisuals(){
   document.querySelectorAll('#content .panel,#content .feature-summary,#content .mini-facts').forEach((el,i)=>{el.classList.add('reveal');el.style.setProperty('--reveal-delay',`${Math.min(i%3*60,120)}ms`);animationObserver.observe(el)});
   document.querySelectorAll('.kpi').forEach((el,i)=>el.animate([{opacity:.3,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:400,delay:i*45,fill:'backwards',easing:'ease-out'}));
  }
+ document.querySelectorAll('.chart-scroll,.heatmap-scroll').forEach(el=>{el.tabIndex=0;el.setAttribute('role','region');el.setAttribute('aria-label','Gráfico com rolagem: '+(el.closest('.panel')?.querySelector('h2')?.textContent||'detalhamento'))});
  const tooltip=$('chart-tooltip');tooltip.hidden=true;
  const hide=()=>{tooltip.hidden=true};
  document.querySelectorAll('.chart-point,.bubble,.bar-row').forEach(el=>{
