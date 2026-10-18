@@ -1,3 +1,4 @@
+import { setupFormFeedback } from './form-feedback.js?v=20261018.fase1';
 import { caseKey, hasDuplicate, caseReplacement } from "./case-save.js?v=20261016.demo1";
 import { permissionsForAccess } from "./permissions.js?v=20261016.demo1";
 import { setupExports } from "./exports.js?v=20261016.demo1";
@@ -6,7 +7,7 @@ import { readableSnapshot } from "./import-core.js?v=20261016.demo1";
 import { matchesGeneralSearch, sortCases, availableYears, matchesEntryPeriod } from "./case-list.js?v=20261016.demo1";
 import { resolveViolenceData, matchesViolence, violenceOptions } from "./violence.js?v=20261016.demo1";
 import { setupViolenceForm } from "./violence-form.js?v=20261016.demo1";
-import { setupWorkflows } from "./workflow-ui.js?v=20261016.demo1";
+import { setupWorkflows } from "./workflow-ui.js?v=20261018.fase1";
 import { replacementFor, activityText, attendanceSummary } from "./workflow-core.js?v=20261016.demo1";
 import { get, ref, onValue, runTransaction, resetDemo, storageNotice } from "./local-store.js?v=20261016.demo1";
 const database = {};
@@ -20,6 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const appWrapper = $("app-wrapper");
   const caseForm = $("case-form");
   const violenceForm = setupViolenceForm();
+  const caseFeedback = setupFormFeedback(caseForm, control => {
+    const pane = control.closest('.tab-pane');
+    if (pane) {
+      const tab = document.querySelector(`[data-bs-target="#${pane.id}"]`);
+      if (tab) {
+        window.bootstrap?.Tab.getOrCreateInstance(tab).show();
+        tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+      }
+    }
+  });
   const filterIds = ["filtroBusca", "filtroMes", "filtroAno", "filtroSituacao", "filtroViolencia", "filtroViolenciaSexual"];
   const caseTableBody = document.querySelector("#case-table tbody");
   const statusLabels = {
@@ -35,6 +46,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let caseDraft = null;
   let authEpoch = 0;
   const caseSnapshot = () => JSON.stringify([...caseForm.querySelectorAll('input,select,textarea')].map(input => [input.id, input.value, input.checked]));
+  const caseHasChanges = () => !appWrapper.hidden && !$("form-section").hidden && Boolean(caseDraft) && caseSnapshot() !== caseDraft;
+  const warnBeforeUnload = event => { event.preventDefault(); event.returnValue = ''; };
+  let unloadGuard = false;
+  function refreshUnloadGuard() {
+    const pending = savingCase || caseHasChanges() || workflows.hasPendingChanges();
+    if (pending === unloadGuard) return;
+    unloadGuard = pending;
+    window[pending ? 'addEventListener' : 'removeEventListener']('beforeunload', warnBeforeUnload);
+  }
+  document.addEventListener('input', refreshUnloadGuard);
+  document.addEventListener('change', refreshUnloadGuard);
   function canLeaveCase() {
     if (savingCase) return false;
     return $("form-section").hidden || !caseDraft || caseSnapshot() === caseDraft || window.confirm("Sair sem salvar as alterações do prontuário?");
@@ -73,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const titles = { list: ["Controle geral de casos","Acompanhe os prontuários e os indicadores da seleção."], form: [editingKey ? "Editar caso" : "Registrar novo caso","Registre as informações do caso nas etapas abaixo."], agenda: ["Agenda e atendimentos","Quem vamos atender? Consulte datas, técnicos e resultados."], tasks: ["Pendências e retornos","O que precisamos resolver? Acompanhe responsáveis e prazos."] };
     $("page-title").textContent = titles[view][0]; $("page-subtitle").textContent = titles[view][1];
     if (view === 'agenda' || view === 'tasks') workflows.render();
+    refreshUnloadGuard();
     if (view !== "list") window.scrollTo({ top: 0, behavior: "smooth" });
     return true;
   }
@@ -103,7 +126,10 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnCancelarForm").addEventListener("click", () => toggleView("list"));
   $("btnResetDemo").addEventListener("click", () => {
     if (savingCase || !window.confirm('Restaurar os exemplos fictícios? As alterações e importações desta aba serão descartadas. Exporte antes se quiser guardá-las.')) return;
-    try { resetDemo(); location.reload(); } catch (error) { notify(storageMessage(error), 'danger'); }
+    try {
+      resetDemo(); caseDraft = null; caseForm.reset(); violenceForm.fill({}); workflows.reset();
+      toggleView('list', true); location.reload();
+    } catch (error) { notify(storageMessage(error), 'danger'); }
   });
 
   const fieldMap = {
@@ -123,7 +149,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savingCase) return;
     if (!permissions.canWriteCases) { notify("Seu perfil não permite alterar casos.", "warning"); return; }
     if (!auth.currentUser) { notify("Entre novamente para salvar um caso.", "warning"); return; }
-    if (!caseForm.reportValidity()) return;
+    const number = $("numero-prontuario").value.trim();
+    const validation = {};
+    if (!number) validation['numero-prontuario'] = 'Informe o número do prontuário.';
+    else if (number.length > 100) validation['numero-prontuario'] = 'Use até 100 caracteres no prontuário.';
+    if (!caseFeedback.validate(validation)) return;
     const button = $("btnSalvarCaso");
     const fullData = Object.fromEntries(Object.entries(fieldMap).map(([key, id]) => [key, $(id).value.trim()]));
     if (!fullData.situacaoAtual) delete fullData.situacaoAtual;
@@ -133,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("case-save-status").textContent = "";
     controlStates.forEach(([input]) => { input.disabled = true; });
     savingCase = true;
+    refreshUnloadGuard();
     setBusy(button, true);
     try {
       if (!await userCanWrite(uid)) {
@@ -143,6 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (auth.currentUser?.uid !== uid || authEpoch !== epoch) return;
       if (hasDuplicate(records, fullData.numeroProntuario, key)) {
         $("case-save-status").textContent = "Este prontuário já está cadastrado. Abra o caso existente para atualizar.";
+        caseFeedback.show($("numero-prontuario"), $("case-save-status").textContent);
         notify("Este prontuário já está cadastrado. Abra o caso existente para atualizar.", "warning"); return;
       }
       const target = key || await caseKey(fullData.numeroProntuario);
@@ -157,12 +189,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!result.committed) {
         const message = key ? "O caso foi alterado por outra pessoa. Suas alterações continuam no formulário. Confira o registro atualizado antes de tentar novamente."
           : "Este prontuário acabou de ser cadastrado por outra pessoa. Abra o caso existente.";
-        $("case-save-status").textContent = message; notify(message, "warning"); return;
+        $("case-save-status").textContent = message;
+        if (!key) caseFeedback.show($("numero-prontuario"), message);
+        notify(message, "warning"); return;
       }
       notify(key ? "Registro atualizado." : "Novo caso registrado.", "success");
       caseDraft = null; toggleView("list", true);
     } catch (error) { if (auth.currentUser?.uid === uid && authEpoch === epoch) { $("case-save-status").textContent = storageMessage(error); notify(storageMessage(error), "danger"); } }
-    finally { savingCase = false; controlStates.forEach(([input, disabled]) => { input.disabled = disabled; }); setBusy(button, false); }
+    finally { savingCase = false; controlStates.forEach(([input, disabled]) => { input.disabled = disabled; }); setBusy(button, false);
+      refreshUnloadGuard();
+      const firstInvalid = caseForm.querySelector('[aria-invalid="true"]');
+      if (firstInvalid && !$("form-section").hidden) caseFeedback.focus(firstInvalid);
+    }
   });
   $("btnSalvarCaso").type = "submit";
 
@@ -264,6 +302,7 @@ document.addEventListener("DOMContentLoaded", () => {
     editingKey = key;
     editingBase = { ...(record.rawData || record.data) };
     $("case-save-status").textContent = "";
+    caseFeedback.reset();
     $("numero-prontuario").readOnly = true;
     $("numero-prontuario").title = "O número identifica o prontuário e não é alterado nesta ficha. Para corrigir a numeração, solicite revisão administrativa.";
     Object.entries(fieldMap).forEach(([field,id]) => {
@@ -291,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
     snapshot.forEach(child => { const data = child.val(); if (data?.numeroProntuario) records.push({ key: child.key, data }); });
     return records;
   }
-  const workflows = setupWorkflows({getCases:()=>cases,getUser:()=>auth.currentUser,canWrite:userCanWrite,openCase:editCase,notify,navigate:toggleView,
+  const workflows = setupWorkflows({getCases:()=>cases,getUser:()=>auth.currentUser,canWrite:userCanWrite,openCase:editCase,notify,navigate:toggleView,onDraftChange:refreshUnloadGuard,
     saveActivity: async ({caseKey,field,value,expected,uid}) => {
       const epoch=authEpoch;
       if (auth.currentUser?.uid !== uid) throw new Error('Entre novamente para salvar.');
@@ -376,7 +415,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.addEventListener("demo:logout-request", event => {
-    if (savingCase || !canLeaveCase()) event.preventDefault();
+    if (savingCase || !canLeaveCase()) { event.preventDefault(); return; }
+    caseDraft = null; caseForm.reset(); violenceForm.fill({});
+    toggleView('list', true);
   });
   initializeDemo();
   document.documentElement.dataset.demoReady = "true";

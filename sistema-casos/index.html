@@ -12,7 +12,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-<link rel="stylesheet" href="style.css?v=20261016.demo2" />
+<link rel="stylesheet" href="style.css?v=20261018.fase1" />
 </head>
 <body>
 
@@ -47,7 +47,7 @@
 
 </form>
 <p class="mt-3 text-center text-muted" style="font-size: 0.9rem;">
-Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app-version">Versão 20261016.demo2</small>
+Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app-version">Versão 20261018.fase1</small>
 </p>
 </section>
 
@@ -82,7 +82,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <div class="sidebar-art"></div>
 
 <div class="sidebar-footer">
-<small class="app-version">Versão 20261016.demo1</small>
+<small class="app-version">Versão 20261018.fase1</small>
 <button type="button" class="btn theme-toggle w-100" data-theme-toggle aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i><span data-theme-label>Modo noturno</span></button>
 <button id="btnDemoLogout" class="btn btn-logout w-100" type="button"><i class="bi bi-box-arrow-left" aria-hidden="true"></i> Sair da demonstração</button>
 <button id="btnResetDemo" class="btn btn-logout w-100" type="button"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Restaurar demonstração</button>
@@ -235,7 +235,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <label class="form-label">Número do Prontuário <span class="text-danger">*</span></label>
 <div class="input-group">
 <span class="input-group-text"><i class="bi bi-file-text"></i></span>
-<input type="text" id="numero-prontuario" class="form-control" required placeholder="Digite o número" />
+<input type="text" id="numero-prontuario" class="form-control" required maxlength="100" placeholder="Digite o número" />
 </div>
 </div>
 <div class="field-group">
@@ -255,6 +255,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <div class="field-group">
 <label class="form-label">Origem do Caso</label>
 <select id="origem-caso" class="form-select">
+<option value="" selected>Selecione…</option>
 <option value="demanda_criad">Demanda espontânea da CRIAD</option>
 <option value="demanda_responsavel">Demanda espontânea do responsável</option>
 <option value="enc_dercca">Encaminhamento da DERRCA</option>
@@ -269,6 +270,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <div class="field-group">
 <label class="form-label">COR (Etnia/Cor)</label>
 <select id="cor" class="form-select">
+<option value="" selected>Selecione…</option>
 <option value="pardo">Pardo(a)</option>
 <option value="branco">Branco(a)</option>
 <option value="preto">Preto(a)</option>
@@ -289,6 +291,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <div class="field-group">
 <label class="form-label">Situação Atual</label>
 <select id="situacao-atual" class="form-select">
+<option value="" selected>Selecione…</option>
 <option value="ativo">Ativo</option>
 <option value="suspenso">Suspenso</option>
 <option value="encerrado_com_protecao">Encerrado com proteção</option>
@@ -327,6 +330,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <div class="field-group">
 <label class="form-label">Comunicação da Violência</label>
 <select id="comunicacao-violencia" class="form-select">
+<option value="" selected>Selecione…</option>
 <option value="comunicacao_ct">Comunicação ao CT</option>
 <option value="comunicacao_policia">Comunicação à Polícia</option>
 <option value="comunicacao_mp">Comunicação ao MP</option>
@@ -370,6 +374,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <div class="field-group">
 <label class="form-label">Houve retorno solicitado?</label>
 <select id="retorno-solicitado" class="form-select">
+<option value="" selected>Selecione…</option>
 <option value="sim">Sim</option>
 <option value="nao">Não</option>
 </select>
@@ -386,6 +391,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <div class="field-group">
 <label class="form-label">Estudo de Caso elaborado?</label>
 <select id="estudo-caso" class="form-select">
+<option value="" selected>Selecione…</option>
 <option value="sim">Sim</option>
 <option value="nao">Não</option>
 </select>
@@ -393,6 +399,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <div class="field-group">
 <label class="form-label">Plano Individual elaborado?</label>
 <select id="pia-elaborado" class="form-select">
+<option value="" selected>Selecione…</option>
 <option value="sim">Sim</option>
 <option value="nao">Não</option>
 </select>
@@ -436,6 +443,6 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js" defer></script>
-<script id="app-script" type="module" src="script.js?v=20261016.demo2"></script>
+<script id="app-script" type="module" src="script.js?v=20261018.fase1"></script>
 </body>
 </html>

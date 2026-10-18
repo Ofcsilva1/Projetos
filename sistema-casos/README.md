@@ -19,3 +19,21 @@ O cartão da vitrine aponta para `sistema-casos/`. A tela de entrada traz `visit
 ## Executar
 
 Sirva a raiz de `Projetos` com um servidor HTTP e abra `/sistema-casos/`. Não há build. Bootstrap, fontes, ícones e bibliotecas de PDF continuam usando os CDNs da aplicação de origem; o leitor XLSX está em `vendor/` com a licença correspondente.
+
+## Fase 1 — integridade dos formulários
+
+Novos casos iniciam origem, cor, situação, comunicação, retorno, estudo e plano sem uma resposta escolhida. Número do prontuário e data de entrada continuam sendo os únicos campos obrigatórios do cadastro. Valores existentes e importados são preservados.
+
+Erros identificáveis aparecem junto ao campo, com descrição acessível e foco na aba correspondente. Um aviso do navegador protege preenchimento não salvo e gravações pendentes ao recarregar ou sair. O aviso depende do navegador e de interação prévia; não garante recuperação após fechamento forçado. Não há armazenamento de rascunhos.
+
+Registros já salvos continuam no `sessionStorage` e sobrevivem ao recarregamento, como antes. Cancelar, sair ou restaurar após confirmação descarta o preenchimento pendente; restaurar também substitui os registros salvos pelos exemplos fictícios, conforme a confirmação existente.
+
+### Testes
+
+Em `sistema-casos/`, execute `npm ci`, `npx playwright install chromium` e `npm test`. Opcionalmente, `NEXO_BROWSER_PATH` aponta para Chrome/Edge já instalado. Playwright é somente uma dependência de desenvolvimento; o site continua sem build.
+
+A suíte usa um domínio HTTPS interceptado, dados sintéticos e serviços locais do próprio NEXO, sem chamadas externas. As fixtures incluem Bootstrap 5.3.0 para exercitar as oito abas reais. Os testes cobrem persistência por aba, campos neutros, edição de valores importados, validação, recarregamento, cancelamento, saída, falta de espaço, memória temporária e responsividade. Não representam certificação WCAG ou validação em todos os navegadores.
+
+`NEXO_QA_DIR` opcional indica uma pasta fora do repositório para capturas. `NEXO_TEST_ASSETS` opcional aponta para bibliotecas visuais/PDF locais, com os nomes e versões dos CDNs existentes, para capturas completas; nenhuma chamada real é permitida quando ausente.
+
+`NEXO_TEST_ROOT` opcional permite verificar a mesma interface em um pacote estático separado, sem modificar o código-fonte.
