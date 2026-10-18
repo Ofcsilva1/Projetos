@@ -44,7 +44,7 @@ async function fixture(options = {}) {
   page.on('pageerror',error=>page.appErrors.push(error.message));
   page.on('console',message=>{if(message.type()==='error')page.appErrors.push(message.text());});
   page.setDefaultTimeout(15000);
-  await page.goto('https://nexo.test/sistema-casos/');
+  await page.goto('https://nexo.test/sistema-casos/' + (options.hash || ''));
   await page.waitForFunction(()=>document.documentElement.dataset.demoReady==='true');
   if (!options.noLogin) {
     await page.locator('#btnLogin').click();
