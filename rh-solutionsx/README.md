@@ -16,6 +16,16 @@ Abra `index.html` em um navegador moderno. Mantenha todos os arquivos `.js`, `.c
 
 Referência: [Documentação oficial do GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
+## Fase 4 — filtros, interatividade e compartilhamento
+
+Os filtros globais agora incluem cargo e senioridade, além de departamento, UF, modelo de trabalho e status. Barras, legendas, faixas, heatmap, composições, bolhas e comparativos salariais permitem seleção por clique, Enter ou Espaço. As seleções se combinam por interseção, aparecem em etiquetas removíveis e atualizam o mesmo conjunto de registros em KPIs, gráficos, resumos, tabela e CSV. Selecionar novamente a mesma combinação remove seus campos.
+
+Em **Filtrar por datas de movimentação**, escolher admissão, desligamento ou admissão ou desligamento. Os limites são inclusivos, com início/fim opcionais. Usar **Aplicar período** para confirmar a edição; datas invertidas mantêm o último recorte aplicado e mostram erro. O período seleciona pessoas pelas datas de seus eventos: não define a competência de salários, metas, horas extras ou acidentes. Essa distinção permanece visível quando o período está aplicado. Pontos de movimentação anual e barras mensais de desligamento também aplicam seus respectivos recortes; o quadro reconstruído continua descritivo.
+
+**Copiar link** compartilha seção, filtros aplicados, visualização do histórico, agrupamento de segurança e configuração da tabela. Recarregar e usar voltar/avançar restaura o estado. Se a cópia automática não estiver disponível, o painel oferece um campo somente leitura com o endereço selecionável. Parâmetros conhecidos inválidos são ignorados com aviso; parâmetros desconhecidos não são utilizados.
+
+`filter-state.js` separa validação, seleção de registros e codificação da URL da apresentação. A busca continua restrita a grupos da tabela e ao CSV, sem alterar os KPIs. Limpar filtros remove também período, seleções e busca, mantendo seção, agrupamentos e ordenação. A fonte e as fórmulas da Fase 3 permanecem preservadas. Detalhes: [FASE-4.md](FASE-4.md).
+
 ## Fase 3 — indicadores e visualizações analíticas
 
 `metrics.js` reúne os cálculos puros usados por cartões, gráficos, textos, tabela e CSV. Valores ausentes não viram zero: médias, medianas e taxas usam somente números finitos e não negativos. Os indicadores informam os denominadores válidos; a distribuição de metas e o panorama separam os registros sem informação.
@@ -46,12 +56,13 @@ Análises preservadas: faixas etárias, faixas de atingimento das metas, composi
 
 Transições curtas e a entrada dos cartões respeitam a preferência de redução de movimento. O foco foi reforçado nos controles e elementos de gráficos já acessíveis por teclado. As barras em HTML continuam com tooltip por ponteiro; tornar esses tooltips acessíveis por teclado permanece uma melhoria futura. Os gráficos largos mantêm rolagem interna no celular.
 
-Para executar a versão atual, manter `premium.css`, `shell.js`, `theme.js`, `data.js`, `metrics.js`, `analytics.js`, `visuals.js`, `app.js` e a pasta `assets` junto de `index.html`. Não há instalação ou build obrigatório. Histórico da arquitetura visual e validação: [FASE-2.md](FASE-2.md).
+Para executar a versão atual, manter `premium.css`, `shell.js`, `theme.js`, `data.js`, `metrics.js`, `filter-state.js`, `analytics.js`, `visuals.js`, `app.js` e a pasta `assets` junto de `index.html`. Não há instalação ou build obrigatório. Histórico da arquitetura visual e validação: [FASE-2.md](FASE-2.md).
 
 ## Funcionalidades
 
 - Navegação lateral no desktop, menu compacto no celular, marca RH SolutionsX e layout responsivo.
-- Filtros globais de departamento, UF, modelo de trabalho e status.
+- Filtros globais de departamento, cargo, UF, modelo de trabalho, status e senioridade; período por datas de movimentação.
+- Seleção nos gráficos, etiquetas removíveis, links de recorte e restauração pelo histórico do navegador.
 - Cartões de ativos, folha base mensal, pessoas com metas atingidas, horas extras e idade média.
 - Gráfico amplo com alternância entre quadro reconstruído e admissões/desligamentos.
 - Distribuições de gênero, etnia, modelo de trabalho e status.
@@ -77,6 +88,10 @@ Folha base não é receita nem custo total de pessoal. Bônus anual é apresenta
 O site lê uma versão preparada em `data.js`; não atualiza automaticamente quando o Excel é alterado. Para atualizações, será necessário preparar novamente os registros com o mesmo esquema e validar o alinhamento.
 
 ## Verificação realizada
+
+A Fase 4 passou em 42 testes unitários de cálculo/estado, 90 checks de regressão visual/funcional da Fase 2, 48 checks analíticos da Fase 3 e 154 checks específicos de interação com Playwright/Chrome. Foram testados filtros combinados, seleções por teclado, legendas, faixas, composição, heatmap, comparativos, datas inclusivas, período inválido/presente, URL, voltar/avançar, cópia/fallback e CSV do recorte. As novas telas foram conferidas em sete larguras de 320 a 1920 px, inclusive período aberto no celular, sem overflow global. Não houve erros de aplicação capturados. Capturas e ferramentas de navegador ficam fora do checkout.
+
+Executar `npm test` na pasta `rh-solutionsx` roda os 42 testes versionados, sem instalação de dependências externas. Os registros das etapas anteriores seguem abaixo como histórico:
 
 A Fase 3 passou em 21 testes de cálculo com Node, 90 checks de regressão da interface e 48 checks específicos de análise com Playwright no Chrome. Foram reconciliados salários, denominadores e séries históricas; verificados salário médio/mediano por recorte, grupos sem ativos, gráfico de senioridade, tooltip salarial por teclado, tabela e CSV com campos vazios e contagens válidas. Casos sintéticos de nulos foram injetados somente em uma sessão isolada de teste, sem alterar os dados do projeto. Nenhum erro JavaScript foi capturado. As novas análises também foram conferidas em 390 e 320 px e nas capturas de desktop e celular.
 

@@ -1,23 +1,37 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const M=globalThis.RHMetrics;
+const S=globalThis.RHFilterState;
+const filterCatalog=S.catalog(DATA);
+const initialState=S.parse(location.search,filterCatalog);
+let state=initialState.state;
 const fmt=(n,d=0)=>M.valid(n)?n.toLocaleString('pt-BR',{maximumFractionDigits:d,minimumFractionDigits:d}):'—';
 const money=(n,d=0)=>M.valid(n)?n.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:d,minimumFractionDigits:d}):'—';
 const esc=s=>String(s??'Não informado').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sum=M.sum;
 const mean=M.mean;
 const colors=['#3b7d9c','#183e55','#bd965b','#8fa8ac','#bdcac6','#8d897c'];
-const chartState={timeline:'headcount',safety:'Departamento'};
-let tab='overview', tableKey='Departamento', tableSort='n', tableDirection=-1, tableSearch='';
-const filters={department:'Departamento',uf:'UF_Alocacao',model:'Modelo_Trabalho',status:'Status'};
+const chartState={timeline:state.trend,safety:state.safety};
+let tab=state.view, tableKey=state.tableGroup, tableSort=state.sort, tableDirection=state.direction==='asc'?1:-1, tableSearch=state.search;
+const filters={department:'Departamento',job:'Cargo',uf:'UF_Alocacao',model:'Modelo_Trabalho',status:'Status',level:'Nivel_Cargo'};
 for(const [id,key] of Object.entries(filters)){
- $(id).innerHTML='<option value="">Todos</option>'+[...new Set(DATA.map(r=>r[key]))].sort((a,b)=>a.localeCompare(b,'pt-BR')).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
- $(id).onchange=render;
+ $(id).innerHTML='<option value="">Todos</option>'+filterCatalog[id].map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('');
+ $(id).value=state[id];
+ $(id).onchange=()=>applyState({[id]:$(id).value},{message:`Filtro de ${S.labels[id]} atualizado.`});
 }
-const selected=()=>DATA.filter(r=>Object.entries(filters).every(([id,key])=>!$(id).value||r[key]===$(id).value));
+const selected=()=>S.select(DATA,state);
 const groups=M.groups;
+function filterKey(field){return Object.hasOwn(S.labels,field)?field:Object.keys(S.dimensions).find(key=>S.dimensions[key]===field);}
+function selectionAttrs(field,value,extra={}){
+ const key=filterKey(field);
+ if(!key)return 'tabindex="0"';
+ if(S.bands[key])value=Object.keys(S.bands[key]).find(id=>S.bands[key][id]===value)||value;
+ const patch={[key]:S.category(value),...extra};
+ const pressed=Object.entries(patch).every(([k,v])=>state[k]===v);
+ return `role="button" tabindex="0" aria-pressed="${pressed}" data-select-key="${key}" data-select-value="${esc(patch[key])}" data-select-extra="${esc(JSON.stringify(extra))}"`;
+}
 const panel=(title,caption,body,control='')=>`<section class="panel"><div class="panel-head"><div><h2>${title}</h2><p class="caption">${caption}</p></div>${control}</div>${body}</section>`;
-const choice=(id,options,value)=>`<select id="${id}" aria-label="${id==='group'?'Agrupar indicadores por':id==='metric'?'Indicador do gráfico':'Visualização do gráfico'}">${options.map(([v,l])=>`<option value="${v}" ${value===v?'selected':''}>${l}</option>`).join('')}</select>`;
+const choice=(id,options,value)=>`<select id="${id}" aria-label="${id==='table-group'?'Agrupamento da tabela':id==='group'?'Agrupar indicadores por':id==='metric'?'Indicador do gráfico':'Visualização do gráfico'}">${options.map(([v,l])=>`<option value="${v}" ${value===v?'selected':''}>${l}</option>`).join('')}</select>`;
 const dimensions=[['Departamento','Departamento'],['UF_Alocacao','UF'],['Cargo','Cargo']];
 function kpis(rows){
  const s=M.summary(rows);
@@ -29,13 +43,14 @@ function bars(rows,key,metric='count',limit=100){
  const field=({age:'Idade',target:'Meta_Atingida_Pct',salary:'Salario_Base',salaryTotal:'Salario_Base',extra:'Horas_Extra_Mes',extraTotal:'Horas_Extra_Mes'})[metric]||'Acidentes_Trabalho';
  const items=groups(rows,key).map(g=>({...g,v:metric==='count'?g.n:metric==='age'?mean(g.items,'Idade'):metric==='target'?mean(g.items,'Meta_Atingida_Pct'):metric==='salary'?mean(g.items,'Salario_Base'):metric==='extra'?mean(g.items,'Horas_Extra_Mes'):metric==='extraTotal'?sum(g.items,'Horas_Extra_Mes'):metric==='salaryTotal'?sum(g.items,'Salario_Base'):M.summary(g.items).accidents.rate})).sort((a,b)=>(a.v===null)-(b.v===null)||(b.v??0)-(a.v??0)||a.name.localeCompare(b.name)).slice(0,limit);
  const max=Math.max(...items.map(g=>g.v??0),1);
- return items.map(g=>`<div class="bar-row"><span class="bar-label">${esc(g.name)}<small>${g.n} pessoas${metric==='count'?'':' · '+M.values(g.items,field).length+' valores válidos'}${metric==='accident'?' · '+fmt(sum(g.items,'Acidentes_Trabalho'))+' ocorrências':''}</small></span>${g.v===null?'<span class="caption">Sem informação</span>':`<div class="track"><div class="fill" style="width:${g.v/max*100}%;background:${metric==='accident'?'#d99a35':'#1978b8'}"></div></div>`}<span class="bar-value">${['salary','salaryTotal'].includes(metric)?money(g.v):fmt(g.v,metric==='count'?0:1)}${g.v===null?'':({age:' anos',target:'%',extra:' h',extraTotal:' h',accident:''})[metric]||''}</span></div>`).join('')+(groups(rows,key).length>limit?`<p class="caption">Exibindo os ${limit} maiores valores. Todos os grupos estão na tabela.</p>`:'');
+ const detail=g=>`${g.name}: ${g.v===null?'sem informação':['salary','salaryTotal'].includes(metric)?money(g.v):fmt(g.v,metric==='count'?0:1)+({count:' pessoas',age:' anos',target:'%',extra:' h',extraTotal:' h',accident:' ocorrências por 100 com informação'})[metric]}; grupo com ${g.n} pessoas`;
+ return items.map(g=>`<button type="button" class="bar-row" ${selectionAttrs(key,g.name)} aria-label="${esc('Filtrar '+(S.labels[filterKey(key)]||key)+'; '+detail(g))}" data-tip="${esc(detail(g))}"><span class="bar-label">${esc(g.name)}<small>${g.n} pessoas${metric==='count'?'':' · '+M.values(g.items,field).length+' valores válidos'}${metric==='accident'?' · '+fmt(sum(g.items,'Acidentes_Trabalho'))+' ocorrências':''}</small></span>${g.v===null?'<span class="caption">Sem informação</span>':`<span class="track"><span class="fill" style="width:${g.v/max*100}%;background:${metric==='accident'?'#d99a35':'#1978b8'}"></span></span>`}<span class="bar-value">${['salary','salaryTotal'].includes(metric)?money(g.v):fmt(g.v,metric==='count'?0:1)}${g.v===null?'':({age:' anos',target:'%',extra:' h',extraTotal:' h',accident:''})[metric]||''}</span></button>`).join('')+(groups(rows,key).length>limit?`<p class="caption">Exibindo os ${limit} maiores valores. Todos os grupos estão na tabela.</p>`:'');
 }
 function donut(rows,key){
  if(!rows.length)return '<p class="empty">Nenhum registro para este recorte.</p>';
  const gs=groups(rows,key).sort((a,b)=>b.n-a.n);let offset=0;
- const segments=gs.map((g,i)=>{const length=g.n/rows.length*100,start=offset;offset+=length;return `<circle class="donut-segment chart-point" tabindex="0" data-tip="${esc(g.name+': '+g.n+' pessoas ('+fmt(length,1)+'%)')}" cx="70" cy="70" r="52" fill="none" stroke="${colors[i%colors.length]}" stroke-width="19" pathLength="100" stroke-dasharray="${length} ${100-length}" stroke-dashoffset="${-start}" transform="rotate(-90 70 70)" aria-label="${esc(g.name+': '+g.n+' pessoas')}"><title>${esc(g.name)}: ${g.n} pessoas</title></circle>`}).join('');
- return `<div class="donut-wrap"><div class="donut-svg"><svg viewBox="0 0 140 140" role="img" aria-label="${esc(gs.map(g=>g.name+': '+g.n).join(', '))}">${segments}<text x="70" y="70" text-anchor="middle" class="donut-total">${rows.length}</text><text x="70" y="88" text-anchor="middle" class="donut-subtitle">pessoas</text></svg></div><div class="donut-legend">${gs.map((g,i)=>`<div><i style="background:${colors[i%colors.length]}"></i><span>${esc(g.name)}</span><b>${fmt(g.n/rows.length*100,1)}% <small>(${g.n})</small></b></div>`).join('')}</div></div>`;
+ const segments=gs.map((g,i)=>{const length=g.n/rows.length*100,start=offset;offset+=length;return `<circle class="donut-segment chart-point" ${selectionAttrs(key,g.name)} data-tip="${esc(g.name+': '+g.n+' pessoas ('+fmt(length,1)+'%)')}" cx="70" cy="70" r="52" fill="none" stroke="${colors[i%colors.length]}" stroke-width="19" pathLength="100" stroke-dasharray="${length} ${100-length}" stroke-dashoffset="${-start}" transform="rotate(-90 70 70)" aria-label="${esc('Filtrar '+(S.labels[filterKey(key)]||key)+': '+g.name+', '+g.n+' pessoas')}"><title>${esc(g.name)}: ${g.n} pessoas</title></circle>`}).join('');
+ return `<div class="donut-wrap"><div class="donut-svg"><svg viewBox="0 0 140 140" role="group" aria-label="${esc(gs.map(g=>g.name+': '+g.n).join(', '))}">${segments}<text x="70" y="70" text-anchor="middle" class="donut-total">${rows.length}</text><text x="70" y="88" text-anchor="middle" class="donut-subtitle">pessoas</text></svg></div><div class="donut-legend">${gs.map((g,i)=>`<div><button type="button" class="legend-filter" ${selectionAttrs(key,g.name)} aria-label="${esc('Filtrar '+(S.labels[filterKey(key)]||key)+': '+g.name)}"><i style="background:${colors[i%colors.length]}"></i><span>${esc(g.name)}</span><b>${fmt(g.n/rows.length*100,1)}% <small>(${g.n})</small></b></button></div>`).join('')}</div></div>`;
 }
 function timeline(rows,mode='headcount'){
  if(!rows.length)return '<p class="empty">Nenhum registro para este recorte.</p>';
@@ -55,9 +70,9 @@ function timeline(rows,mode='headcount'){
  const area=mode==='headcount'?`<path class="timeline-area" d="${headPath} L ${x(years.length-1)} 265 L ${x(0)} 265 Z" fill="url(#timeline-area-gradient)"/><path class="timeline-curve" d="${headPath}" fill="none" stroke="${colors[0]}" stroke-width="3"/>`:'';
  const labels=series.map((s,si)=>s.values.map((v,i)=>{
   const cx=x(i),cy=y(v),above=mode==='headcount'||((series[0].values[i]>=series[1].values[i])===(si===0)),labelY=cy+(above?-22:20);
-  return `<g class="chart-point timeline-point series-${si}" tabindex="0" aria-label="${s.name} em ${years[i]}: ${v} pessoas" data-tip="${s.name} · ${years[i]}: ${v} pessoas"><circle cx="${cx}" cy="${cy}" r="4.5" fill="${s.color}" stroke-width="2" class="timeline-dot"/><rect class="timeline-label-box" x="${cx-17}" y="${labelY-11}" width="34" height="22" rx="6"/><text class="timeline-value" x="${cx}" y="${labelY+4}" text-anchor="middle" data-value="${v}" data-year="${years[i]}" data-series="${s.name}">${fmt(v)}</text><title>${s.name} · ${years[i]}: ${v} pessoas</title></g>`;
+  return `<g class="chart-point timeline-point series-${si}" tabindex="0" ${mode==='movement'?`role="button" data-period-year="${years[i]}" data-period-basis="${si===0?'admission':'departure'}" aria-pressed="${state.dateBasis===(si===0?'admission':'departure')&&state.from===years[i]+'-01-01'&&state.to===years[i]+'-12-31'}"`:''} aria-label="${mode==='movement'?'Filtrar ':''}${s.name} em ${years[i]}: ${v} pessoas" data-tip="${s.name} · ${years[i]}: ${v} pessoas"><circle cx="${cx}" cy="${cy}" r="4.5" fill="${s.color}" stroke-width="2" class="timeline-dot"/><rect class="timeline-label-box" x="${cx-17}" y="${labelY-11}" width="34" height="22" rx="6"/><text class="timeline-value" x="${cx}" y="${labelY+4}" text-anchor="middle" data-value="${v}" data-year="${years[i]}" data-series="${s.name}">${fmt(v)}</text><title>${s.name} · ${years[i]}: ${v} pessoas</title></g>`;
  }).join('')).join('');
- const svg=`<svg class="chart timeline-chart" viewBox="0 0 960 350" role="img" aria-label="${series.map(s=>s.name).join(' e ')} por ano"><defs><linearGradient id="timeline-area-gradient" x1="0" y1="0" x2="0" y2="1"><stop class="timeline-gradient-stop" offset="0%" stop-color="${colors[0]}" stop-opacity=".32"/><stop class="timeline-gradient-stop" offset="100%" stop-color="${colors[0]}" stop-opacity=".02"/></linearGradient></defs><text x="60" y="16">Colaboradores (n)</text>${Array.from({length:5},(_,i)=>`<line x1="60" x2="920" y1="${y(i*ceiling/4)}" y2="${y(i*ceiling/4)}" stroke="#e7edf2"/><text x="46" y="${y(i*ceiling/4)+4}" text-anchor="end">${i*ceiling/4}</text>`).join('')}${area}${mode==='headcount'?'':series.map(s=>`<polyline points="${s.values.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="3"/>`).join('')}${labels}${years.map((v,i)=>`<text x="${x(i)}" y="310" text-anchor="middle">${v}</text>`).join('')}<text x="920" y="340" text-anchor="end">${mode==='headcount'?'Ano (posição em 31/12)':'Ano das movimentações'}</text></svg>`;
+ const svg=`<svg class="chart timeline-chart" viewBox="0 0 960 350" role="${mode==='movement'?'group':'img'}" aria-label="${series.map(s=>s.name).join(' e ')} por ano"><defs><linearGradient id="timeline-area-gradient" x1="0" y1="0" x2="0" y2="1"><stop class="timeline-gradient-stop" offset="0%" stop-color="${colors[0]}" stop-opacity=".32"/><stop class="timeline-gradient-stop" offset="100%" stop-color="${colors[0]}" stop-opacity=".02"/></linearGradient></defs><text x="60" y="16">Colaboradores (n)</text>${Array.from({length:5},(_,i)=>`<line x1="60" x2="920" y1="${y(i*ceiling/4)}" y2="${y(i*ceiling/4)}" stroke="#e7edf2"/><text x="46" y="${y(i*ceiling/4)+4}" text-anchor="end">${i*ceiling/4}</text>`).join('')}${area}${mode==='headcount'?'':series.map(s=>`<polyline points="${s.values.map((v,i)=>`${x(i)},${y(v)}`).join(' ')}" fill="none" stroke="${s.color}" stroke-width="3"/>`).join('')}${labels}${years.map((v,i)=>`<text x="${x(i)}" y="310" text-anchor="middle">${v}</text>`).join('')}<text x="920" y="340" text-anchor="end">${mode==='headcount'?'Ano (posição em 31/12)':'Ano das movimentações'}</text></svg>`;
  return '<div class=chart-scroll>'+svg+'</div>'+`<div class="legend">${series.map(s=>`<span><i style="background:${s.color}"></i>${s.name}</span>`).join('')}</div><p class="caption">Histórico de ${start} a ${end}, reconstruído somente com as pessoas presentes na base. Pode não refletir o quadro completo da empresa. Os filtros usam o status e os atributos registrados.</p>`;
 }
 function bubbles(rows){
@@ -67,10 +82,10 @@ function bubbles(rows){
  if(!gs.length)return '<p class="empty">Não há pares válidos de horas extras e metas neste recorte.</p>';
  const xmax=Math.max(...gs.map(g=>mean(g.items,'Horas_Extra_Mes')),1)*1.25,ymax=Math.max(...gs.map(g=>mean(g.items,'Meta_Atingida_Pct')),100)*1.18;
  const x=v=>65+v/xmax*790,y=v=>260-v/ymax*215;
- return `<div class="chart-scroll"><svg class="chart" viewBox="0 0 960 320" role="img" aria-label="Horas extras médias por pessoa e atingimento médio de metas por departamento"><text x="65" y="18">Atingimento médio das metas (%)</text>${Array.from({length:5},(_,i)=>`<line x1="65" x2="855" y1="${y(ymax*i/4)}" y2="${y(ymax*i/4)}" stroke="#e7edf2"/><text x="52" y="${y(ymax*i/4)+4}" text-anchor="end">${fmt(ymax*i/4)}</text><text x="${x(xmax*i/4)}" y="282" text-anchor="middle">${fmt(xmax*i/4,1)}</text>`).join('')}<line x1="65" x2="855" y1="${y(100)}" y2="${y(100)}" stroke="#d99a35" stroke-dasharray="5 5"/><text x="864" y="${y(100)+4}">100%</text>${gs.map((g,i)=>`<circle class="bubble" tabindex="0" aria-label="${esc(g.name)}: ${g.n} pessoas, ${fmt(mean(g.items,'Horas_Extra_Mes'),1)} horas extras médias e ${fmt(mean(g.items,'Meta_Atingida_Pct'),1)}% de meta" cx="${x(mean(g.items,'Horas_Extra_Mes'))}" cy="${y(mean(g.items,'Meta_Atingida_Pct'))}" r="${Math.sqrt(g.n)*6}" fill="${colors[i%colors.length]}" opacity=".75"><title>${esc(g.name)} · n=${g.n} · ${fmt(mean(g.items,'Horas_Extra_Mes'),1)} h/pessoa · meta média ${fmt(mean(g.items,'Meta_Atingida_Pct'),1)}%</title></circle>`).join('')}<text x="855" y="310" text-anchor="end">Horas extras médias por pessoa (h/mês)</text></svg></div><p class="caption">Área da bolha proporcional às pessoas com pares válidos de horas extras e meta. Passe o cursor ou foque uma bolha para identificá-la. Relação descritiva, sem inferência de causa.</p><div class="legend">${gs.map((g,i)=>`<span><i style="background:${colors[i%colors.length]}"></i>${esc(g.name)}</span>`).join('')}</div>`;
+ return `<div class="chart-scroll"><svg class="chart" viewBox="0 0 960 320" role="group" aria-label="Horas extras médias por pessoa e atingimento médio de metas por departamento"><text x="65" y="18">Atingimento médio das metas (%)</text>${Array.from({length:5},(_,i)=>`<line x1="65" x2="855" y1="${y(ymax*i/4)}" y2="${y(ymax*i/4)}" stroke="#e7edf2"/><text x="52" y="${y(ymax*i/4)+4}" text-anchor="end">${fmt(ymax*i/4)}</text><text x="${x(xmax*i/4)}" y="282" text-anchor="middle">${fmt(xmax*i/4,1)}</text>`).join('')}<line x1="65" x2="855" y1="${y(100)}" y2="${y(100)}" stroke="#d99a35" stroke-dasharray="5 5"/><text x="864" y="${y(100)+4}">100%</text>${gs.map((g,i)=>`<circle class="bubble" ${selectionAttrs('Departamento',g.name)} aria-label="Filtrar departamento ${esc(g.name)}: ${g.n} pessoas, ${fmt(mean(g.items,'Horas_Extra_Mes'),1)} horas extras médias e ${fmt(mean(g.items,'Meta_Atingida_Pct'),1)}% de meta" cx="${x(mean(g.items,'Horas_Extra_Mes'))}" cy="${y(mean(g.items,'Meta_Atingida_Pct'))}" r="${Math.sqrt(g.n)*6}" fill="${colors[i%colors.length]}" opacity=".75"><title>${esc(g.name)} · n=${g.n} · ${fmt(mean(g.items,'Horas_Extra_Mes'),1)} h/pessoa · meta média ${fmt(mean(g.items,'Meta_Atingida_Pct'),1)}%</title></circle>`).join('')}<text x="855" y="310" text-anchor="end">Horas extras médias por pessoa (h/mês)</text></svg></div><p class="caption">Área da bolha proporcional às pessoas com pares válidos de horas extras e meta. Passe o cursor ou foque uma bolha para identificá-la. Relação descritiva, sem inferência de causa.</p><div class="legend">${gs.map((g,i)=>`<span><i style="background:${colors[i%colors.length]}"></i>${esc(g.name)}</span>`).join('')}</div>`;
 }
 function table(rows){
- return panel('Detalhamento por grupo','Totais, médias e medianas do recorte. As colunas n informam os denominadores válidos. Clique no cabeçalho para ordenar.',`<div class="table-tools"><label class="sr-only" for="table-group">Agrupamento da tabela</label>${choice('table-group',dimensions,tableKey)}<label class="sr-only" for="table-search">Buscar grupo</label><input id="table-search" placeholder="Buscar grupo…" value="${esc(tableSearch)}"></div><div class="table-wrap" id="table-body"></div>`);
+ return panel('Detalhamento por grupo','Totais, médias e medianas do recorte. As colunas n informam os denominadores válidos. Clique no cabeçalho para ordenar.',`<div class="table-tools"><label class="sr-only" for="table-group">Agrupamento da tabela</label>${choice('table-group',dimensions,tableKey)}<label class="sr-only" for="table-search">Buscar grupo</label><input id="table-search" name="search" autocomplete="off" maxlength="120" placeholder="Buscar grupo…" value="${esc(tableSearch)}"><span class="table-search-note">A busca afeta apenas a tabela e o CSV.</span></div><div class="table-wrap" id="table-body"></div>`);
 }
 function tableData(rows){
  return groups(rows,tableKey).map(g=>{
@@ -86,12 +101,13 @@ const columns=[['name','Grupo'],['n','Pessoas'],['age','Idade média'],['extra',
 function updateTable(){
  const data=tableData(selected());
  $('table-body').innerHTML=`<table><caption class="sr-only">Resumo agregado por ${tableKey}. As colunas n informam os registros com valores válidos de cada indicador.</caption><thead><tr>${columns.map(([k,l])=>`<th scope="col" aria-sort="${tableSort===k?(tableDirection===1?'ascending':'descending'):'none'}"><button data-sort="${k}">${l} ${tableSort===k?(tableDirection===1?'↑':'↓'):'↕'}</button></th>`).join('')}</tr></thead><tbody>${data.map(g=>`<tr>${columns.map(([k])=>`<td>${k==='name'?esc(g[k]):['salary','salaryMean','salaryMedian'].includes(k)?money(g[k],k==='salary'?0:2):fmt(g[k],['age','extraMean','rate','target'].includes(k)?1:0)}</td>`).join('')}</tr>`).join('')}</tbody></table>${data.length?'':'<p class="empty">Nenhum grupo encontrado.</p>'}`;
- document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{tableDirection=tableSort===b.dataset.sort?-tableDirection:-1;tableSort=b.dataset.sort;updateTable()});
+ document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{const key=b.dataset.sort;const direction=tableSort===key&&tableDirection===-1?'asc':'desc';applyState({sort:key,direction},{tableOnly:true,focusSort:key})});
 }
 function method(){return panel('Como interpretar os indicadores','Fonte: planilha de RH Enterprise fornecida para este portfólio.',`<div class="method-copy"><p>Os 100 registros são fictícios, conforme informado pelo autor. A base reúne atributos de pessoas, admissões entre 2014 e 2023 e desligamentos entre 2023 e 2024. A competência de salários, metas, horas extras e acidentes não foi informada. O painel não atribui esses indicadores a um mês ou ano específico.</p><h3>Definições e denominadores</h3><ul><li><strong>Colaboradores ativos:</strong> contagem de registros com Status = Ativo, respeitando os filtros.</li><li><strong>Folha base mensal:</strong> soma do salário base dos ativos. Não inclui bônus, benefícios, encargos ou custo de horas extras.</li><li><strong>Meta ≥ 100%:</strong> pessoas com atingimento válido maior ou igual a 100 dividido pelo número de pessoas com meta válida. Meta média é outro indicador: média aritmética do percentual individual.</li><li><strong>Ocorrências por 100 pessoas:</strong> soma de acidentes válidos ÷ pessoas com informação válida de acidentes × 100. Não é percentual de acidentados, nem taxa de frequência por horas de exposição. O período dos acidentes não consta na base.</li><li><strong>Horas extras:</strong> soma de horas no mês registrado, cuja competência não foi informada. A média divide essa soma pelas pessoas com horas válidas.</li><li><strong>Idade média:</strong> média aritmética das idades válidas registradas, sem atualização pelo calendário.</li><li><strong>Bônus anual:</strong> soma dos bônus dos ativos. Não é somado diretamente à folha mensal.</li><li><strong>Desligamentos:</strong> contagem dos registros desligados no histórico disponível. Participação entre os registros não representa turnover.</li></ul><h3>Limites e próximos dados necessários</h3><p>A linha histórica reconstrói somente as pessoas presentes na amostra; não comprova o quadro histórico completo. Para calcular turnover por período, obter o quadro inicial e final completo, as admissões e os desligamentos do mesmo período. Para evoluções de folha, metas e horas extras, incluir snapshots mensais. Para frequência de acidentes, incluir horas de exposição e datas das ocorrências. Para análise salarial comparável, considerar cargo, nível e jornada, além de gênero e etnia.</p><p>Os filtros globais afetam os gráficos, cartões, texto e tabelas. O filtro de status usa o status atual registrado, inclusive na reconstrução histórica. A busca da tabela afeta apenas a tabela e o CSV. O CSV exporta o agrupamento e a ordenação escolhidos.</p></div>`);}
 const titles={overview:['Pessoas em perspectiva.','Uma visão integrada de equipe, resultados e bem-estar.'],people:['Diversidade que se enxerga.','Composição da equipe, distribuição etária e modelos de trabalho.'],performance:['Resultados & investimento.','Metas, remuneração e esforço das equipes no recorte disponível.'],safety:['Um olhar para a segurança.','Ocorrências e tamanho das equipes, lado a lado.'],departures:['Entender as saídas.','Motivos e distribuição dos desligamentos registrados na base.'],method:['Dados com contexto.','Definições, tratamento e limites para uma leitura transparente.']};
 function render(){
  const rows=selected();$('scope').textContent=`${rows.length} de ${DATA.length} registros`;
+ renderFilterState();
  $('page-title').textContent=titles[tab][0];$('page-subtitle').textContent=titles[tab][1];
  document.querySelectorAll('[data-tab]').forEach(b=>{b.removeAttribute('aria-current');if(b.dataset.tab===tab)b.setAttribute('aria-current','page')});
  persistentSummary(rows);
@@ -130,20 +146,116 @@ function render(){
    `<div class="grid equal">${panel('Perfil etário das saídas','As faixas de idade dos desligamentos registrados.',ageDistribution(exits))}${panel('Modelo de trabalho nas saídas','A composição dos modelos de trabalho entre as pessoas desligadas.',donut(exits,'Modelo_Trabalho'))}</div>`+
    `<div class="notice">As saídas são contagens do histórico disponível. O quadro completo por período é necessário para calcular turnover.</div>`;
  }
- if(tab==='method')html=method()+metricMethod();
+ if(tab==='method')html=method()+metricMethod()+interactionMethod();
  $('content').innerHTML=html+(tab==='method'?'':table(rows));
- if($('timeline-mode'))$('timeline-mode').onchange=()=>{chartState.timeline=$('timeline-mode').value;$('timeline').innerHTML=timeline(selected(),chartState.timeline);activateVisuals()};
- if($('group'))$('group').onchange=()=>{chartState.safety=$('group').value;$('safety-bars').innerHTML=bars(selected(),chartState.safety,'accident');activateVisuals()};
- if($('table-group')){$('table-group').onchange=()=>{tableKey=$('table-group').value;updateTable()};$('table-search').oninput=()=>{tableSearch=$('table-search').value;updateTable()};updateTable()}
+ if($('timeline-mode'))$('timeline-mode').onchange=()=>applyState({trend:$('timeline-mode').value},{focusId:'timeline-mode'});
+ if($('group'))$('group').onchange=()=>applyState({safety:$('group').value},{focusId:'group'});
+ if($('table-group')){$('table-group').onchange=()=>applyState({tableGroup:$('table-group').value},{tableOnly:true});$('table-search').oninput=()=>applyState({search:$('table-search').value},{tableOnly:true,replace:true});updateTable()}
  compactPanels();updateInsights(rows,tab);activateVisuals();
 }
 
-document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;render()});
-$('reset').onclick=()=>{Object.keys(filters).forEach(id=>$(id).value='');tableSearch='';render()};
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>applyState({view:b.dataset.tab}));
+$('reset').onclick=()=>applyState(S.cleared(state),{syncPeriod:true,closePeriod:true,message:'Filtros e busca limpos. Todos os registros estão disponíveis.'});
 $('export').onclick=()=>{
  const data=tableData(selected());
  const quote=s=>'"'+String(s).replaceAll('"','""')+'"';
  const csv='\uFEFF'+[columns.map(c=>quote(c[1])).join(';'),...data.map(r=>columns.map(([k])=>quote(typeof r[k]==='number'?String(Math.round(r[k]*100)/100).replace('.',','):r[k]??'')).join(';'))].join('\r\n');
  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));const a=document.createElement('a');a.href=url;a.download='rh-solutionsx-resumo.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ $('interaction-status').textContent=`CSV gerado com ${data.length} grupos do recorte aplicado. A busca da tabela também foi respeitada.`;
 };
-render();
+
+function synchronizeState(){
+ tab=state.view;tableKey=state.tableGroup;tableSort=state.sort;tableDirection=state.direction==='asc'?1:-1;tableSearch=state.search;
+ chartState.timeline=state.trend;chartState.safety=state.safety;
+ for(const id of Object.keys(filters))$(id).value=state[id];
+}
+function synchronizePeriod(){
+ $('date-basis').value=state.dateBasis;$('date-start').value=state.from;$('date-end').value=state.to;
+ $('date-start').disabled=$('date-end').disabled=state.dateBasis==='none';
+ $('period-error').textContent='';$('period-status').textContent='';
+ $('date-start').removeAttribute('aria-invalid');$('date-end').removeAttribute('aria-invalid');
+ if(state.dateBasis!=='none')$('period-details').open=true;
+}
+function shareURL(){const url=new URL(location.href);url.search=S.serialize(state);return url.href;}
+function writeURL(replace=false){
+ const url=new URL(shareURL());
+ if(url.href===location.href)return;
+ try{history[replace?'replaceState':'pushState'](null,'',url.href)}catch{
+  $('interaction-status').textContent='O endereço não pôde ser atualizado. Os filtros continuam funcionando nesta página.';
+ }
+}
+function renderFilterState(){
+ const chips=S.describe(state);
+ $('active-filters').innerHTML=chips.length?chips.map(c=>`<button type="button" class="filter-chip" data-remove-filter="${c.key}" aria-label="${esc('Remover filtro '+c.label)}">${esc(c.label)}<span aria-hidden="true">×</span></button>`).join(''):'<span class="no-filters">Nenhum filtro global ativo</span>';
+ $('period-badge').textContent=state.dateBasis!=='none'?'Aplicado':'';
+ const temporal=state.dateBasis!=='none'||Boolean(state.exitMonth);
+ $('period-context').hidden=!temporal;
+ $('period-context').textContent=temporal?'O período seleciona pessoas pelas datas de movimentação. Salários, metas, horas extras e acidentes são os valores registrados dessas pessoas; não representam a competência do período selecionado.':'';
+ if(!$('share-link-box').hidden)$('share-link').value=shareURL();
+}
+function applyState(patch,options={}){
+ state=S.normalize({...state,...patch},filterCatalog).state;
+ synchronizeState();
+ if(options.syncPeriod)synchronizePeriod();
+ if(options.closePeriod)$('period-details').open=false;
+ $('interaction-status').textContent=options.message??'';
+ writeURL(options.replace);
+ if(options.tableOnly)updateTable();else render();
+ if(!$('share-link-box').hidden)$('share-link').value=shareURL();
+ if(options.focusId)$(options.focusId)?.focus({preventScroll:true});
+ if(options.focusSort)document.querySelector(`[data-sort="${options.focusSort}"]`)?.focus({preventScroll:true});
+ if(options.focusChip){
+  const target=[...$('active-filters').querySelectorAll('[data-remove-filter]')].find(el=>el.dataset.removeFilter===options.focusChip);
+  (target||$('reset')).focus();
+ }
+}
+$('active-filters').addEventListener('click',event=>{
+ const button=event.target.closest('[data-remove-filter]');if(!button)return;
+ const key=button.dataset.removeFilter;
+ const patch=key==='period'?{dateBasis:'none',from:'',to:''}:{[key]:''};
+ applyState(patch,{syncPeriod:key==='period',focusChip:key,message:'Filtro removido. Os demais filtros continuam aplicados.'});
+});
+function selectChart(element){
+ if(element.dataset.periodYear){
+  const year=element.dataset.periodYear,basis=element.dataset.periodBasis;
+  applyState({dateBasis:basis,from:year+'-01-01',to:year+'-12-31'},{syncPeriod:true,focusChip:'period',message:'Período aplicado a partir do gráfico de movimentações.'});
+  return;
+ }
+ const key=element.dataset.selectKey;if(!key)return;
+ let extra={};try{extra=JSON.parse(element.dataset.selectExtra||'{}')}catch{return}
+ const patch={[key]:element.dataset.selectValue,...extra};
+ const same=Object.entries(patch).every(([k,v])=>state[k]===v);
+ applyState(same?Object.fromEntries(Object.keys(patch).map(k=>[k,''])):patch,{focusChip:key,message:same?'Seleção do gráfico removida.':'Seleção do gráfico aplicada. Todos os indicadores usam o mesmo recorte.'});
+}
+const selectable='[data-select-key], [data-period-year]';
+$('content').addEventListener('click',event=>{const target=event.target.closest(selectable);if(target)selectChart(target)});
+$('content').addEventListener('keydown',event=>{
+ const target=event.target.closest(selectable);
+ if(target&&target.tagName.toLowerCase()!=='button'&&(event.key==='Enter'||event.key===' ')){event.preventDefault();selectChart(target)}
+});
+for(const id of ['date-basis','date-start','date-end'])$(id).addEventListener('input',()=>{
+ const disabled=$('date-basis').value==='none';$('date-start').disabled=$('date-end').disabled=disabled;
+ $('period-error').textContent='';$('period-status').textContent='Período editado. Use Aplicar período para atualizar os resultados.';
+ $('date-start').removeAttribute('aria-invalid');$('date-end').removeAttribute('aria-invalid');
+});
+$('period-form').addEventListener('submit',event=>{
+ event.preventDefault();
+ const dateBasis=$('date-basis').value;
+ const patch={dateBasis,from:dateBasis==='none'?'':$('date-start').value,to:dateBasis==='none'?'':$('date-end').value};
+ const error=[$('date-start'),$('date-end')].some(input=>input.validity.badInput)?'Informe datas válidas no calendário.':S.validatePeriod(patch);
+ if(error){$('period-error').textContent=error+' Os resultados continuam no último recorte aplicado.';$('period-status').textContent='';$('date-start').setAttribute('aria-invalid','true');$('date-end').setAttribute('aria-invalid','true');$('date-start').focus();return}
+ applyState(patch,{syncPeriod:true,message:dateBasis==='none'?'Filtro de período removido.':'Período aplicado às datas de movimentação. As competências dos valores não foram alteradas.'});
+});
+$('share').onclick=async()=>{
+ const url=shareURL();
+ try{if(!navigator.clipboard?.writeText)throw new Error('clipboard unavailable');await navigator.clipboard.writeText(url);$('share-link-box').hidden=true;$('interaction-status').textContent='Link do recorte aplicado copiado. Ele inclui a seção, os filtros e a configuração da tabela.'}catch{
+  $('share-link-box').hidden=false;$('share-link').value=url;$('share-link').focus();$('share-link').select();
+  $('interaction-status').textContent='Não foi possível copiar automaticamente. O link está selecionado para copiar.';
+ }
+};
+addEventListener('popstate',()=>{
+ const restored=S.parse(location.search,filterCatalog);state=restored.state;synchronizeState();synchronizePeriod();render();
+ $('interaction-status').textContent='Recorte restaurado pelo histórico do navegador.';
+});
+synchronizeState();synchronizePeriod();writeURL(true);render();
+if(initialState.warnings.length)$('interaction-status').textContent='Alguns parâmetros do link eram inválidos e foram ignorados. Confira os filtros ativos.';

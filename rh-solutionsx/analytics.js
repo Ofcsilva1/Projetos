@@ -23,7 +23,7 @@ function salaryComparison(rows, field, limit=100) {
   <div class="salary-group"><strong>${esc(g.name)}</strong><small>${g.stats.n} salários válidos / ${g.n} ativos</small></div>
   <div class="salary-dual">${[['Média','mean'],['Mediana','median']].map(([label,key])=>{
    const value=g.stats[key],text=`${g.name}: ${label.toLowerCase()} ${money(value,2)}, n=${g.stats.n}`;
-   return `<div class="salary-series chart-point" tabindex="0" aria-label="${esc(text)}" data-tip="${esc(text)}"><span>${label}</span>${value===null?'<span class="caption">Sem informação</span>':`<div class="track"><div class="fill ${key}" style="width:${value/max*100}%"></div></div>`}<strong>${money(value,2)}</strong></div>`;
+   return `<div class="salary-series chart-point" ${selectionAttrs(field,g.name)} aria-label="${esc('Filtrar '+(S.labels[filterKey(field)]||field)+': '+text)}" data-tip="${esc(text)}"><span>${label}</span>${value===null?'<span class="caption">Sem informação</span>':`<div class="track"><div class="fill ${key}" style="width:${value/max*100}%"></div></div>`}<strong>${money(value,2)}</strong></div>`;
   }).join('')}</div></div>`).join('')}</div>`+
   (all.length>limit?`<p class="caption">Exibindo ${limit} de ${all.length} cargos, ordenados pela média. Veja todos os grupos na tabela.</p>`:'');
 }
@@ -41,4 +41,19 @@ function metricMethod() {
  <li><strong>Histórico:</strong> contagens anuais da amostra. Em 31/12, contar admissões até essa data e saídas posteriores; quem sai em 31/12 já não integra a posição final. Datas inválidas são excluídas. Os atributos e o status dos filtros são os registrados, não snapshots históricos.</li>
  <li><strong>Precisão:</strong> cálculos usam os valores sem arredondamento intermediário. Médias e medianas salariais são exibidas com duas casas; CSV arredonda números para duas casas e representa valores indisponíveis por campos vazios. As colunas “n” informam os denominadores válidos.</li>
  </ul><p>Turnover, comparações mensais de folha, variações entre competências e tempo de empresa continuam dependentes de informações adicionais. Não foram estimados para preencher o painel.</p></div>`);
+}
+function interactionMethod() {
+ return panel('Como explorar e compartilhar o recorte','Filtros globais, datas de movimentação e busca da tabela têm escopos explícitos.',
+ `<div class="method-copy"><ul>
+ <li><strong>Interseção:</strong> departamento, cargo, UF, modelo de trabalho, status, senioridade e seleções dos gráficos precisam ser atendidos simultaneamente. KPIs, gráficos, textos e tabela recebem o mesmo conjunto de registros.</li>
+ <li><strong>Datas:</strong> escolha admissão, desligamento ou admissão ou desligamento. Os limites inicial e final são inclusivos e podem ficar abertos. Em “ou”, uma pessoa entra uma única vez, mesmo tendo os dois eventos no período.</li>
+ <li><strong>Coorte, não competência:</strong> o período seleciona pessoas por suas movimentações. Salários, metas, horas extras e acidentes permanecem os valores registrados dessas pessoas; não são valores históricos do período escolhido. O filtro de desligamento exige status desligado e datas válidas em ordem cronológica.</li>
+ <li><strong>Aplicar período:</strong> editar os campos não muda resultados nem o link até a aplicação. Uma faixa invertida mostra erro e mantém o recorte anterior. Copiar link ou exportar sempre usa o recorte aplicado.</li>
+ <li><strong>Seleção nos gráficos:</strong> clique, Enter ou Espaço aplica filtros. Repetir a mesma seleção remove seus campos. Composições e heatmap podem aplicar duas dimensões juntas. As etiquetas permitem remover cada filtro separadamente.</li>
+ <li><strong>Movimentações:</strong> pontos anuais de admissões ou desligamentos aplicam o respectivo ano e tipo de evento. A posição de quadro reconstruído permanece descritiva. Barras mensais filtram o mês de desligamento.</li>
+ <li><strong>Faixa salarial:</strong> seleciona somente ativos com salário válido, pois essa distribuição usa essa população. Os comparativos por cargo ou departamento selecionam a categoria no recorte geral; não acrescentam status implicitamente.</li>
+ <li><strong>Tabela e CSV:</strong> busca de grupos, agrupamento e ordenação afetam somente a tabela e a exportação. A busca não altera KPIs ou gráficos. O CSV mantém as 16 colunas da Fase 3.</li>
+ <li><strong>Link:</strong> contém seção, filtros aplicados, visualização do histórico, agrupamento de segurança e configuração da tabela. Recarregar ou usar voltar/avançar restaura esse estado. Campos inválidos no link são ignorados com aviso. Tema, menu aberto e edição de período ainda não aplicada não fazem parte do link.</li>
+ <li><strong>Limpar:</strong> remove filtros globais, datas e busca; mantém a seção, os agrupamentos e a ordenação escolhida.</li>
+ </ul></div>`);
 }
