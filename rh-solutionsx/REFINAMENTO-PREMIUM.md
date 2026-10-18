@@ -14,7 +14,7 @@ A lista de cargos oferece Top 12, Top 24 e Todos, além de busca que considera t
 
 ## Organização e identidade
 
-- Visão geral: KPIs e histórico preservados; rankings mais curtos e grupos explícitos.
+- Visão geral: KPIs e histórico preservados; equipe, vínculos e modelos de trabalho formam três colunas no desktop amplo. Em telas menores, o grupo se reorganiza. O ranking executivo omite apenas a repetição da contagem auxiliar, pois o mesmo valor permanece à direita, no tooltip e na tabela.
 - Pessoas: composição, idade/geografia e cargos/senioridade com densidade equilibrada. Composições longas têm rolagem interna acessível.
 - Desempenho: remuneração compacta primeiro, seguida de esforço/metas, heatmap, horas, folha e distribuições. Todos os indicadores anteriores permanecem.
 - Segurança: estado e pessoas com/sem ocorrência formam o par compacto; cargos e horas extras formam o par denso. O ranking contextual limita a altura, inclusive ao agrupar por todos os cargos.
@@ -34,7 +34,7 @@ Medições com viewport 1440 px, base completa e sem filtros, nos dois temas:
 - Pessoas: altura total de 6.303 para 4.295 px; maior diferença entre cartões pareados de 491 para 70 px.
 - Desempenho: altura total de 7.469 para 5.003 px; diferenças entre cartões pareados até aproximadamente 25 px. Cartão de cargos abaixo de 700 px.
 - Segurança: altura total de 4.014 para 2.913 px; maior diferença entre cartões pareados de 469 para aproximadamente 25 px.
-- Visão geral: 4.866 para 3.951 px. Desligamentos: 3.912 para 3.326 px.
+- Visão geral: 4.866 para 3.758 px, com diferença de 57 px entre os três cartões de equipe/vínculos/modelos. Desligamentos: 3.912 para 3.326 px.
 
 São medições desta amostra e viewport, não garantias para qualquer categoria/texto ou configuração. A redução combina organização, altura limitada de listas e comparação salarial; não representa remoção de dados.
 
