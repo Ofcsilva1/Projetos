@@ -16,27 +16,27 @@ Abra `index.html` em um navegador moderno. Mantenha todos os arquivos `.js`, `.c
 
 Referência: [Documentação oficial do GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
-## Atualização visual e analítica
+## Fase 2 — arquitetura visual e design system
 
 O histórico de quadro no fim do ano usa um gráfico de área com degradê, curva suave e rótulos de dados nos pontos anuais. A suavização é apenas visual: os valores representam posições anuais reconstruídas. A opção de admissões e desligamentos mantém duas séries com rótulos separados para cada ano.
 
-Os filtros usam campos arredondados com superfície própria e destaque de foco. Painéis, cartões e áreas internas dos gráficos têm contraste reforçado com a página, especialmente no modo escuro, com fundos azulados mais claros, contornos suaves e textos mais legíveis.
+Os estilos ativos estão centralizados em `premium.css`, com tokens de cores, superfícies, espaçamento, bordas e foco para os dois temas. `styles.css`, `refinement.css` e `finishing.css` foram preservados como referência da versão anterior, mas não são carregados pelo HTML atual.
 
-Modo claro e modo escuro disponíveis no topo. Na primeira visita, o tema acompanha a preferência do sistema; a escolha manual fica salva no navegador. Os gráficos menores são agrupados em colunas com altura natural, evitando painéis esticados com grandes áreas vazias. Os avisos sobre formatos de avaliação foram retirados da interface. O tratamento original dos dados segue documentado neste README.
+Modo claro e modo escuro disponíveis no topo. Na primeira visita, o tema acompanha a preferência do sistema; a escolha manual fica salva no navegador. A navegação lateral reúne as seis seções no desktop. Até 900 px, um botão abre a navegação; Escape fecha o menu e devolve o foco ao botão. Selecionar uma seção fecha o menu e leva o foco ao conteúdo.
 
-A visão geral reúne dez visualizações, cinco cartões e um panorama executivo com os principais destaques do recorte. Uma faixa de resumo acompanha a rolagem e permanece disponível em todas as abas. No celular, ela mostra os três indicadores principais para ocupar menos espaço.
+A visão geral preserva dez visualizações e cinco cartões. A ordem de leitura começa pelos KPIs, segue para o histórico e apresenta o panorama executivo em formato compacto. No desktop, o resumo fixo aparece apenas depois que os KPIs saem da tela. No celular, permanece oculto para preservar a área de leitura. Ele não aparece na metodologia.
 
-A navegação está centralizada. O visual usa superfícies claras, tons suaves, sombras discretas e uma composição curva no panorama executivo. Não há login. Subtítulos e resumos foram reescritos em linguagem natural.
+O sistema usa azul institucional, cinza claro, superfícies planas e ícones SVG locais. A tipografia usa fontes do sistema, sem downloads externos. `shell.js` contém somente o comportamento do menu e a apresentação do resumo fixo. Dados, denominadores e fórmulas não foram alterados nesta fase. O cartão RH SolutionsX na vitrine do portfólio também foi atualizado, mantendo seu endereço.
 
-Novas análises: faixas etárias, faixas de atingimento das metas, composição de gênero e de modelos de trabalho por departamento, mapa de metas por equipe, faixas salariais, folha e bônus por departamento, acidentes por estado e cargo, pessoas com e sem ocorrências, desligamentos mensais e perfil das saídas.
+Análises preservadas: faixas etárias, faixas de atingimento das metas, composição de gênero e de modelos de trabalho por departamento, mapa de metas por equipe, faixas salariais, folha e bônus por departamento, acidentes por estado e cargo, pessoas com e sem ocorrências, desligamentos mensais e perfil das saídas.
 
-Animações de entrada, barras, linhas, roscas e bolhas respeitam a preferência de redução de movimento. Os gráficos têm informações ao passar o cursor e nos elementos acessíveis por teclado. Roscas em SVG e estilos de impressão preservam melhor os preenchimentos na exportação do navegador para PDF.
+Transições curtas e a entrada dos cartões respeitam a preferência de redução de movimento. O foco foi reforçado nos controles e elementos de gráficos já acessíveis por teclado. As barras em HTML continuam com tooltip por ponteiro; tornar esses tooltips acessíveis por teclado permanece uma melhoria futura. Os gráficos largos mantêm rolagem interna no celular.
 
-Os arquivos `visuals.js` e `refinement.css` também devem acompanhar `index.html` na publicação.
+Para executar a versão atual, manter `premium.css`, `shell.js`, `theme.js`, `data.js`, `visuals.js`, `app.js` e a pasta `assets` junto de `index.html`. Não há instalação ou build obrigatório. Detalhes e validação: [FASE-2.md](FASE-2.md).
 
 ## Funcionalidades
 
-- Navegação superior, marca RH SolutionsX e layout responsivo.
+- Navegação lateral no desktop, menu compacto no celular, marca RH SolutionsX e layout responsivo.
 - Filtros globais de departamento, UF, modelo de trabalho e status.
 - Cartões de ativos, folha base mensal, pessoas com metas atingidas, horas extras e idade média.
 - Gráfico amplo com alternância entre quadro reconstruído e admissões/desligamentos.
@@ -61,6 +61,10 @@ Folha base não é receita nem custo total de pessoal. Bônus anual é apresenta
 O site lê uma versão preparada em `data.js`; não atualiza automaticamente quando o Excel é alterado. Para atualizações, será necessário preparar novamente os registros com o mesmo esquema e validar o alinhamento.
 
 ## Verificação realizada
+
+A Fase 2 passou em 90 checks com Playwright no Chrome: totais gerais, recorte Tecnologia, combinação vazia, limpeza de filtros, seis seções, ordenação e pesquisa da tabela, CSV filtrado gravado e lido, tema persistente, resumo durante rolagem, menu por teclado, Escape, link para pular conteúdo e movimento reduzido. Conferidas larguras de 1920, 1440, 1024, 900, 768, 390 e 320 px, sem overflow horizontal da página. Capturas revisadas em desktop claro/escuro, tablet, celular e vitrine do portfólio. Nenhum erro de aplicação capturado. O favicon ausente da raiz do portfólio gera um 404 preexistente na conferência local; o dashboard possui favicon próprio. A execução completa de testes e as evidências ficam fora do pacote público.
+
+O registro a seguir descreve verificações da versão anterior, não novas validações de impressão ou de acessibilidade completa:
 
 Sintaxe JavaScript validada. Testes em Chrome verificaram os cartões, todas as abas, troca da série histórica, agrupamento de segurança, filtros combinados, recorte vazio, limpeza de filtros, agrupamento e busca da tabela, conteúdo do CSV, ausência de erros JavaScript e ausência de transbordamento horizontal no viewport de 390 px. Layout revisado em capturas de desktop e celular. Verificados também: navegação centralizada, resumo fixo durante a rolagem, dez visualizações na visão geral, informações acessíveis por teclado, estilos de impressão e preferência de redução de movimento.
 

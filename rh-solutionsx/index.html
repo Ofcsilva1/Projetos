@@ -1,17 +1,58 @@
 <!doctype html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="description" content="Portfólio de People & Diversity Analytics. Dashboard interativo da RH SolutionsX com dados fictícios."><title>RH SolutionsX — People Analytics</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="refinement.css"><link rel="stylesheet" href="finishing.css"><script src="theme.js"></script><script src="data.js" defer></script><script src="visuals.js" defer></script><script src="app.js" defer></script></head>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Portfólio de People & Diversity Analytics. Dashboard interativo da RH SolutionsX com dados fictícios.">
+<meta name="theme-color" content="#153b50"><title>RH SolutionsX — People Analytics</title>
+<link rel="stylesheet" href="premium.css">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="theme.js"></script><script src="data.js" defer></script><script src="visuals.js" defer></script><script src="app.js" defer></script><script src="shell.js" defer></script>
+</head>
 <body>
 <a class="skip" href="#main">Ir para o conteúdo</a>
-<header><div class="brand"><img src="assets/logo.png" alt="RH SolutionsX — Pessoas que impulsionam resultados"></div><div class="header-title">PEOPLE & DIVERSITY ANALYTICS<span>Inteligência para cuidar de pessoas</span></div><span class="demo">Portfólio · dados fictícios</span><button id="theme-toggle" class="theme-toggle" type="button" aria-label="Ativar modo escuro" aria-pressed="false">Modo escuro</button></header>
-<nav aria-label="Seções do dashboard"><button data-tab="overview" aria-current="page">Visão geral</button><button data-tab="people">Pessoas & diversidade</button><button data-tab="performance">Desempenho & custos</button><button data-tab="safety">Saúde & segurança</button><button data-tab="departures">Desligamentos</button><button data-tab="method">Metodologia</button></nav>
-<main id="main">
-<div class="intro"><div><p class="eyebrow">RH SOLUTIONSX / OBSERVATÓRIO DE PESSOAS</p><h1 id="page-title">Pessoas em perspectiva.</h1><p id="page-subtitle">Uma visão integrada de equipe, resultados e bem-estar.</p></div><button id="export" class="secondary">Exportar resumo CSV ↓</button></div>
-<section class="filters" aria-label="Filtros globais"><label>Departamento<select id="department"></select></label><label>UF de alocação<select id="uf"></select></label><label>Modelo de trabalho<select id="model"></select></label><label>Status<select id="status"></select></label><button id="reset" class="text-button">Limpar filtros</button><span id="scope" role="status" aria-live="polite"></span></section>
-<aside id="persistent-summary" class="persistent-summary" aria-label="Resumo dos filtros atuais"></aside>
+<svg class="icon-definitions" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+<symbol id="i-overview" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3M16 5a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 5"/></symbol>
+<symbol id="i-performance" viewBox="0 0 24 24"><path d="M4 20V10m8 10V4m8 16v-7M2 20h20"/></symbol>
+<symbol id="i-safety" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6zM8 12l3 3 5-6"/></symbol>
+<symbol id="i-departures" viewBox="0 0 24 24"><path d="M10 4H4v16h6m4-12 4 4-4 4m-6-4h13"/></symbol>
+<symbol id="i-method" viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM14 3v5h5M8 12h8m-8 4h6"/></symbol>
+<symbol id="i-money" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 12h1m10 0h1"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></symbol>
+<symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-13 4h2m4 0h2m-8 3h2"/></symbol>
+<symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+</defs></svg>
+<aside class="sidebar" aria-label="Navegação principal">
+ <div class="brand"><img src="assets/logo.png" width="180" height="120" alt="RH SolutionsX — Pessoas que impulsionam resultados"></div>
+ <p class="sidebar-label">People Analytics</p>
+ <nav id="section-nav" aria-label="Seções do dashboard">
+  <button data-tab="overview" aria-current="page"><svg class="icon" aria-hidden="true"><use href="#i-overview"/></svg>Visão geral</button>
+  <button data-tab="people"><svg class="icon" aria-hidden="true"><use href="#i-people"/></svg>Pessoas & diversidade</button>
+  <button data-tab="performance"><svg class="icon" aria-hidden="true"><use href="#i-performance"/></svg>Desempenho & custos</button>
+  <button data-tab="safety"><svg class="icon" aria-hidden="true"><use href="#i-safety"/></svg>Saúde & segurança</button>
+  <button data-tab="departures"><svg class="icon" aria-hidden="true"><use href="#i-departures"/></svg>Desligamentos</button>
+  <button data-tab="method"><svg class="icon" aria-hidden="true"><use href="#i-method"/></svg>Metodologia</button>
+ </nav>
+ <div class="sidebar-note"><span class="status-dot"></span>Ambiente de portfólio<p>Dados fictícios para explorar pessoas, resultados e bem-estar.</p></div>
+</aside>
+<div class="workspace">
+<header class="topbar">
+ <button id="menu-toggle" class="menu-toggle" type="button" aria-label="Abrir navegação" aria-expanded="false" aria-controls="section-nav"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></button>
+ <div class="header-title">Observatório de pessoas<span>RH SolutionsX</span></div>
+ <span class="demo"><span class="status-dot"></span>Dados fictícios</span>
+ <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Ativar modo escuro" aria-pressed="false">Modo escuro</button>
+</header>
+<main id="main" tabindex="-1">
+<div class="intro"><div><p class="eyebrow">Inteligência de pessoas</p><h1 id="page-title">Pessoas em perspectiva.</h1><p id="page-subtitle">Uma visão integrada de equipe, resultados e bem-estar.</p></div><button id="export" class="secondary"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Exportar resumo CSV</button></div>
+<section class="filters" aria-label="Filtros globais"><label for="department">Departamento<select id="department" name="department"></select></label><label for="uf">UF de alocação<select id="uf" name="uf"></select></label><label for="model">Modelo de trabalho<select id="model" name="model"></select></label><label for="status">Status<select id="status" name="status"></select></label><button id="reset" class="text-button">Limpar filtros</button><span id="scope" role="status" aria-live="polite"></span></section>
+<p class="data-context"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Competência mensal não informada <span>Histórico limitado à amostra disponível.</span></p>
+<aside id="persistent-summary" class="persistent-summary" aria-label="Resumo dos filtros atuais" hidden></aside>
 <div id="content"></div>
 <section class="reading"><div><p class="eyebrow">LEITURA DO RECORTE</p><h2>O que os dados apresentam</h2></div><div id="insights" aria-live="polite"></div></section>
 <footer><span>RH SolutionsX · People & Diversity Analytics</span><span>Base demonstrativa de 100 registros · competência mensal não informada</span></footer>
 </main>
+</div>
 <div id="chart-tooltip" role="tooltip" hidden></div>
 </body></html>
