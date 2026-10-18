@@ -37,3 +37,13 @@ A suíte usa um domínio HTTPS interceptado, dados sintéticos e serviços locai
 `NEXO_QA_DIR` opcional indica uma pasta fora do repositório para capturas. `NEXO_TEST_ASSETS` opcional aponta para bibliotecas visuais/PDF locais, com os nomes e versões dos CDNs existentes, para capturas completas; nenhuma chamada real é permitida quando ausente.
 
 `NEXO_TEST_ROOT` opcional permite verificar a mesma interface em um pacote estático separado, sem modificar o código-fonte.
+
+## Fase 2 — acessibilidade e cabeçalho móvel
+
+Em telas até 820 px, marca, navegação e ações ocupam linhas separadas. Tema, saída, restauração e portfólio permanecem visíveis, com áreas de toque de pelo menos 44 px. O desktop mantém a composição existente e a barra lateral permite rolagem em janelas baixas.
+
+O cadastro possui rótulos associados aos campos; os controles têm atributos `name`, e CPF continua sendo texto com teclado numérico. Botões de exportação têm nomes explícitos, detalhes indicam seu estado expandido e a navegação identifica a seção atual. Os títulos principais, atalhos para acesso/conteúdo, abas e painéis possuem semântica e foco próprios. Ícones decorativos são ocultos das tecnologias assistivas.
+
+Os testes verificam teclado, associação de campos, nomes e estados acessíveis, foco de diálogos nativos e contraste do indicador de foco nos dois temas. O cabeçalho é verificado em 320, 360, 390 e 768 px, incluindo ausência de sobreposição, controles descobertos, áreas de toque e aumento de texto a 200%. Os testes anteriores de persistência e integridade continuam na suíte.
+
+Esta cobertura não afirma conformidade WCAG completa. NVDA/VoiceOver, outros navegadores e aparelhos físicos permanecem pendentes. As melhorias de navegação por URL e os demais refinamentos visuais das fases seguintes não fazem parte desta etapa.

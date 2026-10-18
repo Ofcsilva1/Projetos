@@ -1,13 +1,13 @@
-import { setupFormFeedback } from './form-feedback.js?v=20261018.fase1';
+import { setupFormFeedback } from './form-feedback.js?v=20261018.fase2';
 import { caseKey, hasDuplicate, caseReplacement } from "./case-save.js?v=20261016.demo1";
 import { permissionsForAccess } from "./permissions.js?v=20261016.demo1";
 import { setupExports } from "./exports.js?v=20261016.demo1";
-import { setupImport, appendImportedDetails } from "./import-ui.js?v=20261016.demo1";
+import { setupImport, appendImportedDetails } from "./import-ui.js?v=20261018.fase2";
 import { readableSnapshot } from "./import-core.js?v=20261016.demo1";
 import { matchesGeneralSearch, sortCases, availableYears, matchesEntryPeriod } from "./case-list.js?v=20261016.demo1";
 import { resolveViolenceData, matchesViolence, violenceOptions } from "./violence.js?v=20261016.demo1";
-import { setupViolenceForm } from "./violence-form.js?v=20261016.demo1";
-import { setupWorkflows } from "./workflow-ui.js?v=20261018.fase1";
+import { setupViolenceForm } from "./violence-form.js?v=20261018.fase2";
+import { setupWorkflows } from "./workflow-ui.js?v=20261018.fase2";
 import { replacementFor, activityText, attendanceSummary } from "./workflow-core.js?v=20261016.demo1";
 import { get, ref, onValue, runTransaction, resetDemo, storageNotice } from "./local-store.js?v=20261016.demo1";
 const database = {};
@@ -91,12 +91,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!force && !canLeaveCase()) return false;
     for (const [name, nav, section] of [["list","nav-list","list-section"],["form","nav-new","form-section"],["agenda","nav-agenda","agenda-section"],["tasks","nav-tasks","tasks-section"]]) {
       $(nav).classList.toggle("active", view === name); $(section).hidden = view !== name;
+      if (view === name) $(nav).setAttribute('aria-current', 'page'); else $(nav).removeAttribute('aria-current');
     }
     const titles = { list: ["Controle geral de casos","Acompanhe os prontuários e os indicadores da seleção."], form: [editingKey ? "Editar caso" : "Registrar novo caso","Registre as informações do caso nas etapas abaixo."], agenda: ["Agenda e atendimentos","Quem vamos atender? Consulte datas, técnicos e resultados."], tasks: ["Pendências e retornos","O que precisamos resolver? Acompanhe responsáveis e prazos."] };
     $("page-title").textContent = titles[view][0]; $("page-subtitle").textContent = titles[view][1];
     if (view === 'agenda' || view === 'tasks') workflows.render();
     refreshUnloadGuard();
-    if (view !== "list") window.scrollTo({ top: 0, behavior: "smooth" });
+    $("page-title").focus();
     return true;
   }
 
@@ -221,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderDetails(row, data) {
-    const detailRow = document.createElement("tr"); detailRow.className = "details-row";
+    const detailRow = document.createElement("tr"); detailRow.className = "details-row"; detailRow.id = row.querySelector(".btnDetalhes").getAttribute("aria-controls");
     const cell = document.createElement("td"); cell.colSpan = 7;
     const grid = document.createElement("div"); grid.className = "details-grid";
     const details = [
@@ -268,14 +269,14 @@ document.addEventListener("DOMContentLoaded", () => {
       agendaLink.addEventListener('click',()=>workflows.openScope('agenda',key)); attendance.append(document.createElement('br'),agendaLink);
       row.append(makeCell(data.nomeCriad), makeCell(data.responsavelNome), attendance);
       const actions = document.createElement("td"); actions.className = "text-end text-nowrap";
-      const details = document.createElement("button"); details.type = "button"; details.className = "btn btn-sm btn-outline-secondary btnDetalhes"; details.title = "Ver detalhes"; details.setAttribute("aria-label", "Ver detalhes do caso"); details.innerHTML = '<i class="bi bi-eye"></i>';
-      const edit = document.createElement("button"); edit.type = "button"; edit.className = "btn btn-sm btn-outline-primary btnEditar ms-1"; edit.title = "Editar caso"; edit.setAttribute("aria-label", "Editar caso"); edit.innerHTML = '<i class="bi bi-pencil"></i>'; edit.hidden = !permissions.canWriteCases;
+      const details = document.createElement("button"); details.type = "button"; details.className = "btn btn-sm btn-outline-secondary btnDetalhes"; details.title = "Ver detalhes"; details.setAttribute("aria-label", `Ver detalhes do prontuário ${data.numeroProntuario}`); details.setAttribute("aria-expanded", "false"); details.setAttribute("aria-controls", `case-details-${key}`); details.innerHTML = '<i class="bi bi-eye" aria-hidden="true"></i>';
+      const edit = document.createElement("button"); edit.type = "button"; edit.className = "btn btn-sm btn-outline-primary btnEditar ms-1"; edit.title = "Editar caso"; edit.setAttribute("aria-label", `Editar prontuário ${data.numeroProntuario}`); edit.innerHTML = '<i class="bi bi-pencil" aria-hidden="true"></i>'; edit.hidden = !permissions.canWriteCases;
       actions.append(details, edit); row.append(actions); caseTableBody.append(row);
       row.addEventListener("click", (event) => {
         const button = event.target.closest("button"); if (!button) return;
         if (button.classList.contains("btnDetalhes")) {
           const next = row.nextElementSibling;
-          if (next?.classList.contains("details-row")) next.remove(); else renderDetails(row, data);
+          if (next?.classList.contains("details-row")) { next.remove(); button.setAttribute("aria-expanded", "false"); } else { renderDetails(row, data); button.setAttribute("aria-expanded", "true"); }
         } else if (button.classList.contains("btnEditar")) {
           editCase(key);
         }

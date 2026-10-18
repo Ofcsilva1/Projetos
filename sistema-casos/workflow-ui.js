@@ -1,4 +1,4 @@
-import { setupFormFeedback } from './form-feedback.js?v=20261018.fase1';
+import { setupFormFeedback } from './form-feedback.js?v=20261018.fase2';
 import { APPOINTMENT_STATUS, TASK_STATUS, APPOINTMENT_TYPES, TASK_TYPES, PREFIX, todayISO, strictDate, validateActivity, collectActivities, filterActivities, isLate, buildActivity } from './workflow-core.js?v=20261016.demo1';
 
 const PAGE_SIZE = 10;
@@ -12,16 +12,16 @@ export function setupWorkflows({ getCases, getUser, canWrite, saveActivity, open
     const isAgenda = kind === 'agenda';
     const statuses = isAgenda ? APPOINTMENT_STATUS : TASK_STATUS;
     $(kind === 'agenda' ? 'agenda-section' : 'tasks-section').innerHTML = `
-      <div class="workflow-heading"><div><h3>${isAgenda ? 'Quem vamos atender?' : 'O que precisamos resolver?'}</h3><p>${isAgenda ? 'Registre cada atendimento com data, horário e técnico. Datas passadas não são marcadas como falta automaticamente.' : 'Organize responsáveis, prazos e retornos. Prazos vencidos aparecem como atrasados enquanto a pendência estiver aberta.'}</p></div><button id="${kind}-new" class="btn btn-primary" type="button">${isAgenda ? 'Adicionar atendimento' : 'Adicionar pendência'}</button></div>
+      <div class="workflow-heading"><div><h2>${isAgenda ? 'Quem vamos atender?' : 'O que precisamos resolver?'}</h2><p>${isAgenda ? 'Registre cada atendimento com data, horário e técnico. Datas passadas não são marcadas como falta automaticamente.' : 'Organize responsáveis, prazos e retornos. Prazos vencidos aparecem como atrasados enquanto a pendência estiver aberta.'}</p></div><button id="${kind}-new" class="btn btn-primary" type="button">${isAgenda ? 'Adicionar atendimento' : 'Adicionar pendência'}</button></div>
       <p id="${kind}-access" class="text-muted" role="status"></p>
       <div class="workflow-summary" id="${kind}-summary" aria-label="Resumo da seleção"></div>
-      <section class="card-panel workflow-search" aria-labelledby="${kind}-search-title"><h4 id="${kind}-search-title">${isAgenda ? 'Buscar atendimentos registrados' : 'Buscar pendências registradas'}</h4><p class="workflow-help">Estes campos servem apenas para buscar. Para cadastrar ${isAgenda ? 'uma data e um relato, clique em “Adicionar atendimento” acima' : 'uma pendência, clique em “Adicionar pendência” acima'}.</p><div class="workflow-filters">
-        <label>Buscar por prontuário<select id="${kind}-case" class="form-select"><option value="">Todos os prontuários</option></select></label>
-        <label>${isAgenda ? 'Técnico' : 'Responsável'}<input id="${kind}-owner" class="form-control" type="search" placeholder="Buscar responsável" /></label>
-        <label>Situação<select id="${kind}-status" class="form-select"><option value="">Todas as situações</option>${Object.entries(statuses).map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label>
-        <label>Período ${isAgenda ? '(data prevista)' : '(prazo)'}<select id="${kind}-period" class="form-select"><option value="">Todos os períodos</option><option value="hoje">Hoje</option><option value="semana">Hoje e próximos 6 dias</option><option value="atrasados">${isAgenda ? 'Data passada: conferir' : 'Atrasadas'}</option>${isAgenda ? '' : '<option value="sem_prazo">Sem prazo</option>'}</select></label>
-        <label>${isAgenda ? 'Data agendada a partir de' : 'Prazo a partir de'}<input id="${kind}-from" class="form-control" type="date" /></label>
-        <label>${isAgenda ? 'Data agendada até' : 'Prazo até'}<input id="${kind}-until" class="form-control" type="date" /></label>
+      <section class="card-panel workflow-search" aria-labelledby="${kind}-search-title"><h3 id="${kind}-search-title">${isAgenda ? 'Buscar atendimentos registrados' : 'Buscar pendências registradas'}</h3><p class="workflow-help">Estes campos servem apenas para buscar. Para cadastrar ${isAgenda ? 'uma data e um relato, clique em “Adicionar atendimento” acima' : 'uma pendência, clique em “Adicionar pendência” acima'}.</p><div class="workflow-filters">
+        <label>Buscar por prontuário<select id="${kind}-case" name="${kind}-case" class="form-select"><option value="">Todos os prontuários</option></select></label>
+        <label>${isAgenda ? 'Técnico' : 'Responsável'}<input id="${kind}-owner" name="${kind}-owner" class="form-control" type="search" placeholder="Buscar responsável" /></label>
+        <label>Situação<select id="${kind}-status" name="${kind}-status" class="form-select"><option value="">Todas as situações</option>${Object.entries(statuses).map(([value,label])=>`<option value="${value}">${label}</option>`).join('')}</select></label>
+        <label>Período ${isAgenda ? '(data prevista)' : '(prazo)'}<select id="${kind}-period" name="${kind}-period" class="form-select"><option value="">Todos os períodos</option><option value="hoje">Hoje</option><option value="semana">Hoje e próximos 6 dias</option><option value="atrasados">${isAgenda ? 'Data passada: conferir' : 'Atrasadas'}</option>${isAgenda ? '' : '<option value="sem_prazo">Sem prazo</option>'}</select></label>
+        <label>${isAgenda ? 'Data agendada a partir de' : 'Prazo a partir de'}<input id="${kind}-from" name="${kind}-from" class="form-control" type="date" /></label>
+        <label>${isAgenda ? 'Data agendada até' : 'Prazo até'}<input id="${kind}-until" name="${kind}-until" class="form-control" type="date" /></label>
         <button id="${kind}-clear" class="btn btn-outline-secondary" type="button">Limpar filtros</button>
       </div><p class="workflow-help">Preencha uma ou ambas as datas para limitar a busca ao intervalo desejado. ${isAgenda ? 'Essas datas não criam nem alteram atendimentos.' : 'Essas datas não alteram os prazos cadastrados.'}</p></section>
       <p id="${kind}-notice" role="status" class="workflow-notice"></p>
@@ -33,17 +33,17 @@ export function setupWorkflows({ getCases, getUser, canWrite, saveActivity, open
     $(`${kind}-new`).addEventListener('click', () => openEditor(kind));
   }
   const dialog = document.createElement('dialog'); dialog.id = 'workflow-dialog'; dialog.className = 'workflow-dialog'; dialog.setAttribute('aria-labelledby', 'workflow-title');
-  dialog.innerHTML = `<form id="workflow-form"><h3 id="workflow-title"></h3><p id="workflow-editor-hint" class="text-muted"></p><fieldset id="workflow-editor-fields" class="workflow-editor-fields">
-    <label>Prontuário<select id="workflow-case" class="form-select" required></select></label>
-    <label>Responsável<input id="workflow-owner" class="form-control" maxlength="120" required autocomplete="off" /></label>
-    <label id="workflow-description-label">Pendência<input id="workflow-description" class="form-control" maxlength="240" /></label>
-    <label id="workflow-date-label"><span id="workflow-date-title">Data prevista</span><input id="workflow-date" class="form-control" type="date" /></label>
-    <label id="workflow-time-label">Horário (opcional)<input id="workflow-time" class="form-control" type="time" /></label>
-    <label>Tipo<select id="workflow-type" class="form-select" required></select></label>
-    <label>Situação<select id="workflow-status" class="form-select" required></select></label>
-    <label id="workflow-priority-label">Prioridade<select id="workflow-priority" class="form-select"><option value="normal">Normal</option><option value="alta">Alta</option></select></label>
-    <label id="workflow-completed-label" hidden><span id="workflow-completed-title"></span><input id="workflow-completed" class="form-control" type="date" /></label>
-    <label class="workflow-wide workflow-notes-field"><span id="workflow-notes-title">Descrição / relato do atendimento</span><small id="workflow-notes-help">Escreva o objetivo do atendimento ou o que foi realizado na data escolhida.</small><textarea id="workflow-notes" aria-describedby="workflow-notes-help" class="form-control" rows="4" maxlength="4000" placeholder="Descreva aqui o atendimento... (opcional)"></textarea></label>
+  dialog.innerHTML = `<form id="workflow-form"><h2 id="workflow-title"></h2><p id="workflow-editor-hint" class="text-muted"></p><fieldset id="workflow-editor-fields" class="workflow-editor-fields">
+    <label>Prontuário<select id="workflow-case" name="workflow-case" class="form-select" required></select></label>
+    <label>Responsável<input id="workflow-owner" name="workflow-owner" class="form-control" maxlength="120" required autocomplete="off" /></label>
+    <label id="workflow-description-label">Pendência<input id="workflow-description" name="workflow-description" class="form-control" maxlength="240" /></label>
+    <label id="workflow-date-label"><span id="workflow-date-title">Data prevista</span><input id="workflow-date" name="workflow-date" class="form-control" type="date" /></label>
+    <label id="workflow-time-label">Horário (opcional)<input id="workflow-time" name="workflow-time" class="form-control" type="time" /></label>
+    <label>Tipo<select id="workflow-type" name="workflow-type" class="form-select" required></select></label>
+    <label>Situação<select id="workflow-status" name="workflow-status" class="form-select" required></select></label>
+    <label id="workflow-priority-label">Prioridade<select id="workflow-priority" name="workflow-priority" class="form-select"><option value="normal">Normal</option><option value="alta">Alta</option></select></label>
+    <label id="workflow-completed-label" hidden><span id="workflow-completed-title"></span><input id="workflow-completed" name="workflow-completed" class="form-control" type="date" /></label>
+    <label class="workflow-wide workflow-notes-field"><span id="workflow-notes-title">Descrição / relato do atendimento</span><small id="workflow-notes-help">Escreva o objetivo do atendimento ou o que foi realizado na data escolhida.</small><textarea id="workflow-notes" aria-labelledby="workflow-notes-title" name="workflow-notes" aria-describedby="workflow-notes-help" class="form-control" rows="4" maxlength="4000" placeholder="Descreva aqui o atendimento... (opcional)"></textarea></label>
     </fieldset><p id="workflow-error" role="status" aria-live="polite"></p><div class="workflow-editor-footer"><button id="workflow-cancel" type="button" class="btn btn-outline-secondary">Cancelar</button><button id="workflow-save" type="submit" class="btn btn-primary">Salvar</button></div></form>`;
   document.body.append(dialog);
   const form = $('workflow-form');
