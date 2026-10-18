@@ -457,7 +457,7 @@ main { padding-top: 24px; }
 .bar-row { margin: 0; min-height: 48px; padding-block: 8px; }
 .bar-row small { line-height: 1.5; }
 .rank-scroll { max-height: 336px; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--muted) var(--surface-subtle); padding: 3px 8px 3px 3px; scroll-padding: 8px; }
-.ranking { display: grid; gap: 4px; max-height: 280px; }
+.ranking { display: grid; gap: 4px; max-height: 208px; }
 .scroll-hint { margin-top: 12px; }
 .stacked-row { margin: 8px 0; min-height: 42px; font-size: 12px; }
 .stacked-list.rank-scroll { max-height: 336px; }
@@ -545,3 +545,25 @@ main { padding-top: 24px; }
 .salary-series .salary-values strong { text-align: right; }
 .salary-series.single-salary .salary-connector { display: none; }
 .salary-controls input[type=search] { color: var(--ink); background: var(--surface-subtle); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+/* Espaçamento comum nos pares de gráficos; conteúdo e densidade guiam o agrupamento. */
+.grid.equal > .panel > .panel-head { min-height: 58px; }
+.salary-controls { min-height: 64px; align-items: center; }
+@media (max-width: 700px) {
+ .grid.equal > .panel > .panel-head { min-height: 0; }
+ .salary-controls { min-height: 0; }
+}
+
+.donut-legend > div { margin: 0; }
+.legend-filter { min-height: 32px; padding-block: 4px; }
+@media (max-width: 700px) { .legend-filter { min-height: 44px; } }
+@media print { .salary-controls, .grid.equal > .panel > .panel-head { min-height: 0; } }
+/* Navegação mais ampla no desktop; preservar área útil em notebooks menores. */
+@media screen and (min-width: 1440px) {
+ :root { --sidebar-width: 264px; }
+ .brand { width: 216px; height: 114px; }
+ nav button { padding-inline: 16px; }
+}
+@media screen and (min-width: 1101px) and (max-width: 1439px) {
+ :root { --sidebar-width: 248px; }
+ .brand { width: 208px; height: 110px; }
+}

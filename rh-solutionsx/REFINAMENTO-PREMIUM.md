@@ -17,13 +17,13 @@ A lista de cargos oferece Top 12, Top 24 e Todos, além de busca que considera t
 - Visão geral: KPIs e histórico preservados; rankings mais curtos e grupos explícitos.
 - Pessoas: composição, idade/geografia e cargos/senioridade com densidade equilibrada. Composições longas têm rolagem interna acessível.
 - Desempenho: remuneração compacta primeiro, seguida de esforço/metas, heatmap, horas, folha e distribuições. Todos os indicadores anteriores permanecem.
-- Segurança: ranking contextual e detalhamentos limitam a altura, inclusive ao agrupar por todos os cargos.
-- Desligamentos: movimentação mensal precede motivos/tipos e perfil das saídas. Contagens disponíveis não se tornam turnover.
+- Segurança: estado e pessoas com/sem ocorrência formam o par compacto; cargos e horas extras formam o par denso. O ranking contextual limita a altura, inclusive ao agrupar por todos os cargos.
+- Desligamentos: movimentação mensal precede motivos/departamentos (rankings), tipo/modelo (composição) e UF/faixa etária (perfil). Os pares têm densidade semelhante. Contagens disponíveis não se tornam turnover.
 - Metodologia: definições preservadas, com título de cálculo sem referência a uma fase de implementação na interface.
 
 Os dois temas compartilham estrutura, tipografia e significados de cor. Turquesa e violeta identificam as mesmas séries; as tonalidades são ajustadas ao contraste. O claro usa superfícies neutras suaves, bordas discretas e sidebar grafite, inspirado na última imagem enviada. O escuro mantém superfícies grafite planas e acentos controlados, sem glow. A referência orientou linguagem visual; não foram copiados módulos de reservas, calendário ou dados de vendas.
 
-Espaçamento base de 20 px, rankings com região focalizável, textos auxiliares reforçados e valores monetários alinhados. Gráficos largos mantêm rolagem interna no celular, preservando tamanho de leitura. Transições são curtas e condicionadas à preferência de movimento. Impressão expande as regiões roláveis atualmente exibidas e preserva contexto; Top 12 continua Top 12 até o usuário escolher Todos.
+Sidebar ampliada para 264 px em telas de pelo menos 1440 px e 248 px entre 1101 e 1439 px, com logo proporcional e menu compacto até 900 px. Espaçamento base de 20 px, rankings com altura máxima de 208 px no desktop e região focalizável, textos auxiliares reforçados e valores monetários alinhados. Gráficos largos mantêm rolagem interna no celular, preservando tamanho de leitura. Transições são curtas e condicionadas à preferência de movimento. Impressão expande as regiões roláveis atualmente exibidas e preserva contexto; Top 12 continua Top 12 até o usuário escolher Todos.
 
 A logo original foi preservada e recebeu duas variantes transparentes, preparadas localmente após autorização específica. A variante de lettering claro é usada na sidebar escura dos dois temas. Detalhes em [assets/README.md](assets/README.md). Nenhuma versão gerada por IA foi incorporada.
 
@@ -31,19 +31,19 @@ A logo original foi preservada e recebeu duas variantes transparentes, preparada
 
 Medições com viewport 1440 px, base completa e sem filtros, nos dois temas:
 
-- Pessoas: altura total de 6.303 para 4.541 px; maior diferença entre cartões pareados de 491 para aproximadamente 88 px.
-- Desempenho: altura total de 7.469 para 5.167 px; diferenças entre cartões pareados até aproximadamente 88 px. Cartão de cargos abaixo de 700 px.
-- Segurança: altura total de 4.014 para 3.194 px; maior diferença entre cartões pareados de 469 para 177 px.
-- Visão geral: 4.866 para 4.063 px. Desligamentos: 3.912 para 3.462 px.
+- Pessoas: altura total de 6.303 para 4.295 px; maior diferença entre cartões pareados de 491 para 70 px.
+- Desempenho: altura total de 7.469 para 5.003 px; diferenças entre cartões pareados até aproximadamente 25 px. Cartão de cargos abaixo de 700 px.
+- Segurança: altura total de 4.014 para 2.913 px; maior diferença entre cartões pareados de 469 para aproximadamente 25 px.
+- Visão geral: 4.866 para 3.951 px. Desligamentos: 3.912 para 3.326 px.
 
 São medições desta amostra e viewport, não garantias para qualquer categoria/texto ou configuração. A redução combina organização, altura limitada de listas e comparação salarial; não representa remoção de dados.
 
 ## Validação
 
 - **42 testes unitários** de métricas e estado/filtros, com Node nativo, aprovados.
-- **492 verificações de navegador:** 90 da estrutura funcional, 48 analíticas, 154 de interatividade, 74 da revisão final e 126 do refinamento.
+- **508 verificações de navegador:** 90 da estrutura funcional, 48 analíticas, 154 de interatividade, 74 da revisão final e 142 do refinamento.
 - As 74 verificações de aparência anteriores foram adaptadas aos novos tokens/shape de marcador aprovados. Checks de cálculo, populações e recortes foram preservados.
-- O novo conjunto inclui 84 combinações de seis seções × dois temas × sete larguras: 1920, 1440, 1024, 900, 768, 390 e 320 px. Sem overflow horizontal global.
+- O novo conjunto inclui 96 combinações de seis seções × dois temas × oito larguras: 1920, 1440, 1366, 1024, 900, 768, 390 e 320 px. Sem overflow horizontal global. A revisão adicional de todos os pares fixou o limite verificado de lacuna em menos de 80 px no desktop de 1440 px; o maior valor observado foi 70 px.
 - Busca salarial em toda a lista, Top 12/Todos, valor individual independente, tooltip após busca, seleção por teclado, busca vazia e texto semelhante a HTML, sem injeção.
 - Fixture isolada: grupo com salários 100/200/600 resulta em média 300 e mediana 200; profissional individual com salário 1.000 tem um marcador; salário nulo permanece indisponível e desligado não entra no cálculo. A fixture não foi gravada na base.
 - Rankings de segurança por cargo mantêm os 96 cargos do recorte completo, com altura controlada. Impressão expande rankings e remuneração.
