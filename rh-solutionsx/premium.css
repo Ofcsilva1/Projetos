@@ -567,3 +567,4 @@ main { padding-top: 24px; }
  :root { --sidebar-width: 248px; }
  .brand { width: 208px; height: 110px; }
 }
+.fill.warning, html[data-theme=dark] .fill.warning { background: var(--chart-3) !important; }
