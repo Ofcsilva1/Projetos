@@ -23,7 +23,7 @@ function kpis(rows){
  const goals=rows.filter(r=>r.Meta_Atingida_Pct!==null);
  const met=goals.filter(r=>r.Meta_Atingida_Pct>=100).length;
  const values=[['Colaboradores ativos',fmt(active.length),`${fmt(rows.length)} registros no recorte`],['Folha base mensal',money(sum(active,'Salario_Base')),'Somente ativos · sem encargos e benefícios'],['Pessoas com meta ≥ 100%',goals.length?fmt(met/goals.length*100,1)+'%':'—',`${met} de ${goals.length} registros com meta`],['Horas extras no mês',fmt(sum(rows,'Horas_Extra_Mes'))+' h','Soma do recorte · mês não informado'],['Idade média',rows.length?fmt(mean(rows,'Idade'),1)+' anos':'—','Média dos registros selecionados']];
- return `<div class="kpis">${values.map(v=>`<article class="kpi"><span class="kpi-label">${v[0]}</span><strong>${v[1]}</strong><small>${v[2]}</small></article>`).join('')}</div>`;
+ return `<div class="kpis">${values.map((v,i)=>`<article class="kpi"><div class="kpi-heading"><span class="kpi-label">${v[0]}</span><svg class="icon" aria-hidden="true"><use href="#i-${['people','money','target','clock','calendar'][i]}"/></svg></div><strong>${v[1]}</strong><small>${v[2]}</small></article>`).join('')}</div>`;
 }
 function bars(rows,key,metric='count',limit=100){
  if(!rows.length)return '<p class="empty">Nenhum registro para este recorte.</p>';
@@ -83,9 +83,9 @@ function render(){
  document.querySelectorAll('[data-tab]').forEach(b=>{b.removeAttribute('aria-current');if(b.dataset.tab===tab)b.setAttribute('aria-current','page')});
  persistentSummary(rows);
  let html='';const base=kpis(rows),active=rows.filter(r=>r.Status==='Ativo');
- if(tab==='overview')html=featuredSummary(rows)+base+
+ if(tab==='overview')html=base+
   panel('Como a equipe se formou','Acompanhe as entradas e saídas presentes no histórico da base.',`<div id="timeline">${timeline(rows,chartState.timeline)}</div>`,choice('timeline-mode',[['headcount','Quadro no fim do ano'],['movement','Admissões × desligamentos']],chartState.timeline))+
-  `<div class="grid overview-layout">${panel('Onde estão as pessoas','Conheça o tamanho de cada equipe.',bars(rows,'Departamento'))}<div class="side-stack">${panel('Vínculos na base','Pessoas ativas e saídas registradas no histórico.',donut(rows,'Status'))}${panel('Como as equipes trabalham','A presença dos modelos presencial, híbrido e remoto.',donut(rows,'Modelo_Trabalho'))}</div></div>`+
+  featuredSummary(rows)+`<div class="grid overview-layout">${panel('Onde estão as pessoas','Conheça o tamanho de cada equipe.',bars(rows,'Departamento'))}<div class="side-stack">${panel('Vínculos na base','Pessoas ativas e saídas registradas no histórico.',donut(rows,'Status'))}${panel('Como as equipes trabalham','A presença dos modelos presencial, híbrido e remoto.',donut(rows,'Modelo_Trabalho'))}</div></div>`+
   `<div class="grid equal">${panel('Gerações na equipe','Veja como as pessoas se distribuem por idade.',ageDistribution(rows))}${panel('Metas em perspectiva','Quantas pessoas estão em cada faixa de atingimento.',targetDistribution(rows))}</div>`+
   `<div class="grid equal">${panel('Diversidade de gênero','A composição de gênero das pessoas selecionadas.',donut(rows,'Genero'))}${panel('Diversidade étnica','Uma leitura da autodeclaração registrada na base.',donut(rows,'Etnia'))}</div>`+
   `<div class="grid equal">${panel('Onde se concentram as horas extras','Total de horas registrado em cada departamento.',bars(rows,'Departamento','extraTotal'))}${panel('Segurança por equipe','Ocorrências em relação ao tamanho de cada equipe.',bars(rows,'Departamento','accident'))}</div>`;
