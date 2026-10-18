@@ -60,4 +60,16 @@ Após confirmação da gravação existente, a lista oferece Continuar editando,
 
 Abaixo de 768 px, as tabelas de casos, agenda e pendências apresentam linhas como blocos com rótulos, preservando todas as células, detalhes e ações. Os cabeçalhos continuam disponíveis às tecnologias assistivas; a leitura efetiva com leitores de tela requer validação manual. No desktop, permanecem tabelas.
 
-Os testes da Fase 3 cobrem URLs, histórico e cancelamento, entrada por link, etapas, validação, continuidade após salvar, atendimento vinculado e campos/ações móveis. Usam dados fictícios e Edge/Chromium. Safari, Firefox, NVDA/VoiceOver e aparelhos físicos permanecem pendentes. A Fase 4 de refinamento visual não foi implementada.
+Os testes da Fase 3 cobrem URLs, histórico e cancelamento, entrada por link, etapas, validação, continuidade após salvar, atendimento vinculado e campos/ações móveis. Usam dados fictícios e Edge/Chromium. Safari, Firefox, NVDA/VoiceOver e aparelhos físicos permanecem pendentes.
+
+## Fase 4 — refinamento visual institucional
+
+A marca NEXO, Inter, azul e grafite são preservados. A direção é tornar o trabalho com prontuários mais legível, com hierarquia de títulos, textos secundários maiores e contraste mais forte, sem redesenhar as telas ou os fluxos. Os campos passam a usar texto de 16 px no tamanho padrão da página; os cabeçalhos da tabela deixam de usar caixa alta e espaçamento excessivo. Rótulos, indicadores de situação e textos das tabelas ficam maiores.
+
+O CSS centraliza cores de bordas, superfícies de campos, placeholders e espaçamentos de 8/12/16/24 px. Controles somente de leitura usam fundo próprio e borda tracejada, mantendo o texto selecionável. Botões mantêm alvos de pelo menos 44 px, com estados de hover, foco e desabilitado; o botão de salvamento em andamento mantém cursor de progresso. No celular, o botão de tema da entrada fica acima do cartão para evitar sobreposição em telas baixas. As abas podem reorganizar as colunas quando o texto é ampliado.
+
+Os testes medem contraste de pelo menos 4,5:1 para texto dos campos, placeholders, rótulos e botões primários verificados; pelo menos 3:1 para a borda dos campos. Isso não representa auditoria de todos os pares de cores ou certificação WCAG. São verificados layouts em 320/390/768/1440 px, ambos os temas, diálogos e texto ampliado a 200%. As regressões das fases anteriores continuam na suíte.
+
+Escopo desta fase: `style.css`, versão visual em `index.html`, este README e `tests/fase4-ui.test.cjs`. Não modifica JavaScript de negócio, persistência, autenticação, permissões ou dados. A PR visual parte da branch da Fase 3 enquanto ela estiver em revisão; incorpore a Fase 3 antes da Fase 4. A prévia demonstrativa pode reunir ambas para avaliação.
+
+Skills usadas na Fase 4: `frontend-design` orienta a preservação da identidade, hierarquia e contenção visual; `web-design-guidelines` orienta legibilidade, foco, estados, movimento reduzido e reflow; `frontend-testing-debugging` orienta inspeção renderizada e regressões. O plugin Browser não está disponível; a suíte usa Playwright existente com Edge/Chromium. Safari/Firefox, NVDA/VoiceOver e dispositivos físicos permanecem pendentes.
