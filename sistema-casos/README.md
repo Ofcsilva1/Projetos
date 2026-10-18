@@ -46,4 +46,18 @@ O cadastro possui rótulos associados aos campos; os controles têm atributos `n
 
 Os testes verificam teclado, associação de campos, nomes e estados acessíveis, foco de diálogos nativos e contraste do indicador de foco nos dois temas. O cabeçalho é verificado em 320, 360, 390 e 768 px, incluindo ausência de sobreposição, controles descobertos, áreas de toque e aumento de texto a 200%. Os testes anteriores de persistência e integridade continuam na suíte.
 
-Esta cobertura não afirma conformidade WCAG completa. NVDA/VoiceOver, outros navegadores e aparelhos físicos permanecem pendentes. As melhorias de navegação por URL e os demais refinamentos visuais das fases seguintes não fazem parte desta etapa.
+Esta cobertura não afirma conformidade WCAG completa. NVDA/VoiceOver, outros navegadores e aparelhos físicos permanecem pendentes.
+
+## Fase 3 — navegação e continuidade
+
+As seções usam `#casos`, `#cadastro/etapa-1` a `#cadastro/etapa-8`, `#agenda` e `#pendencias`. Entrar respeita a seção do link; recarregar continua exibindo a entrada demonstrativa. As URLs e o estado de histórico não incluem nomes, CPF ou identificadores de prontuário. A etapa substitui a entrada atual do histórico; Voltar/Avançar percorrem as seções. Filtros e seleção de prontuário permanecem apenas na memória da página.
+
+Voltar, Avançar e alterações manuais do fragmento respeitam a proteção dos rascunhos. Cancelar a saída mantém formulário e URL; confirmar descarta o preenchimento não salvo. Links de cadastro abrem uma ficha nova após recarregar, pois não identificam registros nem armazenam rascunhos. Para editar um registro salvo, abra-o na lista.
+
+O cadastro apresenta etapa atual, Anterior/Próxima e oito abas acessíveis diretamente. Trocar de etapa não salva, valida obrigatoriedade nem apaga campos. A validação ao salvar continua direcionando ao campo inválido. No celular, as abas aparecem em duas colunas.
+
+Após confirmação da gravação existente, a lista oferece Continuar editando, Adicionar atendimento e Continuar na lista. As duas primeiras opções usam o registro salvo na memória, sem adicioná-lo à URL. Erros de gravação mantêm o formulário e não oferecem essas ações. A persistência e as transações locais permanecem intactas.
+
+Abaixo de 768 px, as tabelas de casos, agenda e pendências apresentam linhas como blocos com rótulos, preservando todas as células, detalhes e ações. Os cabeçalhos continuam disponíveis às tecnologias assistivas; a leitura efetiva com leitores de tela requer validação manual. No desktop, permanecem tabelas.
+
+Os testes da Fase 3 cobrem URLs, histórico e cancelamento, entrada por link, etapas, validação, continuidade após salvar, atendimento vinculado e campos/ações móveis. Usam dados fictícios e Edge/Chromium. Safari, Firefox, NVDA/VoiceOver e aparelhos físicos permanecem pendentes. A Fase 4 de refinamento visual não foi implementada.

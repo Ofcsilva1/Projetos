@@ -1,15 +1,16 @@
-import { setupFormFeedback } from './form-feedback.js?v=20261018.fase2';
+import { setupFormFeedback } from './form-feedback.js?v=20261018.fase3';
 import { caseKey, hasDuplicate, caseReplacement } from "./case-save.js?v=20261016.demo1";
 import { permissionsForAccess } from "./permissions.js?v=20261016.demo1";
 import { setupExports } from "./exports.js?v=20261016.demo1";
-import { setupImport, appendImportedDetails } from "./import-ui.js?v=20261018.fase2";
+import { setupImport, appendImportedDetails } from "./import-ui.js?v=20261018.fase3";
 import { readableSnapshot } from "./import-core.js?v=20261016.demo1";
 import { matchesGeneralSearch, sortCases, availableYears, matchesEntryPeriod } from "./case-list.js?v=20261016.demo1";
 import { resolveViolenceData, matchesViolence, violenceOptions } from "./violence.js?v=20261016.demo1";
-import { setupViolenceForm } from "./violence-form.js?v=20261018.fase2";
-import { setupWorkflows } from "./workflow-ui.js?v=20261018.fase2";
+import { setupViolenceForm } from "./violence-form.js?v=20261018.fase3";
+import { setupWorkflows } from "./workflow-ui.js?v=20261018.fase3";
 import { replacementFor, activityText, attendanceSummary } from "./workflow-core.js?v=20261016.demo1";
 import { get, ref, onValue, runTransaction, resetDemo, storageNotice } from "./local-store.js?v=20261016.demo1";
+import { setupSectionNavigation } from './section-navigation.js?v=20261018.fase3';
 const database = {};
 // Local author identity only; there is no authentication or remote database.
 const auth = { currentUser: { uid: 'visitante-local' } };
@@ -45,6 +46,26 @@ document.addEventListener("DOMContentLoaded", () => {
   let unsubscribeCases = null;
   let caseDraft = null;
   let authEpoch = 0;
+  let navigation = null, applyingRoute = false, currentView = 'list', lastSavedKey = null;
+  const tabs = [...$("form-tabs").querySelectorAll('[role="tab"]')];
+  const activeStep = () => Math.max(1, tabs.findIndex(tab => tab.classList.contains('active')) + 1);
+  function updateSteps() {
+    const step = activeStep();
+    $("form-step-status").textContent = `Etapa ${step} de ${tabs.length} — ${tabs[step - 1].textContent.trim()}`;
+    $("btnPreviousStep").disabled = step === 1;
+    $("btnNextStep").disabled = step === tabs.length;
+    tabs[step - 1].scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
+    if (currentView === 'form' && !applyingRoute) navigation?.update('form',step,true);
+  }
+  function showStep(step, focus = false) {
+    const tab = tabs[step - 1];
+    window.bootstrap.Tab.getOrCreateInstance(tab).show();
+    updateSteps();
+    if (focus) tab.focus();
+  }
+  tabs.forEach(tab => tab.addEventListener('shown.bs.tab', updateSteps));
+  $("btnPreviousStep").addEventListener('click',()=>showStep(activeStep()-1,true));
+  $("btnNextStep").addEventListener('click',()=>showStep(activeStep()+1,true));
   const caseSnapshot = () => JSON.stringify([...caseForm.querySelectorAll('input,select,textarea')].map(input => [input.id, input.value, input.checked]));
   const caseHasChanges = () => !appWrapper.hidden && !$("form-section").hidden && Boolean(caseDraft) && caseSnapshot() !== caseDraft;
   const warnBeforeUnload = event => { event.preventDefault(); event.returnValue = ''; };
@@ -88,7 +109,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function toggleView(view, force = false) {
-    if (!force && !canLeaveCase()) return false;
+    if (!force && (!canLeaveCase() || !workflows.canLeave())) return false;
+    if (currentView === 'form' && view !== 'form') {
+      caseDraft = null; editingKey = null; editingBase = null;
+      caseForm.reset(); violenceForm.fill({}); caseFeedback.reset();
+    }
+    currentView = view;
+    if (view !== 'list') $("case-saved-actions").hidden = true;
     for (const [name, nav, section] of [["list","nav-list","list-section"],["form","nav-new","form-section"],["agenda","nav-agenda","agenda-section"],["tasks","nav-tasks","tasks-section"]]) {
       $(nav).classList.toggle("active", view === name); $(section).hidden = view !== name;
       if (view === name) $(nav).setAttribute('aria-current', 'page'); else $(nav).removeAttribute('aria-current');
@@ -96,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const titles = { list: ["Controle geral de casos","Acompanhe os prontuários e os indicadores da seleção."], form: [editingKey ? "Editar caso" : "Registrar novo caso","Registre as informações do caso nas etapas abaixo."], agenda: ["Agenda e atendimentos","Quem vamos atender? Consulte datas, técnicos e resultados."], tasks: ["Pendências e retornos","O que precisamos resolver? Acompanhe responsáveis e prazos."] };
     $("page-title").textContent = titles[view][0]; $("page-subtitle").textContent = titles[view][1];
     if (view === 'agenda' || view === 'tasks') workflows.render();
+    if (!applyingRoute) navigation?.update(view,activeStep());
     refreshUnloadGuard();
     $("page-title").focus();
     return true;
@@ -110,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("numero-prontuario").readOnly = false;
     $("numero-prontuario").title = "";
     caseForm.reset();
+    caseFeedback.reset();
     violenceForm.fill({});
     $("btnCaseAgenda").disabled = $("btnCaseTasks").disabled = true;
     $("form-tabs").querySelector('[data-bs-target="#tab1"]')?.click();
@@ -117,10 +146,17 @@ document.addEventListener("DOMContentLoaded", () => {
     $("numero-prontuario").focus();
   }
 
-  $("nav-list").addEventListener("click", (event) => { event.preventDefault(); toggleView("list"); });
-  $("nav-new").addEventListener("click", (event) => { event.preventDefault(); startNewCase(); });
-  $("nav-agenda").addEventListener("click", event => { event.preventDefault(); toggleView("agenda"); });
-  $("nav-tasks").addEventListener("click", event => { event.preventDefault(); toggleView("tasks"); });
+  for (const [id,view,hash] of [['nav-list','list','casos'],['nav-new','form','cadastro/etapa-1'],['nav-agenda','agenda','agenda'],['nav-tasks','tasks','pendencias']]) {
+    $(id).href = `#${hash}`;
+    $(id).addEventListener('click',event=>{
+      if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0)return;
+      event.preventDefault();
+      if(view==='form')startNewCase();else toggleView(view);
+    });
+  }
+  $("btnContinueCase").addEventListener('click',()=>{if(lastSavedKey)editCase(lastSavedKey);});
+  $("btnSavedAttendance").addEventListener('click',()=>{if(lastSavedKey)workflows.openCreate('agenda',lastSavedKey);});
+  $("btnDismissSaved").addEventListener('click',()=>{$("case-saved-actions").hidden=true;$("page-title").focus();});
   $("btnCaseAgenda").addEventListener("click", () => { if (editingKey) workflows.openCreate("agenda", editingKey); });
   $("btnCaseTasks").addEventListener("click", () => { if (editingKey) workflows.openCreate("tarefas", editingKey); });
   $("btnEmptyNew").addEventListener("click", startNewCase);
@@ -196,6 +232,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       notify(key ? "Registro atualizado." : "Novo caso registrado.", "success");
       caseDraft = null; toggleView("list", true);
+      lastSavedKey = target;
+      $("case-saved-actions").hidden = false;
+      $("case-saved-title").textContent = key ? 'Alterações salvas' : 'Caso registrado';
+      $("case-saved-title").focus();
     } catch (error) { if (auth.currentUser?.uid === uid && authEpoch === epoch) { $("case-save-status").textContent = storageMessage(error); notify(storageMessage(error), "danger"); } }
     finally { savingCase = false; controlStates.forEach(([input, disabled]) => { input.disabled = disabled; }); setBusy(button, false);
       refreshUnloadGuard();
@@ -222,8 +262,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderDetails(row, data) {
-    const detailRow = document.createElement("tr"); detailRow.className = "details-row"; detailRow.id = row.querySelector(".btnDetalhes").getAttribute("aria-controls");
-    const cell = document.createElement("td"); cell.colSpan = 7;
+    const detailRow = document.createElement("tr"); detailRow.setAttribute("role","row"); detailRow.className = "details-row"; detailRow.id = row.querySelector(".btnDetalhes").getAttribute("aria-controls");
+    const cell = document.createElement("td"); cell.setAttribute("role","cell"); cell.colSpan = 7;
     const grid = document.createElement("div"); grid.className = "details-grid";
     const details = [
       ["Documento de origem", data.docOrigem], ["Origem", data.origemCaso], ["Detalhamento", data.detalheOrigem],
@@ -271,7 +311,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const actions = document.createElement("td"); actions.className = "text-end text-nowrap";
       const details = document.createElement("button"); details.type = "button"; details.className = "btn btn-sm btn-outline-secondary btnDetalhes"; details.title = "Ver detalhes"; details.setAttribute("aria-label", `Ver detalhes do prontuário ${data.numeroProntuario}`); details.setAttribute("aria-expanded", "false"); details.setAttribute("aria-controls", `case-details-${key}`); details.innerHTML = '<i class="bi bi-eye" aria-hidden="true"></i>';
       const edit = document.createElement("button"); edit.type = "button"; edit.className = "btn btn-sm btn-outline-primary btnEditar ms-1"; edit.title = "Editar caso"; edit.setAttribute("aria-label", `Editar prontuário ${data.numeroProntuario}`); edit.innerHTML = '<i class="bi bi-pencil" aria-hidden="true"></i>'; edit.hidden = !permissions.canWriteCases;
-      actions.append(details, edit); row.append(actions); caseTableBody.append(row);
+      actions.append(details, edit); row.append(actions);
+      ['Prontuário','Entrada','Situação','CRIAD','Responsável','Atendimento','Ações'].forEach((label,i)=>{
+        const cell=row.cells[i]; cell.setAttribute('role','cell');
+        const caption=document.createElement('span');caption.className='mobile-cell-label';caption.setAttribute('aria-hidden','true');caption.textContent=label;cell.prepend(caption);
+      });
+      row.setAttribute('role','row');caseTableBody.append(row);
       row.addEventListener("click", (event) => {
         const button = event.target.closest("button"); if (!button) return;
         if (button.classList.contains("btnDetalhes")) {
@@ -420,7 +465,24 @@ document.addEventListener("DOMContentLoaded", () => {
     caseDraft = null; caseForm.reset(); violenceForm.fill({});
     toggleView('list', true);
   });
+  navigation = setupSectionNavigation({isVisible:()=>!appWrapper.hidden,apply:(route,entering=false)=>{
+    if (!entering && (!canLeaveCase() || !workflows.canLeave())) return false;
+    applyingRoute = true;
+    try {
+      if (route.view === 'form') {
+        if (!caseDraft || entering) startNewCase();
+        else toggleView('form',true);
+        showStep(route.step);
+      } else toggleView(route.view,true);
+    } finally { applyingRoute = false; }
+    return true;
+  }});
+  for (const [id,target] of [['skip-to-login','login-section'],['skip-to-content','main-content']]) {
+    $(id).addEventListener('click',event=>{event.preventDefault();$(target).focus();$(target).scrollIntoView({block:'start',behavior:'instant'});});
+  }
+  document.addEventListener('demo:enter',()=>navigation.enter());
   initializeDemo();
+  updateSteps();
   document.documentElement.dataset.demoReady = "true";
   document.dispatchEvent(new Event("demo:ready"));
 });

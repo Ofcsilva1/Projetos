@@ -536,3 +536,31 @@ textarea.form-control { min-height: 94px; resize: vertical; line-height: 1.65; }
   .sidebar-footer .sidebar-action-label, .sidebar-footer .theme-toggle [data-theme-label] { display: inline; min-width: 0; overflow-wrap: anywhere; }
   .sidebar-footer .app-version { display: none; }
 }
+.mobile-cell-label { display: none; }
+.form-step-controls { display: grid; grid-template-columns: auto minmax(0,1fr) auto; gap: 12px; align-items: center; margin-bottom: 24px; }
+.form-step-controls p { margin: 0; color: var(--text-main); text-align: center; font-size: .875rem; }
+.form-step-controls .btn { min-height: 44px; }
+.case-saved-actions { padding: 22px; margin-bottom: 20px; border-left: 4px solid var(--focus-ring); }
+.case-saved-actions h2 { color: var(--text-main); font-size: 1.15rem; }
+.case-saved-actions p { color: var(--text-muted); }
+.case-saved-actions > div { display: flex; flex-wrap: wrap; gap: 10px; }
+.case-saved-actions .btn { min-height: 44px; }
+@media (max-width: 767px) {
+  .form-card { padding: 16px; }
+  .form-nav .nav-tabs { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); white-space: normal; }
+  .form-nav .nav-tabs .nav-link { width: 100%; min-width: 0; min-height: 48px; padding: 10px 8px; text-align: left; overflow-wrap: normal; }
+  .form-nav .nav-tabs .nav-link i { display: none; }
+  .form-step-controls { gap: 8px; }
+  .form-step-controls .btn { padding-inline: 10px; }
+  .case-saved-actions > div { display: grid; }
+  #case-table, .workflow-table { display: block; width: 100%; min-width: 0; }
+  #case-table thead, .workflow-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  #case-table tbody, .workflow-table tbody { display: grid; gap: 16px; }
+  #case-table tbody > tr, .workflow-table tbody > tr { display: grid; min-width: 0; padding: 10px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--card-bg); }
+  #case-table tbody > tr > td, .workflow-table tbody > tr > td { display: block; max-width: none; min-width: 0; padding: 10px 6px; text-align: left !important; white-space: normal !important; overflow-wrap: anywhere; border-bottom: 1px solid var(--border-color); }
+  #case-table tbody > tr > td:last-child, .workflow-table tbody > tr > td:last-child { border-bottom: 0; }
+  .mobile-cell-label { display: block; margin-bottom: 4px; color: var(--text-muted); font-size: .75rem; font-weight: 600; }
+  #case-table td .btn, .workflow-table td .btn, .workflow-case-link { min-width: 44px; min-height: 44px; white-space: normal; }
+  .workflow-table summary { min-height: 44px; padding-block: 10px; }
+  #case-table .details-row .details-grid { grid-template-columns: minmax(0,1fr); }
+}

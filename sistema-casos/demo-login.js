@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('skip-to-content').hidden = false;
     document.getElementById('page-title').setAttribute('tabindex', '-1');
     document.getElementById('page-title').focus();
+    document.dispatchEvent(new Event('demo:enter'));
   });
   document.getElementById('btnDemoLogout').addEventListener('click', () => {
     if (!document.dispatchEvent(new Event('demo:logout-request', {cancelable:true}))) return;

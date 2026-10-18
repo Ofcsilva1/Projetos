@@ -1,4 +1,4 @@
-import { setupFormFeedback } from './form-feedback.js?v=20261018.fase2';
+import { setupFormFeedback } from './form-feedback.js?v=20261018.fase3';
 import { APPOINTMENT_STATUS, TASK_STATUS, APPOINTMENT_TYPES, TASK_TYPES, PREFIX, todayISO, strictDate, validateActivity, collectActivities, filterActivities, isLate, buildActivity } from './workflow-core.js?v=20261016.demo1';
 
 const PAGE_SIZE = 10;
@@ -25,7 +25,7 @@ export function setupWorkflows({ getCases, getUser, canWrite, saveActivity, open
         <button id="${kind}-clear" class="btn btn-outline-secondary" type="button">Limpar filtros</button>
       </div><p class="workflow-help">Preencha uma ou ambas as datas para limitar a busca ao intervalo desejado. ${isAgenda ? 'Essas datas não criam nem alteram atendimentos.' : 'Essas datas não alteram os prazos cadastrados.'}</p></section>
       <p id="${kind}-notice" role="status" class="workflow-notice"></p>
-      <div class="card-panel workflow-table-wrap"><table class="table align-middle workflow-table"><thead><tr><th>Prontuário</th><th>${isAgenda ? 'Data e hora previstas' : 'Pendência'}</th><th>Responsável</th><th>${isAgenda ? 'Tipo' : 'Prazo'}</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="${kind}-rows"></tbody></table><p id="${kind}-empty" class="workflow-empty"></p><nav id="${kind}-pagination" aria-label="Páginas da ${isAgenda ? 'agenda' : 'lista de pendências'}"></nav></div>
+      <div class="card-panel workflow-table-wrap"><table class="table align-middle workflow-table" role="table"><thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Prontuário</th><th scope="col" role="columnheader">${isAgenda ? 'Data e hora previstas' : 'Pendência'}</th><th scope="col" role="columnheader">Responsável</th><th scope="col" role="columnheader">${isAgenda ? 'Tipo' : 'Prazo'}</th><th scope="col" role="columnheader">Situação</th><th scope="col" role="columnheader">Ações</th></tr></thead><tbody role="rowgroup" id="${kind}-rows"></tbody></table><p id="${kind}-empty" class="workflow-empty"></p><nav id="${kind}-pagination" aria-label="Páginas da ${isAgenda ? 'agenda' : 'lista de pendências'}"></nav></div>
       <details class="card-panel workflow-legacy"><summary>Histórico e anotações anteriores do prontuário</summary><p>Selecione um prontuário acima para consultar o texto anterior. Ele não é convertido automaticamente em datas, tarefas ou faltas.</p><div id="${kind}-legacy"></div></details>`;
     const ids = ['case', 'owner', 'status', 'period', 'from', 'until'];
     for (const suffix of ids) $(`${kind}-${suffix}`).addEventListener('input', () => { states[kind].page = 1; renderKind(kind); });
@@ -97,7 +97,12 @@ export function setupWorkflows({ getCases, getUser, canWrite, saveActivity, open
       const actions=document.createElement('td'), edit=textNode('button','Editar / registrar resultado','btn btn-sm btn-outline-primary'); edit.type='button'; edit.disabled=!writeEnabled;
       edit.addEventListener('click',()=>openEditor(kind,item)); actions.append(edit);
       const notes=document.createElement('details'); notes.append(textNode('summary','Observações'),textNode('p',data.observacao||'Sem observações.')); actions.append(notes);
-      row.append(caseCell,main,textNode('td',data.responsavel),deadline,state,actions); body.append(row);
+      row.append(caseCell,main,textNode('td',data.responsavel),deadline,state,actions);
+      ['Prontuário',isAgenda?'Data e hora previstas':'Pendência','Responsável',isAgenda?'Tipo':'Prazo','Situação','Ações'].forEach((label,i)=>{
+        const cell=row.cells[i];cell.setAttribute('role','cell');
+        const caption=textNode('span',label,'mobile-cell-label');caption.setAttribute('aria-hidden','true');cell.prepend(caption);
+      });
+      row.setAttribute('role','row');body.append(row);
     }
     $(`${kind}-empty`).hidden=filtered.length>0;
     $(`${kind}-empty`).textContent = items.length ? 'Nenhum item corresponde aos filtros.' : isAgenda ? 'Nenhum atendimento estruturado registrado. Adicione um atendimento ou consulte o histórico anterior do prontuário.' : 'Nenhuma pendência estruturada registrada. Adicione uma pendência ou consulte as anotações anteriores do prontuário.';
@@ -210,7 +215,12 @@ export function setupWorkflows({ getCases, getUser, canWrite, saveActivity, open
     }
     $('workflow-editor-fields').disabled=false;$('workflow-save').disabled=false;$('workflow-cancel').disabled=false;render();
   }
-  return { render, reset, hasPendingChanges: () => busy || Boolean(draft && snapshot() !== draft.initial), setCanWrite(value) {writeEnabled=Boolean(value);render();},
+  return { render, reset, canLeave() {
+      if (busy) return false;
+      if (draft && snapshot() !== draft.initial && !window.confirm('Descartar as alterações que ainda não foram salvas?')) return false;
+      if (draft) closeEditor(true);
+      return true;
+    }, hasPendingChanges: () => busy || Boolean(draft && snapshot() !== draft.initial), setCanWrite(value) {writeEnabled=Boolean(value);render();},
     openScope(kind,caseKey) { if(navigate(kind==='agenda'?'agenda':'tasks')===false) return; $(`${kind}-case`).value=caseKey;states[kind].page=1;renderKind(kind); },
     openCreate(kind,caseKey) { if(navigate(kind==='agenda'?'agenda':'tasks')===false) return; $(`${kind}-case`).value=caseKey;states[kind].page=1;renderKind(kind);openEditor(kind,null,caseKey); } };
 }
