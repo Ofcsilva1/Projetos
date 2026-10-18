@@ -32,11 +32,11 @@ export function setupImport({ getUser, getExisting, getPermission, createCase, n
     for (const plan of classified) {
       const tr = document.createElement('tr');
       const source = document.createElement('td'); source.textContent = `${plan.sheet} / ${plan.row}`;
-      const id = document.createElement('input'); id.type = 'text'; id.value = plan.data.numeroProntuario; id.maxLength = 100;
+      const id = document.createElement('input'); id.type = 'text'; id.name = 'numeroProntuario'; id.value = plan.data.numeroProntuario; id.maxLength = 100;
       id.setAttribute('aria-label', `Prontuário da linha ${plan.row} da aba ${plan.sheet}`);
-      const date = document.createElement('input'); date.type = 'date'; date.value = plan.data.dataEntrada;
+      const date = document.createElement('input'); date.type = 'date'; date.name = 'dataEntrada'; date.value = plan.data.dataEntrada;
       date.setAttribute('aria-label', `Data de entrada da linha ${plan.row} da aba ${plan.sheet}`);
-      const select = document.createElement('select'); select.setAttribute('aria-label', `Situação da linha ${plan.row} da aba ${plan.sheet}`);
+      const select = document.createElement('select'); select.name = 'situacaoAtual'; select.setAttribute('aria-label', `Situação da linha ${plan.row} da aba ${plan.sheet}`);
       select.add(new Option('Sem situação informada', ''));
       for (const [value, label] of Object.entries(STATUS)) select.add(new Option(label, value));
       if (plan.data.situacaoAtual === '__revisar__') select.add(new Option('Selecione uma situação válida', '__revisar__'));

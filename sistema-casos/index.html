@@ -5,16 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Nexo | Gestão de Casos — Demonstração</title>
 <script src="theme.js?v=20261016.demo1"></script>
-<script src="demo-login.js?v=20261016.demo2" defer></script>
+<script src="demo-login.js?v=20261018.fase2" defer></script>
 
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-<link rel="stylesheet" href="style.css?v=20261018.fase1" />
+<link rel="stylesheet" href="style.css?v=20261018.fase2" />
 </head>
 <body>
+<a id="skip-to-login" class="skip-link" href="#login-section">Ir para o acesso</a>
+<a id="skip-to-content" class="skip-link" href="#main-content" hidden>Ir para o conteúdo</a>
 
 <div id="notification-container" class="position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
 
@@ -23,23 +25,23 @@
 <button type="button" class="btn theme-toggle auth-theme-toggle" data-theme-toggle aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i><span data-theme-label>Modo noturno</span></button>
 <div class="auth-box animate__animated animate__zoomIn">
 <div class="auth-brand">
-<img src="marca.svg?v=20261016.demo2" alt="Nexo — Gestão de Casos" class="demo-logo" />
-<h2 class="demo-login-title">Conheça o sistema</h2>
+<img src="marca.svg?v=20261016.demo2" alt="Nexo — Gestão de Casos" width="240" height="80" class="demo-logo" />
+<h1 id="login-title" class="demo-login-title" tabindex="-1">Conheça o sistema</h1>
 <p>Seu acesso de demonstração já está preenchido.</p>
 </div>
 
-<section id="login-section">
+<section id="login-section" aria-labelledby="login-title" tabindex="-1">
 <form id="login-form">
 <div class="mb-3">
 <label class="form-label" for="username">E-mail</label>
-<input type="email" id="username" class="form-control" required autocomplete="off" value="visitante@exemplo.com" placeholder="seu.email@instituicao.org" />
+<input type="email" spellcheck="false" id="username" name="username" class="form-control" required autocomplete="off" value="visitante@exemplo.com" placeholder="seu.email@instituicao.org" />
 </div>
 <div class="mb-3">
 <label class="form-label" for="password">Senha</label>
-<input type="password" id="password" class="form-control" required autocomplete="off" value="NexoDemo2026" placeholder="••••••••" />
+<input type="password" id="password" name="password" class="form-control" required autocomplete="off" value="NexoDemo2026" placeholder="••••••••" />
 </div>
 <div class="mb-3 form-check">
-<input class="form-check-input" type="checkbox" id="show-password" />
+<input class="form-check-input" type="checkbox" id="show-password" name="show-password" />
 <label class="form-check-label text-muted" style="font-size: 0.9rem;" for="show-password">Mostrar Senha</label>
 </div>
 <button id="btnLogin" type="submit" class="btn btn-primary w-100" disabled>Preparando acesso...</button>
@@ -47,7 +49,7 @@
 
 </form>
 <p class="mt-3 text-center text-muted" style="font-size: 0.9rem;">
-Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app-version">Versão 20261018.fase1</small>
+Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app-version">Versão 20261018.fase2</small>
 </p>
 </section>
 
@@ -59,46 +61,46 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 
 <aside class="sidebar">
 <div class="sidebar-header">
-      <img src="marca.svg?v=20261016.demo2" alt="Nexo — Gestão de Casos" class="demo-logo" />
+      <img src="marca.svg?v=20261016.demo2" alt="Nexo — Gestão de Casos" width="240" height="80" class="demo-logo" />
 </div>
-<div class="sidebar-menu-container">
+<nav class="sidebar-menu-container" aria-label="Navegação principal">
 <span class="menu-title">GERENCIAMENTO</span>
 <ul class="sidebar-menu">
 <li>
-<a href="#" id="nav-list" class="active">
-<i class="bi bi-grid-3x3-gap"></i> Controle de Casos
+<a href="#" id="nav-list" class="active" aria-current="page">
+<i class="bi bi-grid-3x3-gap" aria-hidden="true"></i> Controle de Casos
 </a>
 </li>
 <li>
 <a href="#" id="nav-new">
-<i class="bi bi-person-plus"></i> Registrar Novo Caso
+<i class="bi bi-person-plus" aria-hidden="true"></i> Registrar Novo Caso
 </a>
 </li>
 <li><a href="#" id="nav-agenda"><i class="bi bi-calendar-week" aria-hidden="true"></i> Agenda e atendimentos</a></li>
 <li><a href="#" id="nav-tasks"><i class="bi bi-list-check" aria-hidden="true"></i> Pendências e retornos</a></li>
 </ul>
-</div>
+</nav>
 
 <div class="sidebar-art"></div>
 
 <div class="sidebar-footer">
-<small class="app-version">Versão 20261018.fase1</small>
+<small class="app-version">Versão 20261018.fase2</small>
 <button type="button" class="btn theme-toggle w-100" data-theme-toggle aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i><span data-theme-label>Modo noturno</span></button>
-<button id="btnDemoLogout" class="btn btn-logout w-100" type="button"><i class="bi bi-box-arrow-left" aria-hidden="true"></i> Sair da demonstração</button>
-<button id="btnResetDemo" class="btn btn-logout w-100" type="button"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Restaurar demonstração</button>
-<a href="../" class="btn w-100">Voltar ao portfólio</a>
+<button id="btnDemoLogout" class="btn btn-logout w-100" type="button"><i class="bi bi-box-arrow-left" aria-hidden="true"></i> <span class="sidebar-action-label">Sair da demonstração</span></button>
+<button id="btnResetDemo" class="btn btn-logout w-100" type="button"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> <span class="sidebar-action-label">Restaurar demonstração</span></button>
+<a href="../" class="btn w-100"><i class="bi bi-arrow-up-right" aria-hidden="true"></i><span class="sidebar-action-label">Voltar ao portfólio</span></a>
 </div>
 </aside>
 
-<main class="main-content">
+<main id="main-content" class="main-content" aria-labelledby="page-title" tabindex="-1">
 
 <header class="content-header">
 <div class="header-titles">
-<h2 id="page-title">Controle Geral de Casos</h2>
+<h1 id="page-title" tabindex="-1">Controle Geral de Casos</h1>
 <p id="page-subtitle" class="text-muted mb-0" style="font-size: 0.85rem;">Gerenciamento e monitoramento de prontuários.</p>
 </div>
 <div class="user-profile">
-<span class="badge-operacional"><i class="bi bi-person-circle"></i> Demonstração pública</span>
+<span class="badge-operacional"><i class="bi bi-person-circle" aria-hidden="true"></i> Demonstração pública</span>
 </div>
 </header>
 
@@ -117,29 +119,29 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <div class="row align-items-center w-100">
 <div class="col-md-9 d-flex gap-3 flex-wrap">
 <div class="input-group filter-wide">
-<span class="input-group-text"><i class="bi bi-search"></i></span>
-<input type="search" id="filtroBusca" class="form-control" placeholder="Buscar prontuário exato, CRIAD, responsável ou técnico" aria-label="Buscar casos" title="Somente números: busca o prontuário exato. Exemplo: 01 encontra 1, sem incluir 101." />
+<span class="input-group-text"><i class="bi bi-search" aria-hidden="true"></i></span>
+<input type="search" id="filtroBusca" name="filtroBusca" class="form-control" placeholder="Buscar prontuário exato, CRIAD, responsável ou técnico" aria-label="Buscar casos" title="Somente números: busca o prontuário exato. Exemplo: 01 encontra 1, sem incluir 101." />
 </div>
-<select id="filtroMes" class="form-select" style="max-width: 180px;" aria-label="Filtrar por mês de entrada">
+<select id="filtroMes" name="filtroMes" class="form-select" style="max-width: 180px;" aria-label="Filtrar por mês de entrada">
 <option value="">Todos os meses</option>
 <option value="1">Janeiro</option><option value="2">Fevereiro</option><option value="3">Março</option><option value="4">Abril</option><option value="5">Maio</option><option value="6">Junho</option><option value="7">Julho</option><option value="8">Agosto</option><option value="9">Setembro</option><option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
 </select>
-<select id="filtroAno" class="form-select" aria-label="Filtrar por ano de entrada">
+<select id="filtroAno" name="filtroAno" class="form-select" aria-label="Filtrar por ano de entrada">
 <option value="">Todos os anos</option>
 </select>
-<select id="filtroSituacao" class="form-select filter-status" aria-label="Filtrar por situação">
+<select id="filtroSituacao" name="filtroSituacao" class="form-select filter-status" aria-label="Filtrar por situação">
 <option value="">Todas as situações</option><option value="ativo">Ativo</option><option value="suspenso">Suspenso</option><option value="encerrado_com_protecao">Encerrado com proteção</option><option value="encerrado_sem_protecao">Encerrado sem proteção</option><option value="nao_competencia">Não é competência</option>
 </select>
-<select id="filtroViolencia" class="form-select" aria-label="Filtrar por tipo de violência">
+<select id="filtroViolencia" name="filtroViolencia" class="form-select" aria-label="Filtrar por tipo de violência">
 <option value="">Todos os tipos de violência</option>
 </select>
-<select id="filtroViolenciaSexual" class="form-select" aria-label="Filtrar por subtipo de violência sexual">
+<select id="filtroViolenciaSexual" name="filtroViolenciaSexual" class="form-select" aria-label="Filtrar por subtipo de violência sexual">
 <option value="">Todos os subtipos sexuais</option>
 </select>
 <button id="btnLimparFiltros" type="button" class="btn btn-outline-secondary clear-filters"><i class="bi bi-x-circle" aria-hidden="true"></i> Limpar filtros</button>
 </div>
 <div class="col-md-3 text-end export-group">
-<select id="ordenacaoCasos" class="form-select" aria-label="Ordenar casos">
+<select id="ordenacaoCasos" name="ordenacaoCasos" class="form-select" aria-label="Ordenar casos">
 <option value="recentes">Mais recentes (entrada)</option>
 <option value="antigos">Mais antigos (entrada)</option>
 <option value="numero_crescente">Prontuário: crescente</option>
@@ -147,18 +149,18 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </select>
 <button type="button" id="btnImport" class="btn btn-light border import-trigger" aria-haspopup="dialog" aria-controls="import-dialog"><i class="bi bi-upload" aria-hidden="true"></i><span>Importar planilha</span></button>
 <button type="button" id="btnExportColumns" class="btn btn-light export-columns-trigger" aria-haspopup="dialog" aria-controls="export-columns-dialog"><i class="bi bi-layout-three-columns" aria-hidden="true"></i><span>Colunas <span id="export-column-count">13</span></span></button>
-<button id="btnExportCSV" class="btn btn-light border btn-sm" title="Exportar CSV"><i class="bi bi-filetype-csv text-secondary"></i></button>
-<button id="btnExportXLS" class="btn btn-light border btn-sm" title="Exportar Excel"><i class="bi bi-file-earmark-excel text-success"></i></button>
-<button id="btnExportPDF" class="btn btn-light border btn-sm" title="Exportar PDF"><i class="bi bi-file-earmark-pdf text-danger"></i></button>
+<button id="btnExportCSV" aria-label="Exportar CSV" class="btn btn-light border btn-sm" title="Exportar CSV"><i class="bi bi-filetype-csv text-secondary" aria-hidden="true"></i></button>
+<button id="btnExportXLS" aria-label="Exportar Excel" class="btn btn-light border btn-sm" title="Exportar Excel"><i class="bi bi-file-earmark-excel text-success" aria-hidden="true"></i></button>
+<button id="btnExportPDF" aria-label="Exportar PDF" class="btn btn-light border btn-sm" title="Exportar PDF"><i class="bi bi-file-earmark-pdf text-danger" aria-hidden="true"></i></button>
 </div>
 </div>
 </div>
 
 <div id="empty-state" class="empty-state" hidden>
-<span class="empty-icon"><i class="bi bi-folder2-open"></i></span>
-<h3>Nenhum caso encontrado</h3>
+<span class="empty-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span>
+<h2>Nenhum caso encontrado</h2>
 <p>Altere os filtros ou registre um novo caso para começar.</p>
-<button type="button" class="btn btn-primary" id="btnEmptyNew"><i class="bi bi-plus-lg me-1"></i>Registrar caso</button>
+<button type="button" class="btn btn-primary" id="btnEmptyNew"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Registrar caso</button>
 </div>
 
 <div class="card-panel table-responsive">
@@ -176,7 +178,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </thead>
 <tbody></tbody>
 </table>
-<nav id="pagination" class="mt-4"></nav>
+<nav aria-label="Páginas dos casos" id="pagination" class="mt-4"></nav>
 </div>
 </section>
 
@@ -184,20 +186,20 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <section id="tasks-section" hidden></section>
 
 <dialog id="import-dialog" class="export-dialog import-dialog" aria-labelledby="import-title">
-<div class="export-dialog-header"><div><h3 id="import-title">Importar planilha otimizada</h3><p>Selecione o arquivo .xlsx. Cadastros e históricos serão vinculados por prontuário. Casos existentes serão ignorados.</p></div></div>
+<div class="export-dialog-header"><div><h2 id="import-title">Importar planilha otimizada</h2><p>Selecione o arquivo .xlsx. Cadastros e históricos serão vinculados por prontuário. Casos existentes serão ignorados.</p></div></div>
 <label for="import-file" class="form-label">Planilha otimizada (.xlsx, até 15 MB)</label>
-<input id="import-file" type="file" accept=".xlsx" class="form-control" />
+<input id="import-file" name="import-file" type="file" accept=".xlsx" class="form-control" />
 <p id="import-status" role="status" aria-live="polite"></p>
 <p id="import-summary"></p>
 <div class="import-table-wrap"><table class="table"><thead><tr><th>Aba / linha</th><th>Prontuário</th><th>Entrada</th><th>Situação</th><th>Conferência</th></tr></thead><tbody id="import-rows"></tbody></table></div>
-<label class="import-confirm"><input id="import-confirm" type="checkbox" /> Conferi a prévia e tenho uma cópia de segurança. Importar somente os registros prontos, mantendo os existentes.</label>
+<label class="import-confirm"><input id="import-confirm" name="import-confirm" type="checkbox" /> Conferi a prévia e tenho uma cópia de segurança. Importar somente os registros prontos, mantendo os existentes.</label>
 <div class="export-dialog-footer"><button id="import-report" type="button" class="btn btn-outline-secondary" disabled>Baixar relatório</button><div><button id="import-close" type="button" class="btn btn-outline-secondary">Fechar</button><button id="import-save" type="button" class="btn btn-primary" disabled>Confirmar importação</button></div></div>
 </dialog>
 
 <dialog id="export-columns-dialog" class="export-dialog" aria-labelledby="export-dialog-title" aria-describedby="export-dialog-description">
 <form id="export-columns-form">
 <div class="export-dialog-header">
-<div><h3 id="export-dialog-title">Colunas da exportação</h3><p id="export-dialog-description">Escolha os campos para CSV, Excel e PDF. Serão exportados todos os casos encontrados pelos filtros, incluindo outras páginas.</p></div>
+<div><h2 id="export-dialog-title">Colunas da exportação</h2><p id="export-dialog-description">Escolha os campos para CSV, Excel e PDF. Serão exportados todos os casos encontrados pelos filtros, incluindo outras páginas.</p></div>
 <button type="button" id="btnCloseExportColumns" class="btn btn-outline-secondary" aria-label="Fechar seleção de colunas"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
 </div>
 <div class="export-column-presets">
@@ -215,46 +217,46 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 
 <nav class="form-nav mb-4">
 <div class="nav nav-tabs border-0 gap-2" id="form-tabs" role="tablist">
-<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1" type="button"><i class="bi bi-person-badge me-1"></i> Identificação</button>
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab2" type="button"><i class="bi bi-activity me-1"></i> Situação</button>
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab3" type="button"><i class="bi bi-people me-1"></i> Responsável</button>
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab4" type="button"><i class="bi bi-shield-exclamation me-1"></i> Violência</button>
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab5" type="button"><i class="bi bi-arrow-right-circle me-1"></i> Encaminhamentos</button>
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab6" type="button"><i class="bi bi-reply me-1"></i> Retorno</button>
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab7" type="button"><i class="bi bi-journal-check me-1"></i> Estudo/Plano</button>
-<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab8" type="button"><i class="bi bi-calendar-event me-1"></i> Atendimentos</button>
+<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab1" id="form-tab-1" role="tab" aria-controls="tab1" aria-selected="true" tabindex="0" type="button"><i class="bi bi-person-badge me-1" aria-hidden="true"></i> Identificação</button>
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab2" id="form-tab-2" role="tab" aria-controls="tab2" aria-selected="false" tabindex="-1" type="button"><i class="bi bi-activity me-1" aria-hidden="true"></i> Situação</button>
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab3" id="form-tab-3" role="tab" aria-controls="tab3" aria-selected="false" tabindex="-1" type="button"><i class="bi bi-people me-1" aria-hidden="true"></i> Responsável</button>
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab4" id="form-tab-4" role="tab" aria-controls="tab4" aria-selected="false" tabindex="-1" type="button"><i class="bi bi-shield-exclamation me-1" aria-hidden="true"></i> Violência</button>
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab5" id="form-tab-5" role="tab" aria-controls="tab5" aria-selected="false" tabindex="-1" type="button"><i class="bi bi-arrow-right-circle me-1" aria-hidden="true"></i> Encaminhamentos</button>
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab6" id="form-tab-6" role="tab" aria-controls="tab6" aria-selected="false" tabindex="-1" type="button"><i class="bi bi-reply me-1" aria-hidden="true"></i> Retorno</button>
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab7" id="form-tab-7" role="tab" aria-controls="tab7" aria-selected="false" tabindex="-1" type="button"><i class="bi bi-journal-check me-1" aria-hidden="true"></i> Estudo/Plano</button>
+<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab8" id="form-tab-8" role="tab" aria-controls="tab8" aria-selected="false" tabindex="-1" type="button"><i class="bi bi-calendar-event me-1" aria-hidden="true"></i> Atendimentos</button>
 </div>
 </nav>
 
 <form id="case-form">
 <div class="tab-content pt-2">
 
-<div class="tab-pane fade show active" id="tab1">
+<div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="form-tab-1">
 <div class="form-grid">
 <div class="field-group">
-<label class="form-label">Número do Prontuário <span class="text-danger">*</span></label>
+<label class="form-label" for="numero-prontuario">Número do Prontuário <span class="text-danger">*</span></label>
 <div class="input-group">
-<span class="input-group-text"><i class="bi bi-file-text"></i></span>
-<input type="text" id="numero-prontuario" class="form-control" required maxlength="100" placeholder="Digite o número" />
+<span class="input-group-text"><i class="bi bi-file-text" aria-hidden="true"></i></span>
+<input type="text" id="numero-prontuario" name="numero-prontuario" class="form-control" required maxlength="100" placeholder="Digite o número" />
 </div>
 </div>
 <div class="field-group">
-<label class="form-label">Data de Entrada <span class="text-danger">*</span></label>
+<label class="form-label" for="data-entrada">Data de Entrada <span class="text-danger">*</span></label>
 <div class="input-group">
-<span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
-<input type="date" id="data-entrada" class="form-control" required />
+<span class="input-group-text"><i class="bi bi-calendar-date" aria-hidden="true"></i></span>
+<input type="date" id="data-entrada" name="data-entrada" class="form-control" required />
 </div>
 </div>
 <div class="field-group">
-<label class="form-label">Documento de Origem</label>
+<label class="form-label" for="documento-origem">Documento de Origem</label>
 <div class="input-group">
-<span class="input-group-text"><i class="bi bi-folder2"></i></span>
-<input type="text" id="documento-origem" class="form-control" placeholder="Documento" />
+<span class="input-group-text"><i class="bi bi-folder2" aria-hidden="true"></i></span>
+<input type="text" id="documento-origem" name="documento-origem" class="form-control" placeholder="Documento" />
 </div>
 </div>
 <div class="field-group">
-<label class="form-label">Origem do Caso</label>
-<select id="origem-caso" class="form-select">
+<label class="form-label" for="origem-caso">Origem do Caso</label>
+<select id="origem-caso" name="origem-caso" class="form-select">
 <option value="" selected>Selecione…</option>
 <option value="demanda_criad">Demanda espontânea da CRIAD</option>
 <option value="demanda_responsavel">Demanda espontânea do responsável</option>
@@ -268,8 +270,8 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </select>
 </div>
 <div class="field-group">
-<label class="form-label">COR (Etnia/Cor)</label>
-<select id="cor" class="form-select">
+<label class="form-label" for="cor">COR (Etnia/Cor)</label>
+<select id="cor" name="cor" class="form-select">
 <option value="" selected>Selecione…</option>
 <option value="pardo">Pardo(a)</option>
 <option value="branco">Branco(a)</option>
@@ -280,17 +282,17 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </select>
 </div>
 <div class="field-group full-width">
-<label class="form-label">Detalhamento da Origem</label>
-<textarea id="detalhe-origem" class="form-control" rows="3" placeholder="Descreva os detalhes..."></textarea>
+<label class="form-label" for="detalhe-origem">Detalhamento da Origem</label>
+<textarea id="detalhe-origem" name="detalhe-origem" class="form-control" rows="3" placeholder="Descreva os detalhes..."></textarea>
 </div>
 </div>
 </div>
 
-<div class="tab-pane fade" id="tab2">
+<div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="form-tab-2">
 <div class="form-grid">
 <div class="field-group">
-<label class="form-label">Situação Atual</label>
-<select id="situacao-atual" class="form-select">
+<label class="form-label" for="situacao-atual">Situação Atual</label>
+<select id="situacao-atual" name="situacao-atual" class="form-select">
 <option value="" selected>Selecione…</option>
 <option value="ativo">Ativo</option>
 <option value="suspenso">Suspenso</option>
@@ -300,36 +302,36 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </select>
 </div>
 <div class="field-group full-width">
-<label class="form-label">Detalhamento da Situação</label>
-<textarea id="detalhe-situacao" class="form-control" rows="3" placeholder="Detalhes sobre a situação..."></textarea>
+<label class="form-label" for="detalhe-situacao">Detalhamento da Situação</label>
+<textarea id="detalhe-situacao" name="detalhe-situacao" class="form-control" rows="3" placeholder="Detalhes sobre a situação..."></textarea>
 </div>
 </div>
 </div>
 
-<div class="tab-pane fade" id="tab3">
+<div class="tab-pane fade" id="tab3" role="tabpanel" aria-labelledby="form-tab-3">
 <div class="form-grid">
 <div class="field-group">
-<label class="form-label">Nome da CRIAD</label>
-<input type="text" id="nome-criad" class="form-control" placeholder="Nome da CRIAD" />
+<label class="form-label" for="nome-criad">Nome da CRIAD</label>
+<input type="text" id="nome-criad" name="nome-criad" class="form-control" placeholder="Nome da CRIAD" />
 </div>
 <div class="field-group">
-<label class="form-label">Nome do(a) Responsável</label>
-<input type="text" id="responsavel-nome" class="form-control" placeholder="Nome completo" />
+<label class="form-label" for="responsavel-nome">Nome do(a) Responsável</label>
+<input type="text" id="responsavel-nome" name="responsavel-nome" class="form-control" placeholder="Nome completo" />
 </div>
 <div class="field-group">
-<label class="form-label">CPF do(a) Responsável</label>
-<input type="text" id="responsavel-cpf" class="form-control" placeholder="000.000.000-00" />
+<label class="form-label" for="responsavel-cpf">CPF do(a) Responsável</label>
+<input type="text" id="responsavel-cpf" inputmode="numeric" autocomplete="off" spellcheck="false" name="responsavel-cpf" class="form-control" placeholder="000.000.000-00" />
 </div>
 </div>
 </div>
 
-<div class="tab-pane fade" id="tab4">
+<div class="tab-pane fade" id="tab4" role="tabpanel" aria-labelledby="form-tab-4">
 <p class="text-muted">Marque as opções aplicáveis nas colunas Tipo de violência, Sexual e Outros. É possível registrar mais de uma violência no mesmo prontuário.</p>
 <div id="violence-fields" class="violence-fields"></div>
 <div class="form-grid">
 <div class="field-group">
-<label class="form-label">Comunicação da Violência</label>
-<select id="comunicacao-violencia" class="form-select">
+<label class="form-label" for="comunicacao-violencia">Comunicação da Violência</label>
+<select id="comunicacao-violencia" name="comunicacao-violencia" class="form-select">
 <option value="" selected>Selecione…</option>
 <option value="comunicacao_ct">Comunicação ao CT</option>
 <option value="comunicacao_policia">Comunicação à Polícia</option>
@@ -338,17 +340,17 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </select>
 </div>
 <div class="field-group">
-<label class="form-label">Ofício de Comunicação</label>
-<input type="text" id="oficio-violencia" class="form-control" placeholder="Ex: 10/01/2024 - Ofício nº 123" />
+<label class="form-label" for="oficio-violencia">Ofício de Comunicação</label>
+<input type="text" id="oficio-violencia" name="oficio-violencia" class="form-control" placeholder="Ex: 10/01/2024 - Ofício nº 123" />
 </div>
 </div>
 </div>
 
-<div class="tab-pane fade" id="tab5">
+<div class="tab-pane fade" id="tab5" role="tabpanel" aria-labelledby="form-tab-5">
 <div class="form-grid">
 <div class="field-group">
-<label class="form-label">Tipo de Encaminhamento</label>
-<select id="encaminhamentos-solicitados" class="form-select">
+<label class="form-label" for="encaminhamentos-solicitados">Tipo de Encaminhamento</label>
+<select id="encaminhamentos-solicitados" name="encaminhamentos-solicitados" class="form-select">
 <option value="">-- Selecione --</option>
 <option value="apoio_ct">Apoio ao CT</option>
 <option value="educacao">Política de Educação</option>
@@ -359,46 +361,46 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </select>
 </div>
 <div class="field-group">
-<label class="form-label">Ofício (Data e Nº)</label>
-<input type="text" id="data-oficio-enc" class="form-control" placeholder="Ex: 15/01/2024 - Ofício nº 456" />
+<label class="form-label" for="data-oficio-enc">Ofício (Data e Nº)</label>
+<input type="text" id="data-oficio-enc" name="data-oficio-enc" class="form-control" placeholder="Ex: 15/01/2024 - Ofício nº 456" />
 </div>
 <div class="field-group full-width">
-<label class="form-label">Detalhamento do Encaminhamento</label>
-<textarea id="detalhe-encaminhamento" class="form-control" rows="2"></textarea>
+<label class="form-label" for="detalhe-encaminhamento">Detalhamento do Encaminhamento</label>
+<textarea id="detalhe-encaminhamento" name="detalhe-encaminhamento" class="form-control" rows="2"></textarea>
 </div>
 </div>
 </div>
 
-<div class="tab-pane fade" id="tab6">
+<div class="tab-pane fade" id="tab6" role="tabpanel" aria-labelledby="form-tab-6">
 <div class="form-grid">
 <div class="field-group">
-<label class="form-label">Houve retorno solicitado?</label>
-<select id="retorno-solicitado" class="form-select">
+<label class="form-label" for="retorno-solicitado">Houve retorno solicitado?</label>
+<select id="retorno-solicitado" name="retorno-solicitado" class="form-select">
 <option value="" selected>Selecione…</option>
 <option value="sim">Sim</option>
 <option value="nao">Não</option>
 </select>
 </div>
 <div class="field-group full-width">
-<label class="form-label">Informações sobre o retorno</label>
-<textarea id="info-retorno" class="form-control" rows="2"></textarea>
+<label class="form-label" for="info-retorno">Informações sobre o retorno</label>
+<textarea id="info-retorno" name="info-retorno" class="form-control" rows="2"></textarea>
 </div>
 </div>
 </div>
 
-<div class="tab-pane fade" id="tab7">
+<div class="tab-pane fade" id="tab7" role="tabpanel" aria-labelledby="form-tab-7">
 <div class="form-grid">
 <div class="field-group">
-<label class="form-label">Estudo de Caso elaborado?</label>
-<select id="estudo-caso" class="form-select">
+<label class="form-label" for="estudo-caso">Estudo de Caso elaborado?</label>
+<select id="estudo-caso" name="estudo-caso" class="form-select">
 <option value="" selected>Selecione…</option>
 <option value="sim">Sim</option>
 <option value="nao">Não</option>
 </select>
 </div>
 <div class="field-group">
-<label class="form-label">Plano Individual elaborado?</label>
-<select id="pia-elaborado" class="form-select">
+<label class="form-label" for="pia-elaborado">Plano Individual elaborado?</label>
+<select id="pia-elaborado" name="pia-elaborado" class="form-select">
 <option value="" selected>Selecione…</option>
 <option value="sim">Sim</option>
 <option value="nao">Não</option>
@@ -407,20 +409,20 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </div>
 </div>
 
-<div class="tab-pane fade" id="tab8">
+<div class="tab-pane fade" id="tab8" role="tabpanel" aria-labelledby="form-tab-8">
 <div class="form-grid">
-<div class="field-group full-width workflow-callout"><h4>Registrar uma data e um relato</h4><p>Primeiro salve o prontuário. Depois, ao editá-lo, clique em <strong>Adicionar atendimento</strong> para escolher a data no calendário, informar o técnico e escrever a descrição do atendimento. Cada atendimento terá seu próprio registro.</p><div class="workflow-case-actions"><button id="btnCaseAgenda" type="button" class="btn btn-primary" disabled>Adicionar atendimento</button><button id="btnCaseTasks" type="button" class="btn btn-outline-primary" disabled>Adicionar pendência</button></div><small>Para consultar os registros existentes, use “Agenda e atendimentos” ou “Pendências e retornos” no menu lateral.</small></div>
+<div class="field-group full-width workflow-callout"><h2>Registrar uma data e um relato</h2><p>Primeiro salve o prontuário. Depois, ao editá-lo, clique em <strong>Adicionar atendimento</strong> para escolher a data no calendário, informar o técnico e escrever a descrição do atendimento. Cada atendimento terá seu próprio registro.</p><div class="workflow-case-actions"><button id="btnCaseAgenda" type="button" class="btn btn-primary" disabled>Adicionar atendimento</button><button id="btnCaseTasks" type="button" class="btn btn-outline-primary" disabled>Adicionar pendência</button></div><small>Para consultar os registros existentes, use “Agenda e atendimentos” ou “Pendências e retornos” no menu lateral.</small></div>
 <div class="field-group">
-<label class="form-label">Técnicos de referência</label>
-<input type="text" id="tecnicos-referencia" class="form-control" />
+<label class="form-label" for="tecnicos-referencia">Técnicos de referência</label>
+<input type="text" id="tecnicos-referencia" name="tecnicos-referencia" class="form-control" />
 </div>
 <div class="field-group">
-<label class="form-label">Histórico anterior de datas e relatos</label>
-<textarea id="datas-atendimento" class="form-control" placeholder="Anotações anteriores preservadas. Use Agenda e atendimentos para novos registros com data." rows="3"></textarea>
+<label class="form-label" for="datas-atendimento">Histórico anterior de datas e relatos</label>
+<textarea id="datas-atendimento" name="datas-atendimento" class="form-control" placeholder="Anotações anteriores preservadas. Use Agenda e atendimentos para novos registros com data." rows="3"></textarea>
 </div>
 <div class="field-group full-width">
-<label class="form-label">Outras pendências</label>
-<textarea id="outras-pendencias" class="form-control" rows="2"></textarea>
+<label class="form-label" for="outras-pendencias">Outras pendências</label>
+<textarea id="outras-pendencias" name="outras-pendencias" class="form-control" rows="2"></textarea>
 </div>
 </div>
 </div>
@@ -429,8 +431,8 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 
 <p id="case-save-status" role="status" aria-live="polite" class="text-danger mt-3"></p>
 <div class="form-footer mt-4 pt-3 border-top d-flex justify-content-end gap-2">
-<button type="button" class="btn btn-outline-secondary px-4" id="btnCancelarForm"><i class="bi bi-x-lg"></i> Cancelar</button>
-<button type="submit" id="btnSalvarCaso" class="btn btn-primary px-4"><i class="bi bi-save"></i> Salvar registro</button>
+<button type="button" class="btn btn-outline-secondary px-4" id="btnCancelarForm"><i class="bi bi-x-lg" aria-hidden="true"></i> Cancelar</button>
+<button type="submit" id="btnSalvarCaso" class="btn btn-primary px-4"><i class="bi bi-save" aria-hidden="true"></i> Salvar registro</button>
 </div>
 </form>
 </div>
@@ -443,6 +445,6 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js" defer></script>
-<script id="app-script" type="module" src="script.js?v=20261018.fase1"></script>
+<script id="app-script" type="module" src="script.js?v=20261018.fase2"></script>
 </body>
 </html>

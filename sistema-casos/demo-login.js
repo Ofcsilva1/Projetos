@@ -36,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     status.textContent = '';
     entry.hidden = true;
     app.hidden = false;
+    document.getElementById('skip-to-login').hidden = true;
+    document.getElementById('skip-to-content').hidden = false;
     document.getElementById('page-title').setAttribute('tabindex', '-1');
     document.getElementById('page-title').focus();
   });
@@ -43,7 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!document.dispatchEvent(new Event('demo:logout-request', {cancelable:true}))) return;
     app.hidden = true;
     entry.hidden = false;
+    document.getElementById('skip-to-content').hidden = true;
+    document.getElementById('skip-to-login').hidden = false;
     prefill();
-    button.focus();
+    document.getElementById('login-title').focus();
   });
 });
