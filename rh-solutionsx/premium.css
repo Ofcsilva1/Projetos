@@ -568,3 +568,18 @@ main { padding-top: 24px; }
  .brand { width: 208px; height: 110px; }
 }
 .fill.warning, html[data-theme=dark] .fill.warning { background: var(--chart-3) !important; }
+@media screen and (min-width: 1101px) {
+ .overview-layout { grid-template-columns: 1.2fr 1fr 1fr; }
+ .overview-layout > .side-stack { display: contents; }
+ .overview-layout .donut-svg { width: 152px; height: 152px; }
+ .overview-layout .ranking { max-height: 176px; }
+ .overview-layout .bar-row { min-height: 40px; }
+ .overview-layout .bar-row small { display: none; }
+}
+@media screen and (max-width: 1100px) {
+ .overview-layout { grid-template-columns: 1fr; }
+ .overview-layout > .side-stack { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media screen and (max-width: 700px) {
+ .overview-layout > .side-stack { grid-template-columns: 1fr; }
+}
