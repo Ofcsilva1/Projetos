@@ -132,7 +132,7 @@ function render(){
   panel('Modelos de trabalho por equipe','A combinação de presencial, híbrido e remoto em cada área.',departmentStack(rows,'Modelo_Trabalho'))+
   `<div class="grid equal">${panel('Senioridade na base','Distribuição pelo nível de cargo registrado. Não representa tempo de empresa.',donut(rows,'Nivel_Cargo'))}${panel('Distribuição por cargo','Os 12 cargos com mais registros. Todos os cargos estão na tabela.',bars(rows,'Cargo','count',12))}</div>`;
  if(tab==='performance')html=base+remunerationSummary(rows)+
-  `<div class="grid equal">${panel('Remuneração por departamento','Média e mediana do salário base dos ativos. Valores sem ajuste por cargo, nível ou jornada.',salaryComparison(rows,'Departamento'))}${panel('Remuneração por cargo','Até 12 cargos com maior salário médio entre ativos. Todos os grupos estão na tabela.',salaryComparison(rows,'Cargo',12))}</div>`+
+  `<div class="grid equal">${panel('Remuneração por departamento','Média e mediana do salário base dos ativos. Valores sem ajuste por cargo, nível ou jornada.',salaryComparison(rows,'Departamento'))}${panel('Remuneração por cargo','Salário individual quando há uma pessoa; média e mediana para grupos maiores. Busca local e lista completa disponíveis.',salaryComparison(rows,'Cargo',12))}</div>`+
   panel('Esforço & atingimento de metas','Explore a relação entre horas extras e resultados por departamento.',bubbles(rows))+
   `<div class="grid equal">${panel('Metas por departamento','Como as equipes se posicionam no atingimento médio.',bars(rows,'Departamento','target'))}${panel('O alcance das metas','A distribuição das pessoas por faixa de resultado.',targetDistribution(rows))}</div>`+
   panel('Um mapa dos resultados','Identifique a concentração das faixas de metas dentro de cada equipe.',targetHeatmap(rows))+
@@ -146,8 +146,7 @@ function render(){
   `<div class="notice">O período dos acidentes e as horas de exposição não constam na base. A visualização não permite concluir que horas extras causaram acidentes.</div>`;
  if(tab==='departures'){
   const exits=rows.filter(r=>r.Status==='Desligado');
-  html=base+miniFacts(rows,'departures')+`<div class="grid equal">${panel('Por que as pessoas saíram','Os motivos informados nos desligamentos registrados.',bars(exits,'Motivo_Desligamento'))}${panel('Como ocorreram as saídas','A participação dos desligamentos voluntários e involuntários.',donut(exits,'Tipo_Desligamento'))}</div>`+
-   panel('Quando aconteceram as saídas','A distribuição mensal dos desligamentos com data informada.',monthDepartures(rows))+
+  html=base+miniFacts(rows,'departures')+panel('Quando aconteceram as saídas','A distribuição mensal dos desligamentos com data informada.',monthDepartures(rows))+`<div class="grid equal">${panel('Por que as pessoas saíram','Os motivos informados nos desligamentos registrados.',bars(exits,'Motivo_Desligamento'))}${panel('Como ocorreram as saídas','A participação dos desligamentos voluntários e involuntários.',donut(exits,'Tipo_Desligamento'))}</div>`+
    `<div class="grid equal">${panel('Saídas por departamento','As equipes de origem das pessoas desligadas.',bars(exits,'Departamento'))}${panel('Saídas por estado','Onde estavam alocadas as pessoas que saíram.',bars(exits,'UF_Alocacao'))}</div>`+
    `<div class="grid equal">${panel('Perfil etário das saídas','As faixas de idade dos desligamentos registrados.',ageDistribution(exits))}${panel('Modelo de trabalho nas saídas','A composição dos modelos de trabalho entre as pessoas desligadas.',donut(exits,'Modelo_Trabalho'))}</div>`+
    `<div class="notice">As saídas são contagens do histórico disponível. O quadro completo por período é necessário para calcular turnover.</div>`;
@@ -157,7 +156,7 @@ function render(){
  if($('timeline-mode'))$('timeline-mode').onchange=()=>applyState({trend:$('timeline-mode').value},{focusId:'timeline-mode'});
  if($('group'))$('group').onchange=()=>applyState({safety:$('group').value},{focusId:'group'});
  if($('table-group')){$('table-group').onchange=()=>applyState({tableGroup:$('table-group').value},{tableOnly:true});$('table-search').oninput=()=>applyState({search:$('table-search').value},{tableOnly:true,replace:true});updateTable()}
- compactPanels();updateInsights(rows,tab);activateVisuals();
+ compactPanels();bindSalaryControls();updateInsights(rows,tab);activateVisuals();
  updatePrintContext(rows);
 }
 

@@ -83,18 +83,24 @@ function miniFacts(rows,kind){
 }
 let animationObserver;
 function compactPanels(){
- const container=$('content');
- for(const group of [...container.querySelectorAll(':scope > .grid.equal')]){
-  if(!group.isConnected)continue;
-  const masonry=document.createElement('div');masonry.className='masonry-panels';container.insertBefore(masonry,group);
-  let next=group;
-  while(next?.matches('.grid.equal')){const following=next.nextElementSibling;while(next.firstChild)masonry.appendChild(next.firstChild);next.remove();next=following}
- }
+ // Keep the authored group order; bound dense lists instead of merging unrelated grids.
+ document.querySelectorAll('#content .panel, #safety-bars').forEach(panel=>{
+  const title=panel.querySelector('h2')?.textContent||panel.closest('.panel')?.querySelector('h2')?.textContent||'Indicadores';
+  const rows=[...panel.children].filter(el=>el.matches('.bar-row'));
+  if(rows.length>4){
+   const list=document.createElement('div');list.className='rank-scroll ranking';list.tabIndex=0;
+   list.setAttribute('role','region');list.setAttribute('aria-label',title+', lista completa com rolagem');
+   rows[0].before(list);rows.forEach(row=>list.append(row));
+   const hint=document.createElement('p');hint.className='caption scroll-hint';hint.textContent=`${rows.length} categorias exibidas. Role a lista para explorar.`;list.after(hint);
+  }
+  const stack=panel.querySelector('.stacked-list');
+  if(stack){stack.classList.add('rank-scroll');stack.tabIndex=0;stack.setAttribute('role','region');stack.setAttribute('aria-label','Composição por equipe, com rolagem')}
+ });
 }
-function activateVisuals(){
+function activateVisuals(animate=true){
  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches||matchMedia('print').matches;
- animationObserver?.disconnect();
- if(!reduce){
+ if(animate)animationObserver?.disconnect();
+ if(!reduce&&animate){
   animationObserver=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-visible');animationObserver.unobserve(e.target)}}),{threshold:.06});
   document.querySelectorAll('#content .panel,#content .feature-summary,#content .mini-facts').forEach((el,i)=>{el.classList.add('reveal');el.style.setProperty('--reveal-delay',`${Math.min(i%3*60,120)}ms`);animationObserver.observe(el)});
   document.querySelectorAll('.kpi').forEach((el,i)=>el.animate([{opacity:.3,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}],{duration:400,delay:i*45,fill:'backwards',easing:'ease-out'}));
@@ -103,6 +109,7 @@ function activateVisuals(){
  const tooltip=$('chart-tooltip');tooltip.hidden=true;
  const hide=()=>{tooltip.hidden=true};
  document.querySelectorAll('.chart-point,.bubble,.bar-row').forEach(el=>{
+  if(el.dataset.tooltipBound)return;el.dataset.tooltipBound='true';
   const text=el.dataset.tip||el.getAttribute('aria-label')||el.innerText?.replaceAll('\n',' · ');
   if(!text)return;
   const show=e=>{tooltip.textContent=text;tooltip.hidden=false;const b=el.getBoundingClientRect();const x=e.clientX||b.x+b.width/2,y=e.clientY||b.y;tooltip.style.left=Math.max(8,Math.min(x,innerWidth-tooltip.offsetWidth-12))+'px';tooltip.style.top=Math.max(8,Math.min(y+18,innerHeight-tooltip.offsetHeight-12))+'px'};

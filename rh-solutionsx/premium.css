@@ -417,3 +417,131 @@ button.bar-row:hover { background: var(--surface-subtle); }
  html[data-theme=dark] .timeline-point.series-0 .timeline-dot { fill: #77d5b0; }
  html[data-theme=dark] .timeline-point.series-1 .timeline-dot { fill: #b69be9; }
 }
+
+/* Refinamento premium: componentes compartilhados, cores ajustadas por tema. */
+:root {
+ --bg: #eff0f2; --white: #fafafb; --surface-subtle: #f0f1f4;
+ --ink: #252b36; --navy: #202633; --muted: #606775; --line: #d9dde3;
+ --blue: #087f8c; --gold: #7757a6; --accent-soft: #e5f2ef; --focus: #087f8c;
+ --sidebar-bg: #15181e; --sidebar-text: #e4e7ee;
+ --chart-1: #148778; --chart-2: #7656b5; --chart-3: #a16c22;
+ --chart-4: #447eae; --chart-5: #698b78; --chart-6: #767382;
+ --space: 20px; --sidebar-width: 220px; --radius: 12px;
+ --shadow: 0 3px 12px rgb(24 32 48 / 3%);
+}
+html[data-theme=dark] {
+ --bg: #101215; --white: #191c21; --surface-subtle: #20242b;
+ --ink: #e5e9ef; --navy: #f1f4f8; --muted: #aab3bf; --line: #333a45;
+ --blue: #58d6c0; --gold: #ac93ef; --accent-soft: #20332f; --focus: #7be8d5;
+ --sidebar-bg: #14171c; --sidebar-text: #e4e7ee;
+ --chart-1: #58d6c0; --chart-2: #ac93ef; --chart-3: #ddb166;
+ --chart-4: #7aafe0; --chart-5: #96bba6; --chart-6: #aaa3c0;
+}
+.brand { width: 188px; height: 112px; margin-bottom: 20px; background: transparent; border-radius: 0; }
+.brand img { width: 100%; height: 100%; object-fit: contain; }
+html[data-theme=dark] .brand { background: transparent; }
+.sidebar { border-right: 1px solid #2d333d; }
+nav button { color: #cbd2de; }
+nav button:hover, html[data-theme=dark] nav button:hover { background: #222b34; }
+nav button[aria-current], html[data-theme=dark] nav button[aria-current] { background: #253339; border-color: #3d5359; box-shadow: inset 3px 0 #58d6c0; color: #fff; }
+main { padding-top: 24px; }
+.intro { margin-bottom: 20px; }
+.filters { padding: 16px 20px; }
+.kpi { padding: 16px; }
+.kpi-heading { min-height: 28px; }
+.kpi strong { font-size: clamp(23px,1.8vw,28px); }
+.kpi small, .bar-row small, .stacked-row small, .mini-facts small { font-size: 11px; }
+.panel { padding: 20px; }
+.panel-head { margin-bottom: 18px; }
+.caption, .legend, .donut-legend, .bar-row { font-size: 12px; }
+.bar-row { margin: 0; min-height: 48px; padding-block: 8px; }
+.bar-row small { line-height: 1.5; }
+.rank-scroll { max-height: 336px; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--muted) var(--surface-subtle); padding: 3px 8px 3px 3px; scroll-padding: 8px; }
+.ranking { display: grid; gap: 4px; max-height: 280px; }
+.scroll-hint { margin-top: 12px; }
+.stacked-row { margin: 8px 0; min-height: 42px; font-size: 12px; }
+.stacked-list.rank-scroll { max-height: 336px; }
+.grid.equal { align-items: start; }
+.grid.equal > .panel { min-height: 0; }
+.table-wrap { max-height: 360px; }
+.chart-scroll { padding-top: 6px; }
+.chart text { font-size: 12px; }
+.heatmap-scroll { max-height: 350px; }
+.heatmap th { top: 0; z-index: 2; }
+.salary-controls { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; margin-bottom: 12px; }
+.salary-controls label { display: grid; gap: 5px; font-size: 12px; color: var(--muted); }
+.salary-controls input { width: 100%; }
+.salary-controls label:first-child { flex: 1; min-width: 120px; }
+.salary-controls select { min-width: 85px; }
+.salary-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 11px; color: var(--muted); }
+.salary-legend span { display: flex; align-items: center; gap: 6px; }
+.salary-legend i, .salary-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; background: var(--chart-1); }
+.salary-legend .median, .salary-dot.median { background: var(--chart-2); border-radius: 2px; }
+.salary-axis { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); margin: 0 125px 8px 40%; }
+.salary-comparison { display: grid; gap: 0; max-height: 380px; }
+.salary-compare-row { border-bottom: 1px solid var(--line); padding: 0; }
+.salary-compare-row:last-child { padding: 0; }
+.salary-series { display: grid; grid-template-columns: minmax(110px,38%) minmax(30px,1fr) 122px; gap: 16px; width: 100%; border: 0; border-radius: 6px; background: transparent; color: var(--ink); text-align: left; padding: 12px 4px; min-height: 68px; }
+.salary-series:hover, .salary-series[aria-pressed=true] { background: var(--accent-soft); }
+.salary-group { display: block; margin: 0; }
+.salary-group strong { display: block; font-size: 12px; font-weight: 600; color: var(--ink); }
+.salary-group small { display: block; font-size: 11px; margin-top: 4px; color: var(--muted); }
+.salary-plot { position: relative; height: 22px; margin-inline: 5px; background: linear-gradient(var(--line),var(--line)) center/100% 1px no-repeat; }
+.salary-connector { position: absolute; top: 9px; height: 4px; background: var(--muted); opacity: .6; }
+.salary-dot { position: absolute; top: 6px; width: 10px; height: 10px; transform: translateX(-50%); box-shadow: 0 0 0 2px var(--white); }
+.salary-dot.median { top: 5px; height: 12px; }
+.salary-values { text-align: right; }
+.salary-values strong { font-size: 12px; color: var(--ink); }
+.salary-values small { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; }
+.salary-count { margin-top: 12px; }
+.salary-series.single-salary { min-height: 62px; }
+.single-salary .salary-dot { width: 9px; height: 9px; }
+#chart-tooltip { font-size: 12px; background: var(--navy); max-width: min(360px,calc(100vw - 24px)); }
+@media screen {
+ html[data-theme=dark] .panel, html[data-theme=dark] .kpi { background: var(--white); border-color: var(--line); }
+ html[data-theme=dark] .feature-summary, html[data-theme=dark] .reading { background: var(--white); }
+ html[data-theme=dark] .timeline-curve, html[data-theme=dark] .chart polyline:first-of-type { stroke: var(--chart-1); }
+ html[data-theme=dark] .chart polyline:nth-of-type(2) { stroke: var(--chart-2); }
+ html[data-theme=dark] .timeline-gradient-stop { stop-color: var(--chart-1); }
+ html[data-theme=dark] .fill { background: var(--chart-1) !important; }
+ html[data-theme=dark] .timeline-point.series-0 .timeline-dot { fill: var(--chart-1); }
+ html[data-theme=dark] .timeline-point.series-1 .timeline-dot { fill: var(--chart-2); }
+ html[data-theme=dark] #chart-tooltip { background: #252d38; border-color: #586779; }
+}
+@media (max-width: 1250px) {
+ .salary-series { grid-template-columns: minmax(90px,36%) minmax(20px,1fr) 108px; gap: 10px; }
+ .salary-axis { margin-right: 118px; margin-left: 38%; }
+}
+@media (max-width: 1050px) and (min-width: 701px) {
+ .grid.equal { grid-template-columns: repeat(2,minmax(0,1fr)); }
+ .salary-series { grid-template-columns: 1fr 105px; }
+ .salary-group { grid-column: 1 / -1; }
+ .salary-axis { margin-left: 3px; }
+}
+@media (max-width: 700px) {
+ .panel { padding: 18px 16px; }
+ .grid.equal { grid-template-columns: 1fr; }
+ .rank-scroll { max-height: 300px; }
+ .salary-comparison { max-height: 340px; }
+ .salary-series { grid-template-columns: 1fr 115px; gap: 10px; }
+ .salary-group { grid-column: 1 / -1; }
+ .salary-axis { margin-left: 4px; margin-right: 130px; }
+ .salary-controls input, .salary-controls select { min-height: 44px; }
+ .salary-values strong { font-size: 13px; }
+ .caption { line-height: 1.7; }
+}
+@media (prefers-reduced-motion: no-preference) {
+ body, .panel, .kpi, .filters, .topbar { transition: background-color .18s, border-color .18s, color .18s; }
+ .salary-dot { transition: box-shadow .16s; }
+}
+@media print {
+ :root, html[data-theme=dark] { --bg: #fff; --white: #fff; --ink: #252b36; --navy: #202633; --muted: #606775; --line: #d9dde3; --chart-1: #148778; --chart-2: #7656b5; }
+ .rank-scroll, .ranking, .salary-comparison, .heatmap-scroll, .table-wrap { max-height: none; overflow: visible; }
+ .salary-controls label, .scroll-hint { display: none; }
+ .salary-series { break-inside: avoid; }
+}
+
+.salary-series .salary-group strong { text-align: left; }
+.salary-series .salary-values strong { text-align: right; }
+.salary-series.single-salary .salary-connector { display: none; }
+.salary-controls input[type=search] { color: var(--ink); background: var(--surface-subtle); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }

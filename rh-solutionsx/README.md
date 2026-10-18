@@ -32,6 +32,16 @@ No PowerShell com restrição a scripts `.ps1`, use `npm.cmd test`. Os 42 testes
 
 Para hospedagem estática, publique a raiz do repositório e preserve a pasta `rh-solutionsx/`; o `index.html` da raiz é a vitrine. Não é necessária compilação nem variável de ambiente. As alterações chegam à versão publicada depois da revisão e incorporação da respectiva PR e do fluxo de hospedagem.
 
+## Refinamento premium
+
+Os rankings têm altura controlada e rolagem por teclado, com todas as categorias do recorte disponíveis. Os grupos de cartões preservam a ordem de leitura, sem junção automática em um falso masonry. Desligamentos começa pela movimentação mensal antes dos motivos e do perfil.
+
+**Remuneração por departamento:** pontos de média (círculo turquesa) e mediana (quadrado violeta), conectados na mesma escala dentro do painel. Valores em reais, quantidade de ativos e salários válidos permanecem explícitos. A diferença absoluta aparece no tooltip e não pressupõe causas ou desigualdade.
+
+**Remuneração por cargo:** um salário informado recebe um único marcador. Grupos com múltiplos salários válidos recebem média e mediana. O seletor oferece Top 12, Top 24 e Todos; a busca considera todos os cargos elegíveis. Busca e limite são locais desse gráfico, não alteram KPIs/CSV e não são armazenados no link. Uma mudança de recorte restaura Top 12 e limpa essa busca local. A escala permanece fixa para os cargos do recorte, mesmo durante a busca.
+
+Os temas compartilham turquesa/violeta e estrutura, com cores ajustadas ao contraste. O modo claro usa superfícies neutras suaves e sidebar grafite, inspirado na referência enviada. A logo original foi preservada; versões transparentes foram preparadas localmente com autorização explícita, incluindo lettering claro para a sidebar. Detalhes: [REFINAMENTO-PREMIUM.md](REFINAMENTO-PREMIUM.md) e [assets/README.md](assets/README.md).
+
 ## Como explorar
 
 1. Navegue entre Visão geral, Pessoas & diversidade, Desempenho & custos, Saúde & segurança, Desligamentos e Metodologia.
@@ -93,11 +103,11 @@ Controles da base completa: folha R$ 1.004.900; 91 salários ativos válidos; m�
 - `theme.js`, `shell.js` e `boot.js`: preferência de tema, navegação/resumo e mensagem de recuperação em falha de scripts.
 - `tests/`: 21 testes de métricas e 21 de estado/filtros, sem dependências.
 
-`styles.css`, `refinement.css` e `finishing.css` foram mantidos como referência histórica e não são carregados. O projeto não usa React, biblioteca de gráficos, fonte remota, analytics de visitantes ou backend. Filtros não enviam dados a serviços. Links compartilhados incluem filtros e busca na URL: trate esse endereço como compartilhável.
+`styles.css`, `refinement.css` e `finishing.css` foram mantidos como referência histórica e não são carregados. Os PNGs transparentes de exibição têm 480 × 254 px; a versão original continua disponível. O projeto não usa React, biblioteca de gráficos, fonte remota, analytics de visitantes ou backend. Filtros não enviam dados a serviços. Links compartilhados incluem filtros e busca na URL: trate esse endereço como compartilhável.
 
 ## Direção visual e acessibilidade
 
-A hierarquia prioriza contexto, KPIs, tendências, comparações e detalhamento. Azul institucional no tema claro; modo escuro inspirado na referência enviada pelo autor, com fundo quase preto, cartões grafite, bordas discretas, verde para a série principal e violeta para contraste. Os tokens de gráficos mantêm a cor da legenda igual à série durante a troca de tema. A identidade RH e os gráficos sustentados pela fonte foram preservados; não foram reproduzidos dados ou módulos de vendas da referência.
+A hierarquia prioriza contexto, KPIs, tendências, comparações e detalhamento. Os dois temas compartilham turquesa e violeta, com superfícies neutras no claro e grafite no escuro. Os tokens de gráficos mantêm a cor da legenda igual à série durante a troca de tema. A identidade RH e os gráficos sustentados pela fonte foram preservados; não foram reproduzidos dados ou módulos de vendas/reservas das referências.
 
 Fontes do sistema, SVGs locais, foco visível, nomes de controles, atalhos nativos, menu com Escape, etiquetas removíveis e alternativa tabular apoiam a leitura. Gráficos largos e tabela têm regiões de rolagem focalizáveis. Movimento reduzido é respeitado. A escolha manual do tema persiste quando o armazenamento está disponível; restrição de armazenamento não bloqueia o painel.
 
@@ -105,11 +115,11 @@ Na impressão, o tema volta a superfícies claras, ações são ocultas e o cont
 
 ## Validação e desempenho
 
-Na fase final, passaram **42 testes unitários** e **366 verificações de navegador**: 90 regressões visuais/funcionais, 48 verificações analíticas, 154 de interatividade e 74 da fase final. Foram usados Playwright/Chrome e um smoke test em Edge; sete larguras de 320 a 1920 px. Incluem reconciliação independente, CSV, URLs/histórico, teclado, temas, mobile, impressão, script indisponível, JavaScript desativado, armazenamento bloqueado e abertura direta por arquivo. Sem erros de aplicação nas sessões normais.
+Na fase final, passaram **42 testes unitários** e **492 verificações de navegador**: 90 regressões visuais/funcionais, 48 verificações analíticas, 154 de interatividade, 74 da fase final e 126 do refinamento premium. As verificações visuais anteriores foram adaptadas aos novos tokens e marcadores aprovados; os checks de cálculo e recorte foram preservados. Foram usados Playwright/Chrome e um smoke test em Edge; sete larguras de 320 a 1920 px. Incluem reconciliação independente, CSV, URLs/histórico, teclado, temas, mobile, impressão, script indisponível, JavaScript desativado, armazenamento bloqueado e abertura direta por arquivo. Sem erros de aplicação nas sessões normais.
 
-Formatadores `Intl.NumberFormat` são reutilizados, evitando sua criação repetida em células e gráficos. Microbenchmark local no Chrome, 25 renderizações por seção após 3 aquecimentos, viewport 1440 × 1100 e movimento reduzido: mediana da Visão geral de 17,1 para 9,2 ms; Desempenho & custos de 37,5 para 20,4 ms. São medições locais da função de renderização, sem representar Core Web Vitals, Lighthouse, rede móvel ou garantia de desempenho em outros dispositivos. Não foram adicionadas dependências de runtime.
+Formatadores `Intl.NumberFormat` são reutilizados, evitando sua criação repetida em células e gráficos. Microbenchmark local no Chrome, 25 renderizações por seção após 3 aquecimentos, viewport 1440 × 1100 e movimento reduzido: no refinamento, medianas de 10,2 ms na Visão geral e 21,0 ms em Desempenho & custos. Antes da reutilização de formatadores, a Fase 5 havia medido 17,1 e 37,5 ms, respectivamente. São medições locais da função de renderização, sem representar Core Web Vitals, Lighthouse, rede móvel ou garantia de desempenho em outros dispositivos. Não foram adicionadas dependências de runtime.
 
-Testes de navegador e capturas ficam fora do checkout, em `rh-solutions-fase2-qa/phase5-evidence`, no ambiente de desenvolvimento. Os testes de cálculo/estado permanecem versionados e reproduzíveis com `npm test`. Detalhes finais: [FASE-5.md](FASE-5.md).
+Testes de navegador e capturas ficam fora do checkout, em `rh-solutions-fase2-qa/refinement-evidence` e `rh-solutions-fase2-qa/phase5-evidence`, no ambiente de desenvolvimento. Os testes de cálculo/estado permanecem versionados e reproduzíveis com `npm test`. Detalhes finais: [FASE-5.md](FASE-5.md).
 
 ## Skills utilizadas
 
@@ -122,7 +132,7 @@ React best practices não se aplica à stack vanilla. Playwright Interactive nã
 
 ## Evolução e próximos passos
 
-As decisões e resultados de cada fase ficam em [FASE-2.md](FASE-2.md), [FASE-3.md](FASE-3.md), [FASE-4.md](FASE-4.md) e [FASE-5.md](FASE-5.md). Esses arquivos são registros históricos; este README descreve o comportamento atual.
+O refinamento aprovado está documentado em [REFINAMENTO-PREMIUM.md](REFINAMENTO-PREMIUM.md). As decisões e resultados de cada fase ficam em [FASE-2.md](FASE-2.md), [FASE-3.md](FASE-3.md), [FASE-4.md](FASE-4.md) e [FASE-5.md](FASE-5.md). Esses arquivos são registros históricos; este README descreve o comportamento atual.
 
 Para novas análises, obter snapshots mensais para folha/metas/horas; quadro completo por período para turnover; horas de exposição e datas para acidentes; referência temporal para tempo de empresa; cargo, nível e jornada para comparação salarial ajustada. Unicidade por pessoa exigirá identificador consistente na preparação, sem necessidade de publicá-lo.
 
