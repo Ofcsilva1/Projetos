@@ -17,18 +17,33 @@ function salaryComparison(rows, field, limit=100) {
  if(!active.length)return '<p class="empty">Nenhum colaborador ativo neste recorte.</p>';
  const all=groups(active,field).map(g=>({...g,stats:M.stats(g.items,'Salario_Base')}))
   .sort((a,b)=>(a.stats.mean===null)-(b.stats.mean===null)||(b.stats.mean??0)-(a.stats.mean??0)||a.name.localeCompare(b.name,'pt-BR'));
+ const jobs=field==='Cargo',id=jobs?'salary-jobs':'salary-departments';
+ const max=Math.max(1,...all.flatMap(g=>[g.stats.mean??0,g.stats.median??0]));
  const items=all.slice(0,limit);
- const max=Math.max(1,...items.flatMap(g=>[g.stats.mean??0,g.stats.median??0]));
- return `<div class="salary-comparison">${items.map(g=>`<div class="salary-compare-row">
-  <div class="salary-group"><strong>${esc(g.name)}</strong><small>${g.stats.n} salários válidos / ${g.n} ativos</small></div>
-  <div class="salary-dual">${[['Média','mean'],['Mediana','median']].map(([label,key])=>{
-   const value=g.stats[key],text=`${g.name}: ${label.toLowerCase()} ${money(value,2)}, n=${g.stats.n}`;
-   return `<div class="salary-series chart-point" ${selectionAttrs(field,g.name)} aria-label="${esc('Filtrar '+(S.labels[filterKey(field)]||field)+': '+text)}" data-tip="${esc(text)}"><span>${label}</span>${value===null?'<span class="caption">Sem informação</span>':`<div class="track"><div class="fill ${key}" style="width:${value/max*100}%"></div></div>`}<strong>${money(value,2)}</strong></div>`;
-  }).join('')}</div></div>`).join('')}</div>`+
-  (all.length>limit?`<p class="caption">Exibindo ${limit} de ${all.length} cargos, ordenados pela média. Veja todos os grupos na tabela.</p>`:'');
+ const markup=g=>{
+  const single=jobs&&g.stats.n===1,stats=g.stats,known=stats.n>0;
+  const text=single?`${g.name}: salário ${money(stats.mean,2)}, ${g.n} ${g.n===1?'pessoa':'pessoas'}, ${stats.n} salário válido`:`${g.name}: média ${money(stats.mean,2)}; mediana ${money(stats.median,2)}; ${stats.n} salários válidos / ${g.n} ativos. Diferença absoluta ${known?money(Math.abs(stats.mean-stats.median),2):'indisponível'}, sem inferência de causa.`;
+  const mean=known?stats.mean/max*100:0,median=known?stats.median/max*100:0;
+  return `<div class="salary-compare-row" data-salary-name="${esc(g.name)}"><button type="button" class="salary-series chart-point ${single?'single-salary':'paired-salary'}" ${selectionAttrs(field,g.name)} data-tip="${esc(text)}" aria-label="${esc('Filtrar '+text)}"><span class="salary-group"><strong>${esc(g.name)}</strong><small>${g.n===1?'1 pessoa':g.n+' ativos'} · ${stats.n} ${stats.n===1?'salário válido':'salários válidos'}</small></span><span class="salary-plot" aria-hidden="true">${known?`<span class="salary-connector" style="left:${Math.min(mean,median)}%;width:${Math.abs(mean-median)}%"></span><i class="salary-dot mean" style="left:${mean}%"></i>${single?'':`<i class="salary-dot median" style="left:${median}%"></i>`}`:'<span class="caption">Sem informação</span>'}</span><span class="salary-values"><strong>${money(stats.mean,2)}</strong>${single?'<small>Salário registrado</small>':`<small>Mediana ${money(stats.median,2)}</small>`}</span></button></div>`;
+ };
+ return `<div class="salary-controls">${jobs?`<label>Buscar cargo<input type="search" id="salary-search" name="salary-search" autocomplete="off" maxlength="120" placeholder="Nome do cargo…"></label><label>Exibir<select id="salary-limit" name="salary-limit"><option value="12">Top 12</option><option value="24">Top 24</option><option value="all">Todos (${all.length})</option></select></label>`:''}<div class="salary-legend"><span><i class="mean"></i>${jobs&&all.every(g=>g.stats.n<=1)?'Salário registrado':jobs?'Salário / média':'Média'}</span>${!jobs||all.some(g=>g.stats.n>1)?'<span><i class="median"></i>Mediana</span>':''}</div></div><div class="salary-axis" aria-hidden="true"><span>R$ 0</span><span>${money(max,0)}</span></div><div class="salary-comparison rank-scroll" id="${id}" tabindex="0" role="region" aria-label="Remuneração por ${jobs?'cargo':'departamento'}, com rolagem">${items.map(markup).join('')}</div><p class="caption salary-count" id="${id}-count">${jobs?'Exibindo '+items.length+' de '+all.length+' cargos. Busque um cargo ou escolha Todos; todos os grupos também estão na tabela.':'Pontos na mesma escala dentro deste painel. A distância mostra a diferença entre média e mediana, sem identificar causas.'}</p>${jobs?`<template id="salary-all">${all.map(markup).join('')}</template>`:''}`;
+}
+function bindSalaryControls(){
+ const input=$('salary-search'),limit=$('salary-limit');if(!input)return;
+ const refresh=()=>{
+  const source=$('salary-all').content,query=input.value.trim().toLocaleLowerCase('pt-BR');
+  const rows=[...source.querySelectorAll('.salary-compare-row')].filter(row=>row.dataset.salaryName.toLocaleLowerCase('pt-BR').includes(query));
+  const count=limit.value==='all'?rows.length:Number(limit.value);
+  const fragment=document.createDocumentFragment();rows.slice(0,count).forEach(row=>fragment.appendChild(row.cloneNode(true)));
+  $('salary-jobs').replaceChildren(fragment);
+  if(!rows.length)$('salary-jobs').innerHTML='<p class="empty">Nenhum cargo encontrado. Ajuste a busca.</p>';
+  $('salary-jobs-count').textContent=`Exibindo ${Math.min(count,rows.length)} de ${rows.length} cargos encontrados. Busca local deste gráfico; filtros globais, KPIs e CSV permanecem no recorte aplicado.`;
+  activateVisuals(false);
+ };
+ input.addEventListener('input',refresh);limit.addEventListener('change',refresh);
 }
 function metricMethod() {
- return panel('Regras de cálculo da Fase 3','Mesmas definições em cartões, resumos, gráficos, tabela e CSV.',
+ return panel('Regras de cálculo','Mesmas definições em cartões, resumos, gráficos, tabela e CSV.',
  `<div class="method-copy"><ul>
  <li><strong>Valores válidos:</strong> números finitos e não negativos da base preparada. Nulos, campos ausentes, textos, infinitos e valores negativos não são convertidos em zero.</li>
  <li><strong>Somas:</strong> soma dos valores válidos. Com registros no grupo e nenhum valor válido, mostrar “—”. Sem registros elegíveis, uma contagem ou soma é zero; médias, medianas e taxas continuam indisponíveis.</li>
