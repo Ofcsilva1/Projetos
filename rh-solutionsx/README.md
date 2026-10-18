@@ -16,6 +16,20 @@ Abra `index.html` em um navegador moderno. Mantenha todos os arquivos `.js`, `.c
 
 Referência: [Documentação oficial do GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
+## Fase 3 — indicadores e visualizações analíticas
+
+`metrics.js` reúne os cálculos puros usados por cartões, gráficos, textos, tabela e CSV. Valores ausentes não viram zero: médias, medianas e taxas usam somente números finitos e não negativos. Os indicadores informam os denominadores válidos; a distribuição de metas e o panorama separam os registros sem informação.
+
+A seção Desempenho & custos apresenta salário médio e mediana salarial dos ativos, além de comparativos por departamento e cargo. A seção Pessoas & diversidade acrescenta senioridade e distribuição por cargo. Na base completa, a média salarial é R$ 11.042,86 e a mediana é R$ 10.800,00, sobre 91 salários ativos válidos. Salário base mensal e bônus anual permanecem separados. Não há ajuste por cargo, nível ou jornada nem inferência de equidade salarial.
+
+`analytics.js` contém a apresentação dessas novas análises e a explicação das fórmulas na aba Metodologia. A tabela e o CSV ganharam média, mediana e colunas de contagem válida para salários, metas, acidentes, idades e horas extras. Os campos numéricos indisponíveis são exportados vazios; o CSV agora possui 16 colunas. O cabeçalho de ocorrências explicita o denominador com informação válida.
+
+O arquivo `data.js` foi preservado integralmente. Turnover, evolução mensal de folha e tempo de empresa continuam pendentes dos dados necessários. Não foram acrescentados filtros ou seleção cruzada da Fase 4. Decisões e definições: [FASE-3.md](FASE-3.md).
+
+### Testes de cálculo
+
+Com Node.js 18 ou superior, executar `npm test` dentro de `rh-solutionsx`, ou `node --test rh-solutionsx/tests/metrics.test.cjs` a partir da raiz do repositório. Os testes usam somente módulos nativos do Node; não exigem instalação de pacotes. Abrir o dashboard continua sem depender de Node, npm ou build.
+
 ## Fase 2 — arquitetura visual e design system
 
 O histórico de quadro no fim do ano usa um gráfico de área com degradê, curva suave e rótulos de dados nos pontos anuais. A suavização é apenas visual: os valores representam posições anuais reconstruídas. A opção de admissões e desligamentos mantém duas séries com rótulos separados para cada ano.
@@ -32,7 +46,7 @@ Análises preservadas: faixas etárias, faixas de atingimento das metas, composi
 
 Transições curtas e a entrada dos cartões respeitam a preferência de redução de movimento. O foco foi reforçado nos controles e elementos de gráficos já acessíveis por teclado. As barras em HTML continuam com tooltip por ponteiro; tornar esses tooltips acessíveis por teclado permanece uma melhoria futura. Os gráficos largos mantêm rolagem interna no celular.
 
-Para executar a versão atual, manter `premium.css`, `shell.js`, `theme.js`, `data.js`, `visuals.js`, `app.js` e a pasta `assets` junto de `index.html`. Não há instalação ou build obrigatório. Detalhes e validação: [FASE-2.md](FASE-2.md).
+Para executar a versão atual, manter `premium.css`, `shell.js`, `theme.js`, `data.js`, `metrics.js`, `analytics.js`, `visuals.js`, `app.js` e a pasta `assets` junto de `index.html`. Não há instalação ou build obrigatório. Histórico da arquitetura visual e validação: [FASE-2.md](FASE-2.md).
 
 ## Funcionalidades
 
@@ -46,6 +60,8 @@ Para executar a versão atual, manter `premium.css`, `shell.js`, `theme.js`, `da
 - Acidentes por departamento, UF ou cargo, em ocorrências por 100 pessoas, com totais absolutos.
 - Desligamentos por motivo, tipo e departamento.
 - Tabela agregada por cargo, UF ou departamento, com busca, ordenação e exportação CSV.
+- Média e mediana salarial dos ativos, comparativos por departamento/cargo e denominadores válidos na tabela e no CSV.
+- Distribuição pelo nível de cargo registrado (senioridade), sem estimar tempo de empresa.
 - Resumo descritivo que acompanha os filtros e metodologia dentro do painel.
 
 ## Fonte, tratamento e limites
@@ -61,6 +77,10 @@ Folha base não é receita nem custo total de pessoal. Bônus anual é apresenta
 O site lê uma versão preparada em `data.js`; não atualiza automaticamente quando o Excel é alterado. Para atualizações, será necessário preparar novamente os registros com o mesmo esquema e validar o alinhamento.
 
 ## Verificação realizada
+
+A Fase 3 passou em 21 testes de cálculo com Node, 90 checks de regressão da interface e 48 checks específicos de análise com Playwright no Chrome. Foram reconciliados salários, denominadores e séries históricas; verificados salário médio/mediano por recorte, grupos sem ativos, gráfico de senioridade, tooltip salarial por teclado, tabela e CSV com campos vazios e contagens válidas. Casos sintéticos de nulos foram injetados somente em uma sessão isolada de teste, sem alterar os dados do projeto. Nenhum erro JavaScript foi capturado. As novas análises também foram conferidas em 390 e 320 px e nas capturas de desktop e celular.
+
+Os registros abaixo correspondem às etapas anteriores:
 
 A Fase 2 passou em 90 checks com Playwright no Chrome: totais gerais, recorte Tecnologia, combinação vazia, limpeza de filtros, seis seções, ordenação e pesquisa da tabela, CSV filtrado gravado e lido, tema persistente, resumo durante rolagem, menu por teclado, Escape, link para pular conteúdo e movimento reduzido. Conferidas larguras de 1920, 1440, 1024, 900, 768, 390 e 320 px, sem overflow horizontal da página. Capturas revisadas em desktop claro/escuro, tablet, celular e vitrine do portfólio. Nenhum erro de aplicação capturado. O favicon ausente da raiz do portfólio gera um 404 preexistente na conferência local; o dashboard possui favicon próprio. A execução completa de testes e as evidências ficam fora do pacote público.
 
