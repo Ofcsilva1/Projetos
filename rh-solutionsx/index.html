@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#153b50"><title>RH SolutionsX — People Analytics</title>
 <link rel="stylesheet" href="premium.css">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<script src="boot.js"></script>
 <script src="theme.js"></script><script src="data.js" defer></script><script src="metrics.js" defer></script><script src="filter-state.js" defer></script><script src="analytics.js" defer></script><script src="visuals.js" defer></script><script src="app.js" defer></script><script src="shell.js" defer></script>
 </head>
 <body>
@@ -46,7 +47,10 @@
  <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Ativar modo escuro" aria-pressed="false">Modo escuro</button>
 </header>
 <main id="main" tabindex="-1">
+<p id="startup-status" class="notice" role="status">Carregando painel…</p>
+<noscript><p class="notice">Ative o JavaScript no navegador para explorar os indicadores e filtros deste painel.</p></noscript>
 <div class="intro"><div><p class="eyebrow">Inteligência de pessoas</p><h1 id="page-title">Pessoas em perspectiva.</h1><p id="page-subtitle">Uma visão integrada de equipe, resultados e bem-estar.</p></div><div class="intro-actions"><button id="share" class="secondary"><svg class="icon" aria-hidden="true"><use href="#i-link"/></svg>Copiar link</button><button id="export" class="secondary"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Exportar resumo CSV</button></div></div>
+<p id="print-context" class="print-context"></p>
 <div id="share-link-box" class="share-link-box" hidden><label for="share-link">Link do recorte aplicado</label><input id="share-link" name="shared-link" type="url" autocomplete="off" readonly><p class="caption">Selecione e copie este endereço para abrir o mesmo recorte em outro navegador.</p></div>
 <section class="filters" aria-label="Filtros globais">
  <div class="filter-fields">
