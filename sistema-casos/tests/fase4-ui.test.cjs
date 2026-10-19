@@ -52,12 +52,14 @@ test('refined login, list, form and dialog fit 320, 390, 768 and 1440px in both 
   assert.deepEqual(page.appErrors,[]);
  }finally{await context.close();}
 });
-test('200 percent text reflows form tabs and actions without global overflow at 320px',async()=>{
+test('200 and 250 percent text reflows form tabs and actions at 320px in both themes',async()=>{
  const {page,context}=await fixture();try{
   await page.emulateMedia({reducedMotion:'reduce'});await page.setViewportSize({width:320,height:1400});await page.locator('#nav-new').click();
-  await page.evaluate(()=>{document.documentElement.style.fontSize='200%';});
-  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
-  const clipped=await page.locator('#form-tabs [role=tab],.form-step-controls button,.form-footer button').evaluateAll(els=>els.filter(el=>el.scrollWidth>el.clientWidth+1).map(el=>el.textContent));assert.deepEqual(clipped,[]);
+  for(const theme of ['light','dark'])for(const scale of ['200%','250%']){
+   await page.evaluate(({theme,scale})=>{document.documentElement.dataset.theme=theme;document.documentElement.dataset.bsTheme=theme;document.documentElement.style.fontSize=scale;},{theme,scale});
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`${theme}/${scale}: page overflow`);
+   const clipped=await page.locator('#form-tabs [role=tab],.form-step-controls button,.form-footer button').evaluateAll(els=>els.filter(el=>el.scrollWidth>el.clientWidth+1).map(el=>el.textContent));assert.deepEqual(clipped,[],`${theme}/${scale}: clipped controls`);
+  }
   await page.locator('#btnNextStep').click();await page.waitForFunction(()=>location.hash==='#cadastro/etapa-2');
   assert.equal(await page.locator('#form-step-status').textContent(),'Etapa 2 de 8 — Situação');
  }finally{await context.close();}

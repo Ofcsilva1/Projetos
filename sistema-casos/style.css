@@ -548,7 +548,7 @@ textarea.form-control { min-height: 94px; resize: vertical; line-height: 1.65; }
 @media (max-width: 767px) {
   .form-card { padding: 16px; }
   .form-nav .nav-tabs { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); white-space: normal; }
-  .form-nav .nav-tabs .nav-link { width: 100%; min-width: 0; min-height: 48px; padding: 10px 8px; text-align: left; overflow-wrap: normal; }
+  .form-nav .nav-tabs .nav-link { width: 100%; min-width: 0; min-height: 48px; padding: 10px 8px; text-align: left; overflow-wrap: anywhere; }
   .form-nav .nav-tabs .nav-link i { display: none; }
   .form-step-controls { gap: 8px; }
   .form-step-controls .btn { padding-inline: 10px; }

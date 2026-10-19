@@ -16,4 +16,6 @@ Fluxos UI: links desktop abrem/copiam destino e exibem aria-current; âncora inv
 
 O smoke usa viewports 1440×900 e 390×900, movimento reduzido e rede externa bloqueada. Não certifica leitor de tela, contraste de todas as fotos, Power BI ou origem dos dados. Capturas de telas com registros não devem ser publicadas sem confirmar sua natureza publicável. Não há configuração de lint adicional; o TypeScript do Paradise é verificado pelo build.
 
-O workflow Quality fixa actions por revisão, tem permissão de leitura e não publica nada. A execução hospedada permanece pendente até publicação autorizada. Os PBIX/PBIP/XLSX existentes não são recalculados nem sobrescritos pelos comandos acima.
+O workflow Quality fixa actions por revisão, tem permissão de leitura e não publica nada. Os PBIX/PBIP/XLSX existentes não são recalculados nem sobrescritos pelos comandos acima.
+
+Correção da PR #17: o primeiro CI Linux aprovou sintaxe, TypeScript, build e comparação do artefato, mas detectou corte de “Encaminhamentos” nas abas do Nexo com texto a 200% em 320 px (92/93 testes). As métricas das fontes do sistema variam entre plataformas. As abas móveis agora permitem quebrar palavras longas com `overflow-wrap: anywhere`. O teste continua exigindo ausência de corte e de overflow, e cobre 200% e 250% nos temas claro e escuro. O layout desktop e os dados não são alterados. O resultado remoto atualizado pode ser consultado nos checks da PR.
