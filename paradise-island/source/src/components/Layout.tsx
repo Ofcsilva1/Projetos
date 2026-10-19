@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Media } from './Media';
 import { Modal } from './Modal';
 import { Arrow, DrawCircle, Eyebrow } from './Primitives';
 import { nav, type ImageId } from '../data/content';
-import RubberSegment from './references/RubberSegment';
 import SpecularButton from './references/SpecularButton';
 import { FictionalLogoLoop } from './AnimatedShowcases';
 import { useMotionSettings } from './MotionSettings';
@@ -23,12 +22,10 @@ export function Layout() {
   const headerRef = useRef<HTMLElement>(null);
   const { paused, stopped, toggle } = useMotionSettings();
   const location = useLocation();
-  const navigate = useNavigate();
   const navigation = [{ href: '/', label: 'Início' }, ...nav];
   const active = location.pathname === '/' ? homeActive : location.pathname.startsWith('/acomodacoes') ? '/acomodacoes' : location.pathname;
   const top = () => { const target = document.getElementById(location.pathname === '/' ? 'inicio' : 'conteudo'); if (target) scrollToSection(target); };
   const destination = (path: string) => location.pathname === '/' && homeSections[path] ? { pathname: '/', hash: `#${homeSections[path]}` } : path;
-  const choose = (path: string) => navigate(destination(path));
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
@@ -54,7 +51,14 @@ export function Layout() {
     <header ref={headerRef} className={`header header-white ${scrolled ? 'solid' : ''}`}>
       <div className="header-main-row">
         <Link className="brand-link" to="/" aria-label="Paradise Island, início"><Brand /></Link>
-        <nav className="header-nav-elastic" aria-label="Navegação principal"><RubberSegment items={navigation.map(item => ({ value: item.href, label: item.label }))} value={active} onChange={choose} trackColor="#f1f2ed" thumbColor="#173e37" textColor="#173e37" activeTextColor="#ffffff" size="md" radius={30} inset={4} equalSlots={false} stretch={100} squash={4} speed={0.75} glide={65} draggable disabled={false} className="header-rubber" aria-label="Escolher seção ou página" /></nav>
+        <nav className="header-nav-elastic" aria-label="Navegação principal">
+          <div className="header-rubber header-links">
+            {navigation.map(item => <Link key={item.href} to={destination(item.href)} className="header-section-link" aria-current={active === item.href ? (location.pathname === item.href ? 'page' : 'location') : undefined}>
+              {active === item.href && <motion.span className="header-link-active" layoutId="header-active-link" transition={stopped ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 34 }} aria-hidden="true" />}
+              <span className="header-link-label">{item.label}</span>
+            </Link>)}
+          </div>
+        </nav>
         <div className="header-actions"><button className="motion-toggle" onClick={toggle} aria-label={paused ? 'Retomar animações' : 'Pausar animações'} aria-pressed={paused} title={paused ? 'Retomar animações' : 'Pausar animações'}>{paused ? '▶' : 'Ⅱ'}</button><button className="menu-toggle" onClick={() => setMenu(true)} aria-expanded={menu} aria-label="Abrir menu"><span /><span /><span className="menu-label">Menu</span></button></div>
       </div>
     </header>

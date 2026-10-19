@@ -2,7 +2,7 @@
 
 Data: 17/10/2026. Implementação local autorizada pelo usuário após auditoria e planejamento. Nenhum original foi sobrescrito.
 
-Atualização V2: após nova orientação do usuário, DriftWall também foi incorporado, as animações ganharam destaque na Home e cinco componentes oficiais adicionais foram integrados. O registro atual está em ATUALIZACAO_ANIMACOES.md; os detalhes abaixo descrevem a primeira versão.
+Atualização V2: DriftWall também foi incorporado e as animações ganharam destaque na Home. A implementação atual pode ser inspecionada em `src/components/AnimatedShowcases.tsx`; [REFERENCIAS_ANIMACOES.md](REFERENCIAS_ANIMACOES.md) registra referências adicionais. Os detalhes históricos abaixo descrevem a primeira versão. A navegação principal atual usa links reais; RubberSegment permanece como seletor de filtros da galeria.
 
 ## Acervo visual
 
@@ -38,7 +38,7 @@ Origem: `draecircle.txt` e [link fornecido](https://www.hover.dev/components/tex
 
 ### DriftWall
 
-Origem: `codigo do carrossel de fotos.txt` e [link fornecido](https://reactbits.dev/components/drift-wall). Estudado, mas não incorporado literalmente: clones focáveis, loop permanente e ausência de ação nos botões simulados exigiriam reestruturação significativa. A galeria editorial estática aproveita a ideia de composição e destaque sem esses problemas. Essa é a única das cinco referências de código que não foi incorporada como componente.
+Origem: `codigo do carrossel de fotos.txt` e [link fornecido](https://reactbits.dev/components/drift-wall). Não incorporado na primeira versão; a V2 o usa por meio de `AnimatedShowcases.tsx`, com caminho estático alternativo e controles de movimento. A descrição de sua ausência pertence apenas ao histórico inicial.
 
 ## Conteúdo e procedência
 

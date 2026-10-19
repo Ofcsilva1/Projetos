@@ -1,8 +1,18 @@
 # Vitrine do portfólio
 
+## Orientação atual
+
+A vitrine possui oito cartões e uma lista de materiais com ferramenta Excel, PDFs por título, HTML R, arquivos e links Power BI. “Projetos selecionados” descreve a curadoria; placeholders e tutoriais privados não são demonstrações de competência implementada. Os links de relatório publicado não certificam cálculos ou permissões do modelo.
+
+Verifique navegação e reflow em desktop/celular usando [o roteiro de validação](VALIDACAO.md). O workflow Quality verifica código/testes/build e não realiza deploy. A aplicação Paradise mantém fonte e build estático sincronizados por comando local explícito; isso não publica o site.
+
+## Histórico — inspeção de 16/10/2026
+
+Os parágrafos seguintes registram a primeira versão e não descrevem a quantidade atual de cartões, a configuração atual de CI ou a disponibilidade atual dos links. Os HTTP 404 citados são resultados históricos, não falhas atuais confirmadas.
+
 Atualização: o cartão de sistema passa a abrir [Nexo — Gestão de Casos](../sistema-casos/), demonstração com login preenchido e sem banco remoto. As notas abaixo registram a inspeção anterior à primeira publicação. O Pages foi posteriormente publicado com sucesso em `main` + `/(root)`.
 
-A página `index.html` na raiz apresenta quatro cartões em tema escuro, seguindo a referência visual aprovada. Em telas até 640 px a grade passa de duas para uma coluna. O CSS e os ícones são locais; a vitrine funciona sem JavaScript, instalação ou compilação.
+A primeira versão de `index.html` apresentava quatro cartões em tema escuro. O CSS e os ícones da vitrine são locais; sua navegação funciona sem JavaScript, instalação ou compilação.
 
 ## Publicação e verificação em 16/10/2026
 

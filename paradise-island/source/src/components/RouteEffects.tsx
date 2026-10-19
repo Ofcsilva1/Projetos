@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigationType } from 'react-router-dom';
 import { scrollToSection } from './navigation';
+import { decodeAnchor } from './anchor.mjs';
 export function RouteEffects() {
   const location = useLocation();
   const navigationType = useNavigationType();
@@ -11,8 +12,8 @@ export function RouteEffects() {
     const descriptions: Record<string, string> = { '/': 'Uma ilha, outro ritmo. Explore as acomodações e experiências do Paradise Island, um resort fictício.', '/ilha': 'Explore os ambientes do Paradise Island em uma vista aérea ilustrativa e descubra hospedagem, mar, spa e gastronomia.', '/acomodacoes': 'Conheça os bangalôs e villas privativas do resort fictício Paradise Island.', '/experiencias': 'Bem-estar, atividades náuticas, praia, piscina e celebrações: conheça as experiências do Paradise Island.', '/gastronomia': 'Alta culinária, frutos do mar e menu degustação em uma atmosfera pé na areia.', '/galeria': 'Explore as imagens ilustrativas do Paradise Island por ambiente.', '/reservas': 'Organize suas preferências de estadia em uma consulta local demonstrativa, sem envio de dados.' };
     document.querySelector('meta[name="description"]')?.setAttribute('content', descriptions[location.pathname] || 'Paradise Island — experiência de portfólio de um resort fictício.');
     const timeout = window.setTimeout(() => {
-      const hash = location.hash.slice(1);
-      const target = hash ? document.getElementById(decodeURIComponent(hash)) : null;
+      const hash = decodeAnchor(location.hash);
+      const target = hash ? document.getElementById(hash) : null;
       if (target) scrollToSection(target, navigationType !== 'POP');
       else if (navigationType !== 'POP') { window.scrollTo({ top: 0, behavior: 'instant' }); document.querySelector<HTMLElement>('main')?.focus({ preventScroll: true }); }
     }, 20);
