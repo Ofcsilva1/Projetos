@@ -1,0 +1,13 @@
+{
+  "name": "portfolio-quality",
+  "private": true,
+  "scripts": {
+    "check": "node scripts/check-syntax.cjs",
+    "test": "node --test tests/*.test.cjs rh-solutionsx/tests/*.test.cjs sistema-casos/tests/*.test.js sistema-casos/tests/*.test.cjs paradise-island/source/tests/*.test.mjs",
+    "build": "npm run build --prefix paradise-island/source",
+    "refresh:paradise": "node scripts/refresh-paradise-build.cjs",
+    "check:paradise-build": "node scripts/refresh-paradise-build.cjs --check"
+  },
+  "engines": {"node": ">=22"},
+  "devDependencies": {"playwright": "1.62.1"}
+}
