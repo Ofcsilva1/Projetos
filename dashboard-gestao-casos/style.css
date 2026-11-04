@@ -1,17 +1,17 @@
 /* CORES: reúne as cores usadas pelos componentes do dashboard. */
 :root {
   color-scheme: light;
-  --navy: #173e53;
-  --navy-dark: #102d3d;
-  --teal: #087f87;
-  --teal-dark: #075e66;
-  --teal-soft: #e0f1f0;
-  --ink: #193847;
-  --muted: #526a77;
-  --line: #d4e1e5;
-  --paper: #f2f6f7;
+  --navy: #121a31;
+  --navy-dark: #10182c;
+  --primary: #4658d9;
+  --primary-dark: #3546bd;
+  --primary-soft: #eef0fd;
+  --ink: #202b45;
+  --muted: #66728a;
+  --line: #e2e7f0;
+  --paper: #f3f5fa;
   --white: #ffffff;
-  --focus: #bf7b17;
+  --focus: #8c9bff;
 }
 
 /* BASE: define fonte, largura e foco para toda a página. */
@@ -41,7 +41,7 @@ button {
 }
 
 a {
-  color: var(--teal-dark);
+  color: var(--primary-dark);
 }
 
 a:focus-visible,
@@ -121,7 +121,7 @@ main,
 }
 
 .main-nav a:hover {
-  color: var(--teal-dark);
+  color: var(--primary-dark);
   text-decoration: underline;
 }
 
@@ -147,13 +147,13 @@ main,
 
 .project-path {
   margin: 0 0 19px;
-  color: #bdd8df;
+  color: #c7d0e8;
   font-size: 12px;
 }
 
 .project-path span {
   margin-inline: 8px;
-  color: #66c5c7;
+  color: #a7b4ff;
 }
 
 h1 {
@@ -167,7 +167,7 @@ h1 {
 .intro-text {
   max-width: 670px;
   margin: 15px 0 20px;
-  color: #e2eef1;
+  color: #e6e9f4;
   font-size: 17px;
 }
 
@@ -175,9 +175,9 @@ h1 {
   display: inline-block;
   margin: 0;
   padding: 7px 11px;
-  border: 1px solid #9bd6d8;
+  border: 1px solid #aebaff;
   border-radius: 5px;
-  color: #edffff;
+  color: #f6f7ff;
   font-size: 12px;
   font-weight: 700;
 }
@@ -186,9 +186,9 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border-left: 2px solid #56b8bd;
+  border-left: 2px solid #8c9bff;
   padding-left: 21px;
-  color: #cfebed;
+  color: #dce2f6;
   font-size: 12px;
 }
 
@@ -239,17 +239,17 @@ h1 {
 #empty-clear {
   min-height: 40px;
   padding: 8px 12px;
-  background: var(--teal-soft);
-  border: 1px solid #93c8c9;
+  background: var(--primary-soft);
+  border: 1px solid #b9c4f5;
   border-radius: 6px;
-  color: var(--teal-dark);
+  color: var(--primary-dark);
   font-size: 13px;
   font-weight: 700;
 }
 
 .clear-button:hover,
 #empty-clear:hover {
-  background: #c5e8e6;
+  background: #dde3ff;
 }
 
 .filters {
@@ -271,7 +271,7 @@ h1 {
   min-height: 43px;
   padding: 8px 10px;
   background: var(--white);
-  border: 1px solid #8da9b4;
+  border: 1px solid #9aa8c4;
   border-radius: 6px;
   color: var(--ink);
 }
@@ -290,10 +290,10 @@ h1 {
 .filter-chip {
   min-height: 32px;
   padding: 5px 8px;
-  background: var(--teal-soft);
-  border: 1px solid #a2d5d5;
+  background: var(--primary-soft);
+  border: 1px solid #c2cbf4;
   border-radius: 5px;
-  color: var(--teal-dark);
+  color: var(--primary-dark);
   font-size: 12px;
 }
 
@@ -318,8 +318,8 @@ h1 {
 }
 
 .kpi-primary {
-  background: var(--teal-soft);
-  border-color: #b4dad9;
+  background: var(--primary-soft);
+  border-color: #c8d0f7;
 }
 
 .kpi-label {
@@ -406,8 +406,8 @@ h1 {
 
 .trend-item:hover,
 .trend-item[aria-pressed="true"] {
-  color: var(--teal-dark);
-  background: var(--teal-soft);
+  color: var(--primary-dark);
+  background: var(--primary-soft);
 }
 
 .trend-value {
@@ -418,7 +418,7 @@ h1 {
 .trend-bar {
   width: min(100%, 28px);
   height: max(2px, calc(var(--bar-ratio) * 133px));
-  background: var(--teal);
+  background: var(--primary);
   border-radius: 3px 3px 0 0;
 }
 
@@ -447,7 +447,7 @@ h1 {
 
 .bar-button:hover .bar-name,
 .bar-button[aria-pressed="true"] .bar-name {
-  color: var(--teal-dark);
+  color: var(--primary-dark);
   text-decoration: underline;
 }
 
@@ -467,14 +467,14 @@ h1 {
   display: block;
   height: 9px;
   overflow: hidden;
-  background: #e4edf0;
+  background: #e5e9f2;
   border-radius: 5px;
 }
 
 .bar-fill {
   display: block;
   height: 100%;
-  background: var(--teal);
+  background: var(--primary);
   border-radius: 5px;
 }
 
@@ -530,10 +530,10 @@ th {
 
 td button {
   padding: 6px 9px;
-  background: var(--teal-soft);
+  background: var(--primary-soft);
   border: 0;
   border-radius: 4px;
-  color: var(--teal-dark);
+  color: var(--primary-dark);
   font-weight: 700;
 }
 
@@ -553,7 +553,7 @@ td button {
   background: var(--white);
   border: 1px solid var(--line);
   border-radius: 5px;
-  color: var(--teal-dark);
+  color: var(--primary-dark);
 }
 
 .pagination button:disabled {
@@ -571,7 +571,7 @@ td button {
 }
 
 .detail-dialog::backdrop {
-  background: #102d3db8;
+  background: #10182cba;
 }
 
 .dialog-heading {
@@ -587,10 +587,10 @@ td button {
 
 .dialog-heading button {
   padding: 7px 10px;
-  background: var(--teal-soft);
+  background: var(--primary-soft);
   border: 0;
   border-radius: 4px;
-  color: var(--teal-dark);
+  color: var(--primary-dark);
 }
 
 .detail-dialog dl {
@@ -634,13 +634,13 @@ td button {
 .about-section p {
   max-width: 58ch;
   margin: 0;
-  color: #d9e8ec;
+  color: #e0e5f3;
 }
 
 .about-section a {
   display: inline-block;
   margin-top: 14px;
-  color: #b5eded;
+  color: #c7d0ff;
 }
 
 .method-section {
@@ -801,4 +801,5 @@ td button {
     scroll-behavior: auto;
   }
 }
+
 

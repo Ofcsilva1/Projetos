@@ -2,6 +2,8 @@
 
 Website demonstrativo do dashboard de Gestão de Casos para portfólio. A interface usa HTML, CSS e JavaScript sem dependências de produção.
 
+A paleta de azul marinho e índigo foi adaptada do `style.css` do site Proteja. A organização dos indicadores parte do dashboard GBS existente e da capa do relatório Power BI fornecida.
+
 **Demonstração com dados fictícios.** Os 500 registros em `dados-ficticios.json` foram extraídos da base sintética já embutida no arquivo `Dashboard_GBS- prontuario.html` de `Ofcsilva1/Projetos`. Nenhum prontuário real, nome, CPF ou credencial é necessário.
 
 ## Executar
