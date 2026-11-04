@@ -1,151 +1,198 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <!-- CONFIGURAÇÃO: define idioma, escala no celular e arquivos do dashboard. -->
+  <!-- CONFIGURAÇÃO: prepara idioma, escala e arquivos da página. -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#121a31">
-  <meta name="description" content="Demonstração interativa de Gestão de Casos do Projeto Proteja, com dados fictícios.">
-  <title>Gestão de Casos | Projeto Proteja · GBS</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23121a31'/%3E%3Ctext x='32' y='42' fill='white' text-anchor='middle' font-family='Arial' font-size='27' font-weight='bold'%3EG%3C/text%3E%3C/svg%3E">
+  <meta name="theme-color" content="#14253e">
+  <meta name="description" content="Observatório demonstrativo de Gestão de Casos do Projeto Proteja, com dados fictícios.">
+  <title>Gestão de Casos | Observatório Proteja · GBS</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2314253e'/%3E%3Ctext x='32' y='43' fill='white' text-anchor='middle' font-family='Arial' font-size='30' font-weight='bold'%3EG%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="./style.css">
   <script src="./script.js" defer></script>
 </head>
 <body>
-  <!-- CABEÇALHO: identifica o projeto e oferece acesso direto às seções. -->
-  <a class="skip-link" href="#painel">Ir para o painel</a>
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="brand" href="#inicio" aria-label="GBS, voltar ao início"><span class="brand-mark">GBS</span><span class="brand-name">Global Bahia<br>Solutions</span></a>
-      <nav class="main-nav" aria-label="Navegação principal">
-        <a href="#painel">Painel</a>
-        <a href="#detalhes">Base de casos</a>
-        <a href="#sobre">Sobre o projeto</a>
-      </nav>
-      <span class="header-project">Projeto Proteja</span>
+  <!-- ACESSO RÁPIDO: leva o teclado diretamente ao conteúdo. -->
+  <a class="skip-link" href="#main">Ir para o conteúdo</a>
+
+  <!-- BARRA LATERAL: organiza as perguntas principais do relatório. -->
+  <aside class="sidebar" id="sidebar" aria-label="Navegação do dashboard">
+    <div class="sidebar-brand">
+      <a class="brand-link" href="#visao-geral" aria-label="GBS, ir para visão geral">
+        <span class="brand-mark">GBS</span>
+        <span class="brand-name">Global Bahia<br>Solutions</span>
+      </a>
+      <div class="brand-rule"></div>
+      <p class="sidebar-project">Projeto Proteja <span>Gestão de Casos</span></p>
     </div>
-  </header>
+    <nav class="sidebar-nav" id="section-nav" aria-label="Seções">
+      <a href="#visao-geral" aria-current="page"><span class="nav-icon" aria-hidden="true">◫</span>Visão geral</a>
+      <a href="#perfil"><span class="nav-icon" aria-hidden="true">◉</span>Perfil dos casos</a>
+      <a href="#atendimento"><span class="nav-icon" aria-hidden="true">✚</span>Atendimento</a>
+      <a href="#violencias"><span class="nav-icon" aria-hidden="true">◇</span>Violências</a>
+      <a href="#territorio"><span class="nav-icon" aria-hidden="true">⌖</span>Rede territorial</a>
+      <a href="#detalhes"><span class="nav-icon" aria-hidden="true">▤</span>Base de casos</a>
+      <a href="#sobre"><span class="nav-icon" aria-hidden="true">ⓘ</span>Sobre e método</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <span class="sidebar-demo-dot" aria-hidden="true"></span>
+      <strong>Demonstração com dados fictícios</strong>
+      <p>Exploração pública sem registros pessoais.</p>
+    </div>
+  </aside>
+  <button class="sidebar-overlay" id="sidebar-overlay" type="button" aria-label="Fechar navegação" hidden></button>
 
-  <main id="inicio">
-    <!-- ABERTURA: explica o tema, o período e a natureza dos dados. -->
-    <section class="intro-section" aria-labelledby="page-title">
-      <div class="intro-copy">
-        <p class="project-path">Portfólio <span aria-hidden="true">/</span> Business Intelligence <span aria-hidden="true">/</span> Gestão de Casos</p>
-        <h1 id="page-title">Gestão de Casos</h1>
-        <p class="intro-text">Um olhar sobre entradas, perfil dos casos e atendimentos registrados no Projeto Proteja.</p>
-        <p class="demo-label">Demonstração com dados fictícios</p>
-      </div>
-      <div class="intro-aside" aria-label="Contexto do painel">
-        <span class="aside-title">Período da base demonstrativa</span>
-        <strong id="base-period">Carregando período…</strong>
-        <span>Use os filtros para explorar um recorte.</span>
-      </div>
-    </section>
+  <!-- CABEÇALHO: mostra a localização atual e abre o menu no celular. -->
+  <div class="workspace">
+    <header class="topbar">
+      <button class="menu-button" id="menu-button" type="button" aria-label="Abrir navegação" aria-expanded="false" aria-controls="sidebar">
+        <span aria-hidden="true">☰</span>
+      </button>
+      <div class="topbar-title"><span>GBS / Projeto Proteja</span><strong>Observatório de casos</strong></div>
+      <span class="topbar-period" id="topbar-period">Carregando período…</span>
+      <span class="topbar-demo">Dados fictícios</span>
+    </header>
 
-    <!-- FILTROS: todas as escolhas afetam os mesmos indicadores e gráficos. -->
-    <section class="filter-section" id="painel" aria-labelledby="filter-title">
-      <div class="section-heading">
-        <div>
-          <h2 id="filter-title">Explore os casos</h2>
-          <p id="selection-summary" aria-live="polite">Carregando dados…</p>
+    <main id="main">
+      <!-- ABERTURA: dá contexto ao visitante e mostra o período da base. -->
+      <section class="report-intro" id="visao-geral" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <p class="section-kicker">Painel analítico · Projeto Proteja</p>
+          <h1 id="page-title">Gestão de Casos</h1>
+          <p>Entradas, perfil e atendimento em uma leitura integrada da rede de proteção.</p>
+          <div class="intro-meta"><span id="base-period">Carregando período…</span><span>Demonstração com dados fictícios</span></div>
         </div>
-        <button class="clear-button" id="clear-filters" type="button">Limpar filtros</button>
-      </div>
-      <div class="filters">
-        <div class="filter-field">
-          <label for="month-filter">Mês de entrada</label>
-          <select id="month-filter" data-filter="month"><option value="">Todo o período</option></select>
+        <div class="intro-art" aria-hidden="true">
+          <span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><span class="orbit orbit-three"></span>
+          <span class="art-core">P</span>
+          <span class="art-point art-point-one"></span><span class="art-point art-point-two"></span><span class="art-point art-point-three"></span>
         </div>
-        <div class="filter-field">
-          <label for="sex-filter">Sexo</label>
-          <select id="sex-filter" data-filter="sex"><option value="">Todos</option></select>
-        </div>
-        <div class="filter-field">
-          <label for="council-filter">Conselho Tutelar</label>
-          <select id="council-filter" data-filter="council"><option value="">Todos</option></select>
-        </div>
-        <div class="filter-field">
-          <label for="status-filter">Situação</label>
-          <select id="status-filter" data-filter="status"><option value="">Todas</option></select>
-        </div>
-      </div>
-      <div class="active-filters" id="active-filters" aria-live="polite"></div>
-    </section>
+      </section>
 
-    <!-- CONTEÚDO: indicadores e gráficos usam somente a seleção atual. -->
-    <section class="dashboard-content" aria-label="Indicadores e gráficos">
-      <div class="empty-state" id="empty-state" hidden>
+      <!-- FILTROS: todas as escolhas se combinam no mesmo recorte. -->
+      <section class="filter-panel" id="filtros" aria-labelledby="filter-title">
+        <div class="filter-heading">
+          <div><h2 id="filter-title">Explore os dados</h2><p id="selection-summary" role="status" aria-live="polite">Carregando dados…</p></div>
+          <button class="clear-button" id="clear-filters" type="button">Limpar filtros</button>
+        </div>
+        <div class="filter-grid">
+          <label>Mês de entrada<select id="month-filter" data-filter="month"><option value="">Todo o período</option></select></label>
+          <label>Sexo<select id="sex-filter" data-filter="sex"><option value="">Todos</option></select></label>
+          <label>Conselho Tutelar<select id="council-filter" data-filter="council"><option value="">Todos</option></select></label>
+          <label>Situação<select id="status-filter" data-filter="status"><option value="">Todas</option></select></label>
+        </div>
+        <details class="extra-filters">
+          <summary>Mais filtros <span>Faixa etária, raça/cor e violência sexual</span></summary>
+          <div class="filter-grid filter-grid-extra">
+            <label>Faixa etária<select id="age-filter" data-filter="ageBand"><option value="">Todas</option></select></label>
+            <label>Raça/cor<select id="race-filter" data-filter="race"><option value="">Todas</option></select></label>
+            <label>Violência sexual<select id="sexual-filter" data-filter="sexual"><option value="">Todas</option></select></label>
+          </div>
+        </details>
+        <div class="active-filters" id="active-filters" aria-live="polite"></div>
+      </section>
+
+      <!-- ESTADO VAZIO: orienta quando nenhuma combinação encontra casos. -->
+      <section class="empty-state" id="empty-state" hidden>
+        <div class="empty-icon" aria-hidden="true">⌕</div>
         <h2>Nenhum caso neste recorte</h2>
-        <p>Escolha outro período ou remova um filtro para voltar a explorar os dados.</p>
-        <button type="button" id="empty-clear">Limpar filtros</button>
+        <p>Remova uma seleção ou limpe os filtros para voltar a explorar os dados.</p>
+        <button id="empty-clear" type="button">Limpar filtros</button>
+      </section>
+
+      <div id="analysis-results">
+        <!-- INDICADORES: resumem os casos, com fórmulas descritas no método. -->
+        <section class="kpi-section" aria-labelledby="kpi-title">
+          <div class="section-heading section-heading-compact"><h2 id="kpi-title">Indicadores principais</h2><span>Seleção atual</span></div>
+          <div class="kpi-grid" id="kpi-grid"></div>
+        </section>
+
+        <!-- VISÃO GERAL: a tendência e a situação respondem aos filtros. -->
+        <section class="analysis-section" aria-labelledby="overview-title">
+          <div class="section-heading"><div><p class="section-kicker">Visão geral</p><h2 id="overview-title">Movimento e situação dos casos</h2></div><p>Selecione um mês ou uma situação para filtrar.</p></div>
+          <div class="panel-grid panel-grid-wide">
+            <article class="chart-panel trend-panel">
+              <div class="panel-heading"><div><h3>Entradas ao longo do tempo</h3><p>Quantidade de casos por mês de admissão</p></div><span class="chart-unit">Casos</span></div>
+              <div id="trend-chart" class="trend-chart" role="group" aria-label="Entradas por mês"></div>
+              <div id="trend-mobile" class="trend-mobile"></div>
+              <div class="panel-footer"><span id="comparison-text">Selecione um mês para comparar com o anterior.</span><span>Fonte: base demonstrativa</span></div>
+            </article>
+            <article class="chart-panel status-panel">
+              <div class="panel-heading"><div><h3>Situação dos casos</h3><p>Composição do recorte</p></div></div>
+              <div id="status-chart" class="donut-layout"></div>
+              <p class="chart-note">“Concluído” é uma situação registrada, sem comprovar proteção efetivada.</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- PERFIL: combina faixa etária, sexo e raça/cor sem inferir dados ausentes. -->
+        <section class="analysis-section" id="perfil" aria-labelledby="profile-title">
+          <div class="section-heading"><div><p class="section-kicker">Perfil dos casos</p><h2 id="profile-title">Quem aparece nos registros</h2></div><p>Faixa etária na admissão; categorias como constam na base.</p></div>
+          <div class="panel-grid panel-grid-profile">
+            <article class="chart-panel"><div class="panel-heading"><div><h3>Faixa etária</h3><p>Casos por grupo de idade</p></div></div><div id="age-chart" class="column-chart"></div></article>
+            <article class="chart-panel"><div class="panel-heading"><div><h3>Sexo</h3><p>Participação no recorte</p></div></div><div id="sex-chart" class="donut-layout"></div></article>
+            <article class="chart-panel"><div class="panel-heading"><div><h3>Raça/cor</h3><p>Distribuição dos registros</p></div></div><div id="race-chart" class="bar-chart"></div></article>
+          </div>
+        </section>
+
+        <!-- ATENDIMENTO: mostra cobertura como proporção dos casos do recorte. -->
+        <section class="analysis-section" id="atendimento" aria-labelledby="care-title">
+          <div class="section-heading"><div><p class="section-kicker">Atendimento e proteção</p><h2 id="care-title">Etapas registradas do cuidado</h2></div><p>“Sim” dividido pelo total do recorte; ausência não vira “Não”.</p></div>
+          <div class="panel-grid panel-grid-even">
+            <article class="chart-panel"><div class="panel-heading"><div><h3>Cobertura dos serviços</h3><p>Proporção de casos com atendimento registrado</p></div></div><div id="care-chart" class="coverage-chart"></div></article>
+            <article class="chart-panel"><div class="panel-heading"><div><h3>Plano individual</h3><p>Elaboração informada na base</p></div></div><div id="plan-chart" class="donut-layout"></div></article>
+          </div>
+        </section>
+
+        <!-- VIOLÊNCIAS: separa classificações de violência e vínculo informado. -->
+        <section class="analysis-section" id="violencias" aria-labelledby="violence-title">
+          <div class="section-heading"><div><p class="section-kicker">Violências</p><h2 id="violence-title">Classificações e vínculos</h2></div><p>Um caso pode ter outras classificações além da sexual.</p></div>
+          <div class="panel-grid panel-grid-even">
+            <article class="chart-panel"><div class="panel-heading"><div><h3>Violência sexual</h3><p>Classificação registrada no prontuário</p></div></div><div id="sexual-chart" class="bar-chart"></div></article>
+            <article class="chart-panel"><div class="panel-heading"><div><h3>Relação suspeito × vítima</h3><p>Vínculo informado na base</p></div></div><div id="relation-chart" class="bar-chart"></div></article>
+          </div>
+        </section>
+
+        <!-- TERRITÓRIO: destaca a distribuição por Conselho Tutelar. -->
+        <section class="analysis-section" id="territorio" aria-labelledby="territory-title">
+          <div class="section-heading"><div><p class="section-kicker">Rede territorial</p><h2 id="territory-title">Onde chegam as demandas</h2></div><p>Quantidade e participação no recorte atual.</p></div>
+          <div class="panel-grid panel-grid-wide">
+            <article class="chart-panel"><div class="panel-heading"><div><h3>Casos por Conselho Tutelar</h3><p>Selecione uma barra para filtrar toda a página</p></div></div><div id="council-chart" class="bar-chart council-chart"></div></article>
+            <article class="territory-feature"><span class="feature-symbol" aria-hidden="true">⌖</span><p>Conselho com mais casos</p><strong id="top-council">—</strong><span id="top-council-note">Aguardando dados…</span></article>
+          </div>
+        </section>
       </div>
-      <div id="results">
-        <div class="kpi-grid" id="kpi-grid" aria-label="Indicadores principais"></div>
-        <div class="dashboard-grid">
-          <section class="chart-panel trend-panel" aria-labelledby="trend-title">
-            <div class="panel-heading">
-              <div><h2 id="trend-title">Entradas ao longo do tempo</h2><p>Casos por mês de entrada</p></div>
-              <span class="panel-unit">Quantidade de casos</span>
-            </div>
-            <div class="trend-chart" id="trend-chart"></div>
-          </section>
-          <section class="chart-panel" aria-labelledby="status-title">
-            <div class="panel-heading">
-              <div><h2 id="status-title">Situação dos casos</h2><p>Distribuição na seleção atual</p></div>
-            </div>
-            <div class="bar-chart" id="status-chart"></div>
-          </section>
-          <section class="chart-panel" aria-labelledby="council-title">
-            <div class="panel-heading">
-              <div><h2 id="council-title">Rede territorial</h2><p>Casos por Conselho Tutelar</p></div>
-            </div>
-            <div class="bar-chart" id="council-chart"></div>
-          </section>
-          <section class="chart-panel" aria-labelledby="care-title">
-            <div class="panel-heading">
-              <div><h2 id="care-title">Atendimentos registrados</h2><p>Percentual sobre os casos do recorte</p></div>
-            </div>
-            <div class="bar-chart" id="care-chart"></div>
-          </section>
+
+      <!-- DETALHES: lista os registros fictícios usados nos cálculos. -->
+      <section class="details-section" id="detalhes" aria-labelledby="details-title">
+        <div class="section-heading"><div><p class="section-kicker">Base de casos</p><h2 id="details-title">Explore os registros</h2><p>Identificadores fictícios; sem nomes ou documentos pessoais.</p></div><span id="record-count" class="record-count"></span></div>
+        <p class="table-hint">No celular, deslize a tabela para ver todas as colunas.</p>
+        <div class="table-wrap"><table><thead><tr><th scope="col">Prontuário</th><th scope="col">Entrada</th><th scope="col">Sexo</th><th scope="col">Conselho</th><th scope="col">Situação</th><th scope="col">Psicossocial</th><th scope="col">Detalhe</th></tr></thead><tbody id="record-body"></tbody></table></div>
+        <div class="pagination"><button type="button" id="prev-page">Anterior</button><span id="page-label"></span><button type="button" id="next-page">Próxima</button></div>
+      </section>
+
+      <!-- SOBRE E MÉTODO: documenta contribuição, fórmulas e limites. -->
+      <section class="about-section" id="sobre" aria-labelledby="about-title">
+        <div><p class="section-kicker">Estudo de caso</p><h2 id="about-title">Sobre o projeto</h2><p>Este projeto apresenta o monitoramento de fluxos e a garantia de direitos no Projeto Proteja. A versão original foi desenvolvida em Power BI e Power Query no contexto da GBS.</p></div>
+        <div><h3>Minha contribuição</h3><p>Desenvolvimento do relatório de Business Intelligence e adaptação de sua leitura para um website interativo de portfólio.</p></div>
+      </section>
+      <section class="method-section" id="metodo" aria-labelledby="method-title">
+        <h2 id="method-title">Definição dos indicadores</h2>
+        <div class="method-grid">
+          <p><strong>Total e situação.</strong> Cada linha da base fictícia representa um caso. Ativos contam apenas situação “Ativo”; a taxa divide ativos pelo total do recorte.</p>
+          <p><strong>Atendimentos, plano e BO.</strong> Cada percentual divide os registros com “Sim” pelo total de casos selecionados. Com denominador zero, a taxa aparece como “—”.</p>
+          <p><strong>Violência sexual registrada.</strong> Conta os casos cuja categoria sexual difere de “Não se aplica”; a taxa usa o total do mesmo recorte.</p>
+          <p><strong>Comparação mensal.</strong> Diferença de entradas entre o mês selecionado e o anterior, mantendo os demais filtros. Não exibe variação percentual quando o mês anterior tem zero casos.</p>
         </div>
-        <p class="chart-hint">Selecione uma barra ou um mês pelo mouse ou teclado para aplicar um filtro. As escolhas se combinam.</p>
-      </div>
-    </section>
+        <p class="method-limit">Estas fórmulas são da demonstração web e da base fictícia existente. Medidas DAX, relacionamentos e números reais do Power BI não estavam acessíveis para reconciliação. “Concluído” não é interpretado como proteção efetivada.</p>
+      </section>
 
-    <!-- DETALHES: uma tabela acessível mostra os registros fictícios do recorte. -->
-    <section class="details-section" id="detalhes" aria-labelledby="details-title">
-      <div class="section-heading">
-        <div><h2 id="details-title">Base de casos</h2><p>Registros fictícios que compõem os indicadores.</p></div>
-        <span id="record-count" class="record-count"></span>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th scope="col">Prontuário</th><th scope="col">Entrada</th><th scope="col">Sexo</th><th scope="col">Conselho</th><th scope="col">Situação</th><th scope="col">Psicossocial</th><th scope="col">Detalhe</th></tr></thead>
-          <tbody id="record-body"></tbody>
-        </table>
-      </div>
-      <div class="pagination"><button type="button" id="prev-page">Anterior</button><span id="page-label"></span><button type="button" id="next-page">Próxima</button></div>
-    </section>
+      <!-- RODAPÉ: encerra a página e reforça a origem dos dados. -->
+      <footer class="site-footer"><span>GBS · Global Bahia Solutions</span><span>Projeto Proteja · Demonstração com dados fictícios</span></footer>
+    </main>
+  </div>
 
-    <!-- SOBRE: apresenta a contribuição e distingue a demonstração do relatório original. -->
-    <section class="about-section" id="sobre" aria-labelledby="about-title">
-      <div><h2 id="about-title">Sobre o projeto</h2><p>Este case apresenta o monitoramento de fluxos e a garantia de direitos no Projeto Proteja. O relatório original foi desenvolvido em Power BI e Power Query no contexto da GBS.</p></div>
-      <div><h3>Minha contribuição</h3><p>Desenvolvimento do relatório de Business Intelligence e adaptação do painel para uma experiência web explorável no portfólio.</p><a href="#metodo">Ver definições dos indicadores</a></div>
-    </section>
-
-    <!-- MÉTODO: documenta as regras verificáveis desta versão e os limites da comparação. -->
-    <section class="method-section" id="metodo" aria-labelledby="method-title">
-      <h2 id="method-title">Como ler os indicadores</h2>
-      <p>Cada linha da base fictícia representa um caso. O total conta as linhas do recorte uma vez. Cobertura psicossocial, casos femininos e casos com BO dividem a quantidade marcada como “Sim” ou “Feminino” pelo total do mesmo recorte. Sem casos, o percentual é exibido como “—”.</p>
-      <p>A comparação mostra a variação na quantidade de entradas em relação ao mês anterior, quando um mês é selecionado. Sexo, conselho e situação permanecem aplicados aos dois meses. As barras de atendimento exibem “Sim” dividido pelo total do recorte; valores ausentes não são convertidos em “Não”.</p>
-      <p>Estas regras foram confirmadas no código do dashboard demonstrativo existente. A definição DAX, os relacionamentos e os totais do modelo Power BI original não estavam acessíveis nesta revisão. Os números desta página não representam dados reais do Proteja.</p>
-    </section>
-  </main>
-
-  <!-- RODAPÉ: reforça a identificação e a origem demonstrativa. -->
-  <footer class="site-footer"><span>GBS · Global Bahia Solutions</span><span>Projeto Proteja · Demonstração com dados fictícios</span></footer>
-
-  <!-- JANELA DE DETALHE: abre por clique ou teclado e devolve o foco ao controle. -->
+  <!-- JANELA DE DETALHE: abre por mouse ou teclado e preserva o foco. -->
   <dialog class="detail-dialog" id="detail-dialog" aria-labelledby="dialog-title">
     <div class="dialog-heading"><h2 id="dialog-title">Detalhe do caso</h2><button type="button" id="close-dialog" aria-label="Fechar detalhe">Fechar</button></div>
     <dl id="dialog-content"></dl>

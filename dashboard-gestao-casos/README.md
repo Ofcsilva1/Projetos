@@ -2,7 +2,7 @@
 
 Website demonstrativo do dashboard de Gestão de Casos para portfólio. A interface usa HTML, CSS e JavaScript sem dependências de produção.
 
-A paleta de azul marinho e índigo foi adaptada do `style.css` do site Proteja. A organização dos indicadores parte do dashboard GBS existente e da capa do relatório Power BI fornecida.
+A paleta parte do `style.css` do site Proteja. A navegação lateral e a variedade de gráficos foram estudadas nos projetos `rh-solutionsx/` e `Dashboard_GBS- prontuario.html` do portfólio. A capa do Power BI fornecida orienta o tema e a autoria. O objeto em camadas na abertura é decorativo; os gráficos preservam escalas planas para facilitar a leitura.
 
 **Demonstração com dados fictícios.** Os 500 registros em `dados-ficticios.json` foram extraídos da base sintética já embutida no arquivo `Dashboard_GBS- prontuario.html` de `Ofcsilva1/Projetos`. Nenhum prontuário real, nome, CPF ou credencial é necessário.
 
@@ -18,7 +18,7 @@ Abra `http://localhost:8000/dashboard-gestao-casos/`. Um servidor local é neces
 
 ## Atualizar os dados
 
-Substitua `dados-ficticios.json` apenas por uma base autorizada para apresentação pública. Mantenha um objeto por caso, com `id` e `entry` no formato `AAAA-MM-DD`. Os filtros e indicadores usam `sex`, `council`, `status`, `psycho`, `bo`, `initial` e `legal`. As respostas afirmativas usam o texto `Sim`; valores vazios aparecem como “Não informado” nas distribuições e não são contados como “Não”.
+Substitua `dados-ficticios.json` apenas por uma base autorizada para apresentação pública. Mantenha um objeto por caso, com `id` e `entry` no formato `AAAA-MM-DD`. Os filtros e indicadores usam `sex`, `council`, `status`, `ageBand`, `race`, `sexual`, `relation`, `psycho`, `bo`, `initial`, `legal` e `plan`. As respostas afirmativas usam o texto `Sim`; valores vazios aparecem como “Não informado” nas distribuições e não são contados como “Não”.
 
 Antes de trocar a base, revise a permissão de publicação e a ausência de dados pessoais. Se usar dados reais autorizados, retire o selo “Demonstração com dados fictícios” somente após atualizar também este README e validar os totais.
 
@@ -27,13 +27,15 @@ Antes de trocar a base, revise a permissão de publicação e a ausência de dad
 | Indicador | Cálculo |
 | --- | --- |
 | Total de casos | Quantidade de linhas do recorte, uma por caso |
+| Casos ativos | Registros com `status = Ativo`; participação = ativos / total do recorte |
 | Cobertura psicossocial | Casos com `psycho = Sim` / total do recorte |
-| Casos femininos | Casos com `sex = Feminino` / total do recorte |
+| Plano individual | Casos com `plan = Sim` / total do recorte |
 | Casos com BO | Casos com `bo = Sim` / total do recorte |
+| Violência sexual registrada | Casos com `sexual` preenchido e diferente de `Não se aplica` / total do recorte |
 | Atendimentos registrados | `Sim` no respectivo campo / total do recorte |
 | Comparação mensal | Entradas no mês selecionado menos entradas no mês anterior, com os demais filtros mantidos |
 
-O percentual usa o total do recorte como denominador. Quando o denominador é zero, a interface mostra “—”. A comparação mensal aparece apenas se o mês anterior existir na base. Os filtros se combinam por interseção. O gráfico de tempo mostra os dois meses envolvidos durante a comparação; sem mês escolhido, mostra toda a série.
+O percentual usa o total do recorte como denominador. Quando o denominador é zero, a interface mostra “—”. A comparação mensal aparece apenas se o mês anterior existir na base. Os sete filtros se combinam por interseção. O gráfico de tempo mostra os dois meses envolvidos durante a comparação; sem mês escolhido, mostra toda a série. Clicar novamente numa categoria selecionada remove esse filtro. “Concluído” não é interpretado como proteção efetivada.
 
 ## Origem e limite de fidelidade
 
@@ -43,5 +45,5 @@ Não havia modelo Power BI Desktop conectado ao servidor de autoria local. Medid
 
 ## Revisão antes de publicar
 
-Confira em navegador desktop e celular: carregamento da base, quatro filtros, seleção nas barras e meses, limpeza, recorte vazio, paginação, detalhe por teclado, contraste e ausência de rolagem horizontal na página. A publicação do site ou a alteração do relatório Power BI não fazem parte desta pasta.
+Confira em navegador desktop e celular: carregamento da base, sete filtros, seleção nas linhas, barras, colunas e legendas, limpeza, recorte vazio, menu lateral, paginação, detalhe por teclado, contraste e ausência de rolagem horizontal na página. A tabela tem rolagem própria no celular. A publicação do site ou a alteração do relatório Power BI não fazem parte desta pasta.
 
