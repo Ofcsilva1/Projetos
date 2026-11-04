@@ -214,6 +214,18 @@
 .featured-figure .capture-link { aspect-ratio: 1222/840; background: #000; }
 .featured-figure .capture-link img { object-fit: cover !important; }
 .project-card .capture-link img { object-fit: cover !important; }
+
+/* Prontuário em destaque: respeita a proporção original para mostrar toda a capa. */
+.featured-project[data-project='prontuario'] .capture-link {
+  aspect-ratio: 1427 / 806;
+}
+.featured-project[data-project='prontuario'] .capture-link img {
+  object-fit: contain !important;
+}
+.featured-project[data-project='prontuario'] .expand-label {
+  top: 10px;
+  bottom: auto;
+}
 .contact-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 370px; }
 .contact-option { display: flex; align-items: center; gap: 11px; text-decoration: none; min-height: 64px; padding: 15px 19px; border-radius: 10px; border: 1px solid var(--control-line); background: var(--surface-raised); font-size: 15px; font-weight: 500; }
 .contact-option:hover { background: var(--surface-hover); border-color: var(--accent); }
