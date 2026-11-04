@@ -47,3 +47,5 @@ Não havia modelo Power BI Desktop conectado ao servidor de autoria local. Medid
 
 Confira em navegador desktop e celular: carregamento da base, sete filtros, seleção nas linhas, barras, colunas e legendas, limpeza, recorte vazio, menu lateral, paginação, detalhe por teclado, contraste e ausência de rolagem horizontal na página. A tabela tem rolagem própria no celular. A publicação do site ou a alteração do relatório Power BI não fazem parte desta pasta.
 
+As capturas da revisão estão em [desktop](preview/desktop.png) e [celular](preview/celular.png). A prévia foi testada em 320, 390, 768, 1024 e 1440 px; os totais e quatro recortes foram comparados por contagem independente do JSON.
+
