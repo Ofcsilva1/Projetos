@@ -40,7 +40,7 @@ O efeito Dither Veil foi retirado a pedido do autor. A foto não é alterada. O 
 
 Fonte principal: https://ofcsilva1.github.io/Projetos/#projetos e os READMEs de cada repositório. Conferência em 20/10/2026.
 
-O destaque principal é o Dashboard de Prontuário. Em seguida aparecem Nexo — Gestão de Casos, Dashboard de Vendas, Dashboard de Vendas com IA, RH SolutionsX, Paradise Island e Nexora. Os dashboards e o sistema ligado ao prontuário vêm antes das experiências web. Os filtros exibem quatro projetos em BI/dados e três em sistemas/sites.
+Os sete destaques são Dashboard de Vendas com IA, Nexo — Gestão de Casos, Dashboard de Prontuário, RH SolutionsX, Dashboard de Vendas, Paradise Island e Nexora. Os filtros exibem quatro projetos em BI/dados e três em sistemas/sites.
 
 As pastas dão acesso aos dois PDFs exportados, explorador Excel, planilha de previdência, dashboard HTML R, arquivo HTML GBS e arquivos Power BI. O link abaixo das pastas aponta para o repositório `https://github.com/Ofcsilva1/Projetos`.
 
