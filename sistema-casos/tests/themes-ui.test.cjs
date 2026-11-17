@@ -30,10 +30,10 @@ test('shared themes cover all five pages on desktop, tablet and narrow mobile', 
         await page.setViewportSize({ width, height: 1000 });
         for (const id of ['nav-list', 'nav-new', 'nav-agenda', 'nav-tasks', 'nav-nexus']) {
           await page.locator(`#${id}`).click();
-          // Aguarda a pintura do estado ativo antes de medir uma transição de cor.
-          await page.evaluate(() => new Promise(resolve => {
-            requestAnimationFrame(() => requestAnimationFrame(resolve));
-          }));
+          // Aguarda as transições reais do item ativo; contar quadros não garante cores finais no CI.
+          await page.locator(`#${id}.active`).evaluate(async element => {
+            await Promise.all(element.getAnimations().map(animation => animation.finished));
+          });
           const styles = await page.evaluate(() => {
             const body = getComputedStyle(document.body);
             const nav = getComputedStyle(document.querySelector('.sidebar-menu a.active'));
