@@ -1,7 +1,7 @@
-// Only allowlisted section/step names belong in the URL or history state.
-const names = { list: 'casos', form: 'cadastro', agenda: 'agenda', tasks: 'pendencias' };
+// Rotas permitidas: guarda apenas o nome da tela e a etapa, sem dados dos prontuários.
+const names = { list: 'casos', form: 'cadastro', agenda: 'agenda', tasks: 'pendencias', nexus: 'nexus' };
 export function readSectionRoute(hash) {
-  const match = /^#(casos|cadastro|agenda|pendencias)(?:\/etapa-([1-8]))?$/.exec(hash);
+  const match = /^#(casos|cadastro|agenda|pendencias|nexus)(?:\/etapa-([1-8]))?$/.exec(hash);
   const view = match ? Object.keys(names).find(key => names[key] === match[1]) : 'list';
   return { view, step: view === 'form' ? Number(match?.[2] || 1) : 1 };
 }

@@ -1,0 +1,267 @@
+/* Área da conversa: usa as superfícies e o acabamento compartilhados do Nexo. */
+.nexus-chat {
+  display: flex;
+  flex-direction: column;
+  height: clamp(560px, calc(100dvh - 240px), 860px);
+  min-height: 0;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: clamp(16px, 3vw, 32px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  background-image: var(--panel-sheen);
+  box-shadow: var(--shadow);
+}
+
+.nexus-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  flex: 0 0 auto;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nexus-mode {
+  margin: 0 0 8px;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+/* Seletor do provedor: mantém o rótulo e a escolha existentes com largura confortável. */
+.nexus-toolbar .form-select {
+  min-width: min(100%, 220px);
+}
+
+.nexus-toolbar > div {
+  min-width: 0;
+}
+
+.nexus-help {
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+/* Exemplos iniciais: perguntas prontas que também podem ser digitadas. */
+.nexus-welcome {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 28px 12px;
+  text-align: center;
+}
+
+/* Marca decorativa: identifica a conversa sem apresentar tendências ou dados fictícios. */
+.nexus-welcome::before {
+  content: "";
+  display: block;
+  width: 56px;
+  min-height: 56px;
+  margin-bottom: 20px;
+  border: 1px solid var(--accent-border);
+  border-radius: 18px;
+  background-color: var(--accent-bg);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56'%3e%3cg fill='none' stroke='%23899be5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M17 16h22v18H26l-9 7z'/%3e%3cpath d='M23 23h10M23 28h7'/%3e%3c/g%3e%3c/svg%3e");
+}
+
+.nexus-welcome h2 {
+  margin-bottom: 12px;
+  color: var(--text-main);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.nexus-welcome > p {
+  max-width: 66ch;
+  margin-bottom: 0;
+}
+
+.nexus-welcome > * {
+  flex-shrink: 0;
+}
+
+.nexus-suggestions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.nexus-suggestions .btn {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: 24px;
+  white-space: normal;
+  text-align: left;
+}
+
+/* Mensagens: diferencia autoria com texto e posição, além da cor. */
+.nexus-messages {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 0;
+  overflow-y: scroll;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--control-border) var(--card-bg);
+  padding: 24px 8px;
+}
+
+/* Histórico vazio: a área de exemplos ocupa o espaço até a primeira pergunta. */
+.nexus-messages:empty {
+  display: none;
+}
+
+.nexus-messages::-webkit-scrollbar {
+  width: 10px;
+}
+
+.nexus-messages::-webkit-scrollbar-thumb {
+  border: 2px solid var(--card-bg);
+  border-radius: 8px;
+  background: var(--control-border);
+}
+
+.nexus-message {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  max-width: 88%;
+  padding: 20px 24px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px 16px 16px 4px;
+  background: var(--app-bg);
+  overflow-wrap: anywhere;
+}
+
+.nexus-message-user {
+  align-self: flex-end;
+  justify-self: end;
+  background: var(--field-readonly);
+  max-width: 78%;
+  border-radius: 16px 16px 4px 16px;
+}
+
+.nexus-message h3 {
+  margin: 0 0 8px;
+  color: var(--text-main);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.nexus-message p {
+  margin: 0;
+  color: var(--text-main);
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+/* Campo e rodapé: rótulo visível, ajuda e retorno acessível após o envio. */
+.nexus-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  flex: 0 0 auto;
+  gap: 8px 12px;
+  padding: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  background: var(--surface-raised);
+}
+
+.nexus-form label {
+  grid-column: 1 / -1;
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.nexus-form textarea {
+  grid-column: 1;
+  grid-row: 2;
+  min-height: 72px;
+  max-height: 120px;
+  resize: vertical;
+}
+
+.nexus-form .nexus-help {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+#nexus-status:empty {
+  min-height: 0;
+}
+
+.nexus-submit {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  justify-self: end;
+  min-height: 48px;
+  padding-inline: 20px;
+}
+
+.nexus-footer {
+  flex: 0 0 auto;
+  margin-top: 12px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+/* Celular: mantém mensagens e controles dentro da largura disponível. */
+@media (max-width: 600px) {
+  .nexus-chat {
+    height: 82dvh;
+    min-height: 620px;
+  }
+
+  .nexus-message {
+    max-width: 100%;
+    padding: 14px;
+  }
+
+  .nexus-suggestions {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .nexus-suggestions .btn {
+    padding: 10px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .nexus-welcome {
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 24px 0;
+  }
+
+  .nexus-welcome::before {
+    display: none;
+  }
+
+  .nexus-submit {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    width: 100%;
+  }
+
+  .nexus-form {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 12px;
+  }
+}
