@@ -9,8 +9,10 @@ import { resolveViolenceData, matchesViolence, violenceOptions } from "./violenc
 import { setupViolenceForm } from "./violence-form.js?v=20261018.fase3";
 import { setupWorkflows } from "./workflow-ui.js?v=20261018.fase3";
 import { replacementFor, activityText, attendanceSummary } from "./workflow-core.js?v=20261016.demo1";
-import { get, ref, onValue, runTransaction, resetDemo, storageNotice } from "./local-store.js?v=20261016.demo1";
-import { setupSectionNavigation } from './section-navigation.js?v=20261018.fase3';
+// Recursos do laboratório: armazenamento separado e conversa de consultas locais.
+import { get, ref, onValue, runTransaction, resetDemo, storageNotice } from "./local-store.js?v=20261116.lab1";
+import { setupSectionNavigation } from './section-navigation.js?v=20261116.lab1';
+import { setupNexusChat } from './nexus-chat.js?v=20261116.lab1';
 const database = {};
 // Local author identity only; there is no authentication or remote database.
 const auth = { currentUser: { uid: 'visitante-local' } };
@@ -39,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
     encerrado_sem_protecao: "Encerrado sem proteção", nao_competencia: "Não é competência"
   };
   let cases = [];
+  // Base da conversa: sempre usa os registros atuais, inclusive após uma importação.
+  setupNexusChat({ getCases: () => cases });
   let page = 1;
   let editingKey = null;
   let editingBase = null;
@@ -116,11 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     currentView = view;
     if (view !== 'list') $("case-saved-actions").hidden = true;
-    for (const [name, nav, section] of [["list","nav-list","list-section"],["form","nav-new","form-section"],["agenda","nav-agenda","agenda-section"],["tasks","nav-tasks","tasks-section"]]) {
+    // Telas do sistema: mantém o menu selecionado e mostra somente a seção atual.
+    for (const [name, nav, section] of [["list","nav-list","list-section"],["form","nav-new","form-section"],["agenda","nav-agenda","agenda-section"],["tasks","nav-tasks","tasks-section"],["nexus","nav-nexus","nexus-section"]]) {
       $(nav).classList.toggle("active", view === name); $(section).hidden = view !== name;
       if (view === name) $(nav).setAttribute('aria-current', 'page'); else $(nav).removeAttribute('aria-current');
     }
     const titles = { list: ["Controle geral de casos","Acompanhe os prontuários e os indicadores da seleção."], form: [editingKey ? "Editar caso" : "Registrar novo caso","Registre as informações do caso nas etapas abaixo."], agenda: ["Agenda e atendimentos","Quem vamos atender? Consulte datas, técnicos e resultados."], tasks: ["Pendências e retornos","O que precisamos resolver? Acompanhe responsáveis e prazos."] };
+    titles.nexus = ["Pergunte ao Nexus", "Consulte os dados fictícios do serviço no laboratório."];
     $("page-title").textContent = titles[view][0]; $("page-subtitle").textContent = titles[view][1];
     if (view === 'agenda' || view === 'tasks') workflows.render();
     if (!applyingRoute) navigation?.update(view,activeStep());
@@ -146,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
     $("numero-prontuario").focus();
   }
 
-  for (const [id,view,hash] of [['nav-list','list','casos'],['nav-new','form','cadastro/etapa-1'],['nav-agenda','agenda','agenda'],['nav-tasks','tasks','pendencias']]) {
+  for (const [id,view,hash] of [['nav-list','list','casos'],['nav-new','form','cadastro/etapa-1'],['nav-agenda','agenda','agenda'],['nav-tasks','tasks','pendencias'],['nav-nexus','nexus','nexus']]) {
     $(id).href = `#${hash}`;
     $(id).addEventListener('click',event=>{
       if(event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0)return;
@@ -161,10 +167,10 @@ document.addEventListener("DOMContentLoaded", () => {
   $("btnCaseTasks").addEventListener("click", () => { if (editingKey) workflows.openCreate("tarefas", editingKey); });
   $("btnEmptyNew").addEventListener("click", startNewCase);
   $("btnCancelarForm").addEventListener("click", () => toggleView("list"));
-  $("btnResetDemo").addEventListener("click", () => {
-    if (savingCase || !window.confirm('Restaurar os exemplos fictícios? As alterações e importações desta aba serão descartadas. Exporte antes se quiser guardá-las.')) return;
+  $("btnResetDemo").addEventListener("click", async () => {
+    if (savingCase || !window.confirm('Restaurar os exemplos fictícios? As alterações e importações do laboratório neste endereço serão descartadas, inclusive em outras abas abertas. Exporte antes se quiser guardá-las.')) return;
     try {
-      resetDemo(); caseDraft = null; caseForm.reset(); violenceForm.fill({}); workflows.reset();
+      await resetDemo(); caseDraft = null; caseForm.reset(); violenceForm.fill({}); workflows.reset();
       toggleView('list', true); location.reload();
     } catch (error) { notify(storageMessage(error), 'danger'); }
   });

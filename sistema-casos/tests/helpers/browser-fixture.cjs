@@ -4,7 +4,8 @@ const { chromium } = require('playwright');
 const fs = require('node:fs');
 const path = require('node:path');
 const root = path.resolve(process.env.NEXO_TEST_ROOT || path.join(__dirname, '../..'));
-const storageKey = 'nexo-demo-casos-v1';
+// Base dos testes: usa a chave exclusiva do laboratório para verificar persistência real.
+const storageKey = 'nexo-laboratorio-casos-v1';
 const neutralFields = ['origem-caso','cor','situacao-atual','comunicacao-violencia','retorno-solicitado','estudo-caso','pia-elaborado'];
 let browser;
 before(async () => { browser = await chromium.launch({ headless:true, ...(process.env.NEXO_BROWSER_PATH ? { executablePath:process.env.NEXO_BROWSER_PATH } : {}) }); });
@@ -13,7 +14,7 @@ after(async () => { await browser?.close(); });
 async function fixture(options = {}) {
   const context = await browser.newContext({ viewport:{width:1440,height:1000} });
   if (options.seed) await context.addInitScript(({key,seed}) => {
-    if (!sessionStorage.getItem(key)) sessionStorage.setItem(key, JSON.stringify(seed));
+    if (!localStorage.getItem(key)) localStorage.setItem(key, JSON.stringify(seed));
   }, {key:storageKey,seed:options.seed});
   if (options.blocked) await context.addInitScript(() => {
     Storage.prototype.getItem = () => { throw new Error('Synthetic unavailable storage'); };
@@ -21,6 +22,10 @@ async function fixture(options = {}) {
   const external = [];
   await context.route('**/*', route => {
     const url = new URL(route.request().url());
+    // Testes locais: a descoberta do servidor não deve chamar uma API de IA real.
+    if (url.hostname === 'nexo.test' && url.pathname === '/api/nexus/status') {
+      return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ configured: false, token: 'token-sintetico' }) });
+    }
     if (url.hostname === 'nexo.test') {
       const name = decodeURIComponent(url.pathname.replace(/^\/sistema-casos\//, '')) || 'index.html';
       const filename = path.resolve(root, name);
@@ -53,7 +58,7 @@ async function fixture(options = {}) {
   return {page,context};
 }
 async function guard(page) {return page.evaluate(()=>{const e=new Event('beforeunload',{cancelable:true});window.dispatchEvent(e);return e.defaultPrevented;});}
-async function records(page) {return page.evaluate(key=>JSON.parse(sessionStorage.getItem(key)).casos,storageKey);}
+async function records(page) {return page.evaluate(key=>JSON.parse(localStorage.getItem(key)).casos,storageKey);}
 async function tab(page, id) {
   await page.locator(`[data-bs-target="#${id}"]`).click();
   await page.waitForFunction(id=>document.getElementById(id).classList.contains('show')&&getComputedStyle(document.getElementById(id)).opacity==='1',id);

@@ -1,0 +1,311 @@
+/* Paleta exclusiva do claro: altera as variáveis sem alcançar o tema escuro. */
+:root[data-theme="light"] {
+  --app-bg: #f4f6fc;
+  --sidebar-bg: #fafbff;
+  --card-bg: #ffffff;
+  --surface-raised: #f8f9fd;
+  --surface-hover: #f0f3fc;
+  --text-main: #202a44;
+  --text-muted: #5f6c86;
+  --primary-color: #3548b6;
+  --primary-dark: #293b9c;
+  --button-bg: #4458cd;
+  --button-hover: #3547b3;
+  --button-text: #ffffff;
+  --accent-bg: #e9edff;
+  --accent-border: #b8c5fb;
+  --accent-text: #283c9c;
+  --border-color: #dce3f0;
+  --control-border: #8792aa;
+  --field-bg: #ffffff;
+  --field-readonly: #f3f3f3;
+  --placeholder-color: #616c80;
+  --focus-ring: #4055c5;
+  --focus-halo: rgb(79 99 216 / 14%);
+  --metric-total-bg: #eaf0ff;
+  --metric-total-border: #c7d6fa;
+  --metric-active-bg: #edf6f0;
+  --metric-active-border: #c9dfd0;
+  --metric-closed-bg: #e8f6f9;
+  --metric-closed-border: #bfe0e9;
+  --metric-suspended-bg: #fff5e4;
+  --metric-suspended-border: #efd9af;
+  --metric-outside-bg: #f2eafa;
+  --metric-outside-border: #dcc7ef;
+  --shadow: 0 10px 26px -14px rgb(58 82 146 / 24%), 0 2px 5px rgb(58 82 146 / 4%);
+  --dialog-shadow: 0 24px 70px rgb(37 53 95 / 20%);
+  --workspace-glow: radial-gradient(ellipse at 50% 0%, rgb(115 139 233 / 7%), transparent 65%);
+  --panel-sheen: linear-gradient(145deg, rgb(255 255 255 / 65%), transparent 75%);
+  --notice-bg: #edf0ff;
+  --notice-text: #354584;
+  --notice-border: #b5c3ff;
+}
+
+/* Cabeçalho claro: reduz o peso visual e mantém título, ícone e identificação alinhados. */
+html[data-theme="light"] .content-header {
+  min-height: 86px;
+  padding: 12px 28px;
+  border-bottom-color: #e5eafa;
+  background-color: rgb(255 255 255 / 90%);
+  background-image: linear-gradient(120deg, #ffffff, #fbfcff);
+}
+
+html[data-theme="light"] .content-header h1 {
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  letter-spacing: -0.035em;
+}
+
+html[data-theme="light"] .header-titles {
+  padding-left: 64px;
+}
+
+html[data-theme="light"] .header-titles::before {
+  width: 44px;
+  height: 44px;
+  border-color: #d4ddff;
+  background-color: #f1f4ff;
+  box-shadow: 0 2px 4px rgb(63 85 180 / 7%);
+}
+
+html[data-theme="light"] .badge-operacional {
+  border-color: #c9d2e6;
+  background-color: #ffffff;
+}
+
+html[data-theme="light"] .badge-operacional i {
+  border-radius: 50%;
+}
+
+/* Aviso do laboratório: discreto, com contraste suficiente e sem ocupar espaço excessivo. */
+html[data-theme="light"] .content-body {
+  padding-top: 16px;
+}
+
+html[data-theme="light"] .demo-notice {
+  margin-bottom: 16px;
+  padding: 8px 14px 8px 42px;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+html[data-theme="light"] .demo-notice::before {
+  top: 9px;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  border-width: 1.5px;
+  font-size: 0.75rem;
+}
+
+/* Indicadores pastel: cores localizadas, números escuros e sombra delicada. */
+html[data-theme="light"] .summary-grid {
+  margin-bottom: 16px;
+}
+
+html[data-theme="light"] .summary-grid .summary-card {
+  min-height: 84px;
+  padding: 12px 16px;
+  gap: 12px;
+  background-image: linear-gradient(135deg, rgb(255 255 255 / 36%), transparent 75%);
+  box-shadow: 0 5px 12px -6px rgb(40 63 115 / 20%), inset 0 1px 0 rgb(255 255 255 / 70%);
+}
+
+html[data-theme="light"] .summary-grid .summary-card > div {
+  gap: 4px;
+}
+
+html[data-theme="light"] .summary-grid .summary-card .summary-icon {
+  width: 44px;
+  height: 44px;
+  flex-basis: 44px;
+  border-radius: 16px;
+  background-color: rgb(255 255 255 / 38%);
+  box-shadow: 0 2px 4px rgb(44 64 104 / 4%);
+}
+
+html[data-theme="light"] .summary-card strong {
+  font-size: 1.875rem;
+}
+
+html[data-theme="light"] .summary-card .summary-label {
+  font-weight: 500;
+}
+
+/* Campos neutros: nenhum preenchimento colorido, inclusive leitura e arquivos. */
+html[data-theme="light"] .form-control,
+html[data-theme="light"] .form-select {
+  background-image: none;
+}
+
+html[data-theme="light"] .form-select {
+  background-image: var(--bs-form-select-bg-img);
+  --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%235d6678' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+
+html[data-theme="light"] .input-group-text,
+html[data-theme="light"] .action-bar .input-group-text,
+html[data-theme="light"] .form-control::file-selector-button {
+  background-color: #fafafa;
+}
+
+html[data-theme="light"] .form-control:hover:not(:disabled):not([readonly]),
+html[data-theme="light"] .form-select:hover:not(:disabled) {
+  border-color: #66748f;
+}
+
+/* Ações: índigo na importação e nas confirmações; superfícies neutras nas ações secundárias. */
+html[data-theme="light"] .btn-primary,
+html[data-theme="light"] .export-group .import-trigger {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 20%), 0 3px 7px rgb(61 79 183 / 20%);
+}
+
+html[data-theme="light"] .btn-primary:hover,
+html[data-theme="light"] .export-group .import-trigger:hover {
+  box-shadow: 0 4px 10px rgb(61 79 183 / 25%);
+}
+
+html[data-theme="light"] .btn-outline-secondary,
+html[data-theme="light"] .btn-outline-primary {
+  --bs-btn-hover-bg: #f4f5f8;
+}
+
+html[data-theme="light"] .action-bar {
+  padding: 16px;
+  margin-bottom: 16px !important;
+}
+
+html[data-theme="light"] .action-bar .col-md-9 {
+  gap: 8px !important;
+}
+
+html[data-theme="light"] .action-bar > .row {
+  gap: 10px;
+}
+
+html[data-theme="light"] .action-bar .export-group {
+  padding-top: 4px;
+  border-top: 0;
+}
+
+html[data-theme="light"] #export-column-count {
+  background: #edf0fa;
+}
+
+/* Tabelas: papel branco, cabeçalhos suaves e separadores de baixa intensidade. */
+html[data-theme="light"] .table-responsive {
+  padding: 6px 12px 10px;
+}
+
+html[data-theme="light"] #case-table thead th,
+html[data-theme="light"] .workflow-table thead th {
+  padding-block: 12px;
+  background-color: #f6f8fe;
+  border-color: #e1e6f3;
+}
+
+html[data-theme="light"] #case-table td,
+html[data-theme="light"] .workflow-table td {
+  border-color: #e6eaf4;
+}
+
+html[data-theme="light"] .status-badge {
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 60%);
+}
+
+/* Formulários, acompanhamento e conversa: o acabamento claro acompanha todas as páginas. */
+html[data-theme="light"] .form-nav .nav-tabs .nav-link.active {
+  box-shadow: inset 0 -2px 0 var(--button-bg), 0 2px 4px rgb(54 77 162 / 5%);
+}
+
+html[data-theme="light"] .form-step-controls,
+html[data-theme="light"] .nexus-form {
+  background-color: #fafbfe;
+}
+
+html[data-theme="light"] .workflow-summary article,
+html[data-theme="light"] .nexus-chat {
+  box-shadow: var(--shadow);
+}
+
+html[data-theme="light"] .nexus-suggestions .btn {
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgb(43 60 112 / 5%);
+}
+
+html[data-theme="light"] .nexus-suggestions .btn:hover {
+  background-color: #f3f5fc;
+}
+
+html[data-theme="light"] .nexus-message-assistant {
+  background-color: #ffffff;
+  box-shadow: 0 2px 5px rgb(43 60 112 / 4%);
+}
+
+/* Desktop claro: proporções próximas à referência, preservando todas as opções. */
+@media (min-width: 821px) {
+  html[data-theme="light"] .sidebar {
+    width: 232px;
+    flex-basis: 232px;
+  }
+
+  html[data-theme="light"] .sidebar-header {
+    min-height: 90px;
+    padding-block: 16px;
+  }
+
+  html[data-theme="light"] .sidebar-menu-container {
+    padding-top: 22px;
+  }
+
+  html[data-theme="light"] .sidebar-menu li a {
+    min-height: 48px;
+    padding-block: 10px;
+  }
+
+  html[data-theme="light"] .sidebar-menu li a.active {
+    background-image: linear-gradient(120deg, #eef1ff, #e5eaff);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 65%);
+  }
+
+  html[data-theme="light"] .sidebar-art {
+    opacity: 0.7;
+  }
+}
+
+/* Notebook: conserva espaço para o texto dos cinco indicadores. */
+@media (min-width: 1280px) and (max-width: 1550px) {
+  html[data-theme="light"] .summary-grid .summary-card {
+    padding: 14px 12px;
+    gap: 10px;
+  }
+
+  html[data-theme="light"] .summary-grid .summary-card .summary-icon {
+    width: 34px;
+    height: 38px;
+    flex-basis: 34px;
+    border-radius: 12px;
+  }
+}
+
+/* Celular: respeita o cabeçalho compacto e evita cortes de rótulos e controles. */
+@media (max-width: 600px) {
+  html[data-theme="light"] .content-header {
+    padding: 18px;
+  }
+
+  html[data-theme="light"] .header-titles {
+    padding-left: 0;
+  }
+
+  html[data-theme="light"] .summary-grid .summary-card {
+    padding: 14px;
+  }
+
+  html[data-theme="light"] .summary-grid .summary-card .summary-icon {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    border-radius: 12px;
+  }
+}

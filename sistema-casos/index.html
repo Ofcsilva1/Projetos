@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-nexus-runtime="static">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Nexo | Gestão de Casos — Demonstração</title>
+<title>Nexo Laboratório | Gestão de Casos</title>
 <script src="theme.js?v=20261016.demo1"></script>
 <script src="demo-login.js?v=20261018.fase3" defer></script>
 
@@ -13,6 +13,12 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <link rel="stylesheet" href="style.css?v=20261018.fase4" />
+<!-- Temas globais: compartilha as paletas e os estados visuais entre todas as telas. -->
+<link rel="stylesheet" href="themes.css?v=20261116.2" />
+<!-- Estilo do assistente: organiza a conversa e os exemplos do laboratório. -->
+<link rel="stylesheet" href="nexus.css?v=20261116.lab2" />
+<!-- Modo claro: refina apenas as superfícies claras e preserva o escuro aprovado. -->
+<link rel="stylesheet" href="light-theme.css?v=20261116.1" />
 </head>
 <body>
 <a id="skip-to-login" class="skip-link" href="#login-section">Ir para o acesso</a>
@@ -78,6 +84,8 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </li>
 <li><a href="#" id="nav-agenda"><i class="bi bi-calendar-week" aria-hidden="true"></i> Agenda e atendimentos</a></li>
 <li><a href="#" id="nav-tasks"><i class="bi bi-list-check" aria-hidden="true"></i> Pendências e retornos</a></li>
+<!-- Assistente do serviço: abre o protótipo de consultas locais. -->
+<li><a href="#nexus" id="nav-nexus"><i class="bi bi-chat-left-text" aria-hidden="true"></i> Pergunte ao Nexus</a></li>
 </ul>
 </nav>
 
@@ -88,7 +96,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <button type="button" class="btn theme-toggle w-100" data-theme-toggle aria-pressed="false"><i class="bi bi-moon-stars" aria-hidden="true"></i><span data-theme-label>Modo noturno</span></button>
 <button id="btnDemoLogout" class="btn btn-logout w-100" type="button"><i class="bi bi-box-arrow-left" aria-hidden="true"></i> <span class="sidebar-action-label">Sair da demonstração</span></button>
 <button id="btnResetDemo" class="btn btn-logout w-100" type="button"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> <span class="sidebar-action-label">Restaurar demonstração</span></button>
-<a href="../" class="btn w-100"><i class="bi bi-arrow-up-right" aria-hidden="true"></i><span class="sidebar-action-label">Voltar ao portfólio</span></a>
+<a href="../portfolio/" class="btn w-100"><i class="bi bi-arrow-up-right" aria-hidden="true"></i><span class="sidebar-action-label">Voltar ao portfólio</span></a>
 </div>
 </aside>
 
@@ -100,20 +108,21 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <p id="page-subtitle" class="text-muted mb-0" style="font-size: 0.85rem;">Gerenciamento e monitoramento de prontuários.</p>
 </div>
 <div class="user-profile">
-<span class="badge-operacional"><i class="bi bi-person-circle" aria-hidden="true"></i> Demonstração pública</span>
+<span class="badge-operacional"><i class="bi bi-person-circle" aria-hidden="true"></i> Nexo Laboratório</span>
 </div>
 </header>
 
 <div class="content-body">
-<p class="demo-notice" role="status">Ambiente demonstrativo com dados fictícios. Alterações ficam apenas nesta aba do navegador. Você pode importar sua planilha fictícia. <span id="demo-storage-status"></span></p>
+<!-- Base do laboratório: informa a persistência local e mantém o aviso de falha visível. -->
+<p class="demo-notice" role="status">Laboratório com dados fictícios. Você pode importar sua planilha fictícia. <span id="demo-storage-status"></span></p>
 
 <section id="list-section" class="animate__animated animate__fadeIn">
 <div class="summary-grid" aria-label="Resumo dos casos que correspondem aos filtros">
-<article class="summary-card"><span class="summary-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span><div><span class="summary-label">Prontuários</span><strong id="summary-total">0</strong></div></article>
-<article class="summary-card"><span class="summary-icon summary-icon-green"><i class="bi bi-check2-circle" aria-hidden="true"></i></span><div><span class="summary-label">Casos ativos</span><strong id="summary-active">0</strong></div></article>
-<article class="summary-card" title="Soma dos casos encerrados com proteção e sem proteção"><span class="summary-icon summary-icon-closed"><i class="bi bi-archive" aria-hidden="true"></i></span><div><span class="summary-label">Casos encerrados</span><strong id="summary-closed">0</strong></div></article>
-<article class="summary-card"><span class="summary-icon summary-icon-blue"><i class="bi bi-pause-circle" aria-hidden="true"></i></span><div><span class="summary-label">Casos suspensos</span><strong id="summary-suspended">0</strong></div></article>
-<article class="summary-card"><span class="summary-icon summary-icon-outside"><i class="bi bi-arrow-up-right-circle" aria-hidden="true"></i></span><div><span class="summary-label">Fora da competência</span><strong id="summary-outside">0</strong></div></article>
+<article class="summary-card summary-card-total"><span class="summary-icon"><i class="bi bi-folder2-open" aria-hidden="true"></i></span><div><span class="summary-label">Prontuários</span><strong id="summary-total">0</strong></div></article>
+<article class="summary-card summary-card-active"><span class="summary-icon summary-icon-green"><i class="bi bi-check2-circle" aria-hidden="true"></i></span><div><span class="summary-label">Casos ativos</span><strong id="summary-active">0</strong></div></article>
+<article class="summary-card summary-card-closed" title="Soma dos casos encerrados com proteção e sem proteção"><span class="summary-icon summary-icon-closed"><i class="bi bi-archive" aria-hidden="true"></i></span><div><span class="summary-label">Casos encerrados</span><strong id="summary-closed">0</strong></div></article>
+<article class="summary-card summary-card-suspended"><span class="summary-icon summary-icon-blue"><i class="bi bi-pause-circle" aria-hidden="true"></i></span><div><span class="summary-label">Casos suspensos</span><strong id="summary-suspended">0</strong></div></article>
+<article class="summary-card summary-card-outside"><span class="summary-icon summary-icon-outside"><i class="bi bi-arrow-up-right-circle" aria-hidden="true"></i></span><div><span class="summary-label">Fora da competência</span><strong id="summary-outside">0</strong></div></article>
 </div>
 <div class="action-bar card-panel mb-3">
 <div class="row align-items-center w-100">
@@ -164,7 +173,7 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 </div>
 
 <section id="case-saved-actions" class="card-panel case-saved-actions" aria-labelledby="case-saved-title" hidden>
-<h2 id="case-saved-title" tabindex="-1">Caso registrado</h2><p>As informações foram salvas nesta aba. O que deseja fazer agora?</p>
+<h2 id="case-saved-title" tabindex="-1">Caso registrado</h2><p>O registro foi salvo na base local do laboratório. O que deseja fazer agora?</p>
 <div><button id="btnContinueCase" type="button" class="btn btn-primary">Continuar editando</button><button id="btnSavedAttendance" type="button" class="btn btn-outline-primary">Adicionar atendimento</button><button id="btnDismissSaved" type="button" class="btn btn-outline-secondary">Continuar na lista</button></div>
 </section>
 <div class="card-panel table-responsive">
@@ -188,6 +197,44 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 
 <section id="agenda-section" hidden></section>
 <section id="tasks-section" hidden></section>
+
+<!-- Conversa do laboratório: permite consultas locais ou interpretação com a API do Gemini. -->
+<section id="nexus-section" class="nexus-chat" aria-label="Conversa com o Nexus" hidden>
+  <div class="nexus-toolbar">
+    <div>
+      <p id="nexus-mode-label" class="nexus-mode">Consultas locais · sem IA</p>
+      <label for="nexus-mode" class="visually-hidden">Como interpretar a pergunta</label>
+      <select id="nexus-mode" class="form-select">
+        <option value="local">Consultas locais</option>
+        <option value="gemini" disabled>Gemini (requer servidor configurado)</option>
+      </select>
+    </div>
+    <button id="nexus-clear" type="button" class="btn btn-outline-secondary">Limpar conversa</button>
+  </div>
+  <!-- Exemplos: ajudam a conhecer os tipos de pergunta disponíveis nesta etapa. -->
+  <div id="nexus-welcome" class="nexus-welcome">
+    <h2>O que você quer consultar?</h2>
+    <p class="nexus-help">Consulte entradas no serviço, cadastros, atendimentos e faltas em um período. Esta demonstração usa consultas locais, sem conexão a uma IA. Os totais vêm da base fictícia disponível neste navegador.</p>
+    <div class="nexus-suggestions" aria-label="Sugestões de perguntas">
+      <button type="button" class="btn btn-outline-primary" data-nexus-question="Resumo deste mês">Resumo deste mês</button>
+      <button type="button" class="btn btn-outline-primary" data-nexus-question="Quantos prontuários tiveram entrada nos últimos 45 dias?">Entradas nos últimos 45 dias</button>
+      <button type="button" class="btn btn-outline-primary" data-nexus-question="Quantas faltas tivemos neste mês?">Faltas deste mês</button>
+      <button type="button" class="btn btn-outline-primary" data-nexus-question="Quantos cadastros foram criados neste mês?">Cadastros deste mês</button>
+      <button type="button" class="btn btn-outline-primary" data-nexus-question="Quantos atendimentos realizamos neste mês?">Atendimentos deste mês</button>
+    </div>
+  </div>
+  <!-- Histórico acessível: novas mensagens são anunciadas sem interpretar HTML. -->
+  <div id="nexus-messages" class="nexus-messages" role="log" aria-label="Mensagens da conversa" aria-live="polite" aria-relevant="additions" tabindex="0"></div>
+  <form id="nexus-form" class="nexus-form">
+    <label for="nexus-question">Sua pergunta sobre o serviço</label>
+    <textarea id="nexus-question" name="pergunta" class="form-control" rows="2" maxlength="600" aria-describedby="nexus-period-help" placeholder="Ex.: faça um resumo deste mês"></textarea>
+    <p id="nexus-period-help" class="nexus-help">Enter envia; Shift+Enter cria outra linha. Até 600 caracteres. A consulta usa toda a base, sem os filtros da lista.</p>
+    <button type="submit" class="btn btn-primary nexus-submit">Consultar dados</button>
+    <p id="nexus-status" class="nexus-help" role="status" aria-live="polite"></p>
+  </form>
+  <!-- Limites do teste: informa onde ficam os dados e quais acessos ainda não existem. -->
+  <footer id="nexus-privacy" class="nexus-footer nexus-help">Use somente dados fictícios. Consulta neste navegador, sem envio a uma IA. Permissões por cargo ainda não implementadas.</footer>
+</section>
 
 <dialog id="import-dialog" class="export-dialog import-dialog" aria-labelledby="import-title">
 <div class="export-dialog-header"><div><h2 id="import-title">Importar planilha otimizada</h2><p>Selecione o arquivo .xlsx. Cadastros e históricos serão vinculados por prontuário. Casos existentes serão ignorados.</p></div></div>
@@ -450,6 +497,6 @@ Acesso demonstrativo. Clique em Entrar para explorar o sistema.<small class="app
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js" defer></script>
-<script id="app-script" type="module" src="script.js?v=20261018.fase3"></script>
+<script id="app-script" type="module" src="script.js?v=20261116.lab1"></script>
 </body>
 </html>
